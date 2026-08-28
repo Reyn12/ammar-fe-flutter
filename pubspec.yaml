@@ -101,7 +101,7 @@ flutter_gen:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/ic_logo_dapurself.png"
+  image_path: "assets/icons/ic_logo_app.png"
 
 flutter_native_splash:
   color: "#ffffff"

@@ -1,0 +1,257 @@
+---
+description: Jangan extract provider ke variabel, widget custom pisah file, dan field model harus nullable
+globs: "**/*.dart"
+alwaysApply: true
+---
+
+# Riverpod — Jangan Extract Provider ke Variabel
+
+Jangan pernah membuat variabel yang isinya `ref.watch` / `ref.read` (atau hasil method notifier dari situ).
+
+Pakai langsung di tempat yang butuh.
+
+```dart
+// ❌ BAD
+final currentIndex = ref.watch(onboardingProvider);
+final notifier = ref.read(onboardingProvider.notifier);
+final path = await ref.read(splashProvider.notifier).initialize();
+final api = ref.watch(apiServiceProvider);
+
+OnboardingDotIndicator(currentIndex: currentIndex);
+context.go(path);
+return api.fetchAcademicSemesters(mock: mockStatus);
+
+// ✅ GOOD
+OnboardingDotIndicator(currentIndex: ref.watch(onboardingProvider));
+context.go(await ref.read(splashProvider.notifier).initialize());
+PrimaryButton(
+  onPressed: () =>
+      ref.read(onboardingProvider.notifier).goToNextPage(controller),
+);
+return ref
+    .watch(apiServiceProvider)
+    .fetchAcademicSemesterSummary(mock: mockStatus);
+return ref.watch(apiServiceProvider).fetchAcademicAdvisorApproval(
+  semesterIndex: ref.watch(academicTabSemesterProvider),
+  mock: mockStatus,
+);
+```
+
+Yang boleh jadi variabel: controller, form key, animation, dsb — **bukan** hasil `ref.watch` / `ref.read`.
+
+# Widget — Satu Custom Widget = Satu File
+
+Ikuti pola `home_page.dart`: **page cuma compose widget**, nggak nulis UI custom di dalam file page.
+
+## Page file
+
+- Isi page: `ref.watch` / `ref.listenFuture`, layout utama, dan **import widget dari file lain**
+- Jangan bikin class widget baru (private maupun public) di file page
+- Jangan bikin `_WidgetXXX`, `_HeaderSection`, `_buildSomething()` yang return widget kompleks
+
+```dart
+// ✅ GOOD — home_page.dart
+class HomePage extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return CustomScrollScaffold(
+      child: Column(
+        children: [
+          ref.watch(homeSummaryProvider).when(
+            loading: () => const HomeHeaderShimmer(),
+            error: (_, _) => HomeHeaderError(
+              onRetry: () => ref.invalidate(homeSummaryProvider),
+            ),
+            data: (summary) => HomeHeader(
+              name: summary.name.toString(),
+              onNotificationTap: () => context.push(AppPaths.notification),
+            ),
+          ),
+          HomeMenuAccess(onClassScheduleTap: () { ... }),
+        ],
+      ),
+    );
+  }
+}
+```
+
+## Widget file
+
+- Setiap widget custom **wajib file sendiri** di folder `widgets/` feature
+- Class **public** (PascalCase), bukan private (`_Something`)
+- Satu file = satu widget utama (shimmer/error/content dipisah kalau perlu)
+
+Contoh struktur home:
+
+```
+features/home/
+├── pages/home_page.dart
+└── widgets/
+    ├── home_header.dart
+    ├── home_header_shimmer.dart
+    ├── home_header_error.dart
+    ├── home_schedule_card.dart
+    ├── home_schedule_card_shimmer.dart
+    └── home_schedule_card_error.dart
+```
+
+## Penamaan file & class
+
+- File: `snake_case.dart` (contoh: `home_header_shimmer.dart`)
+- Class: PascalCase, prefix feature (contoh: `HomeHeaderShimmer`, `HomeScheduleCardError`)
+- Shimmer / error / empty / builder → **file terpisah**, jangan digabung di page
+
+## Builder & Item — Penamaan List Widget
+
+Kalau UI-nya **list/array**, pisah jadi 2 peran:
+
+| Peran       | Penamaan                                                   | Tugas                                      |
+| ----------- | ---------------------------------------------------------- | ------------------------------------------ |
+| **Builder** | `{feature}_{nama}_builder.dart` → `{Feature}{Nama}Builder` | Loop data, compose list, spacing/separator |
+| **Item**    | `{feature}_{nama}_item.dart` → `{Feature}{Nama}Item`       | Satu baris/card/chip di dalam list         |
+
+### Builder
+
+- Dipakai di page/section lewat `.when(data: ...)`
+- Isinya `ListView` / `Column` + `List.generate` / `for`
+- **Nggak** nulis UI detail item di dalam builder — panggil widget Item
+
+```dart
+// ✅ GOOD — class_schedule_builder.dart
+class ClassScheduleBuilder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(items.length, (index) {
+        return ClassScheduleCardItem(
+          name: items[index].name.toString(),
+          ...
+        );
+      }),
+    );
+  }
+}
+```
+
+Shimmer builder → `{nama}_builder_shimmer.dart` / `{Nama}BuilderShimmer`
+
+### Item
+
+- Widget **satu elemen** dalam list (card, row, chip, tile)
+- **Wajib** suffix `_item` di file & class
+- Builder yang render list **harus** import Item, bukan Card/Row tanpa suffix
+
+```dart
+// ❌ BAD — class_schedule_card.dart (seharusnya item)
+class ClassScheduleCard extends StatelessWidget { ... }
+
+// ✅ GOOD — class_schedule_card_item.dart
+class ClassScheduleCardItem extends StatelessWidget { ... }
+
+// ✅ GOOD — contoh lain di project
+// academic_course_builder.dart  → AcademicCourseBuilder
+// academic_course_item.dart     → AcademicCourseItem
+// helpdesk_ticket_builder.dart  → HelpdeskTicketBuilder
+// helpdesk_ticket_item.dart     → HelpdeskTicketItem
+// home_news_item.dart           → HomeNewsItem
+```
+
+### Struktur folder contoh class schedule
+
+```
+features/class_schedule/widgets/
+├── class_schedule_builder.dart
+├── class_schedule_builder_shimmer.dart
+├── class_schedule_card_item.dart      ← bukan class_schedule_card.dart
+├── class_schedule_day_selector.dart
+└── class_schedule_empty.dart
+```
+
+### Card vs Item
+
+- Kalau widget itu **cuma 1 elemen list** → pakai suffix **Item** (`ClassScheduleCardItem`, `FaqItemCard` boleh kalau memang card-style item)
+- Kalau widget itu **section/card standalone** (bukan elemen list) → boleh tanpa Item (`HomeScheduleCard`, `AcademicSemesterSummaryCard`)
+
+```dart
+// ❌ BAD — home_page.dart
+class HomePage extends ConsumerWidget { ... }
+
+class _HomeHeaderSection extends StatelessWidget { ... }
+
+Widget _buildScheduleCard() { ... }
+
+// ❌ BAD — home_summary_card.dart
+class HomeSummaryCard extends ConsumerWidget { ... }
+
+class _AcademicContent extends StatelessWidget { ... }
+
+class _GpaItem extends StatelessWidget { ... }
+
+// ✅ GOOD
+// home_page.dart          → HomePage (compose only)
+// home_header.dart        → HomeHeader
+// home_academic_content.dart → HomeAcademicContent
+// home_gpa_item.dart      → HomeGpaItem
+```
+
+## Yang boleh inline di page
+
+- Widget bawaan Flutter (`Column`, `SizedBox`, `Padding`, dll)
+- Widget shared global (`CustomScrollScaffold`, `PrimaryButton`, dll)
+- Callback sederhana (`onTap: () => context.push(...)`)
+
+## Yang nggak boleh inline / nested di page
+
+- Widget UI custom baru (header, card, list item, section, dll)
+- Private widget class (`_Xxx`)
+- Helper method yang return widget kompleks (`Widget _buildXxx()`)
+
+Kalau UI mulai panjang atau reusable → **pindah ke file widget baru**.
+
+# Model — Penamaan File & Class
+
+- File: `snake_case_model.dart` (contoh: `user_model.dart`, `faq_item_model.dart`)
+- Class: PascalCase + suffix `Model` (contoh: `UserModel`, `FaqItemModel`)
+- Enum/status tetap tanpa suffix `Model` kalau memang enum (contoh: `HelpdeskTicketStatus`)
+
+# Model — Field Nullable
+
+Field model API harus nullable. Jangan `required` + default palsu (`''`, `0`) di `fromJson`. Fallback tampilan di UI (`?? ''`), bukan di model.
+
+```dart
+// ❌ BAD
+const UserModel({required this.name});
+final String name;
+
+factory UserModel.fromJson(Map<String, dynamic> json) {
+  return UserModel(name: (json['name'] ?? '') as String);
+}
+
+// ✅ GOOD
+const UserModel({this.name});
+final String? name;
+
+factory UserModel.fromJson(Map<String, dynamic> json) {
+  return UserModel(name: json['name']?.toString());
+}
+
+Text(user.name ?? '');
+```
+
+# Model — fromJson Ikut Response BE
+
+Jangan fallback ke nama field lain di `fromJson`. Tulis key persis seperti response BE.
+
+```dart
+// ❌ BAD — BE kirim "name", jangan mapping sendiri
+factory UserModel.fromJson(Map<String, dynamic> json) {
+  return UserModel(name: (json['name'] ?? json['nama'])?.toString());
+}
+
+// ✅ GOOD
+factory UserModel.fromJson(Map<String, dynamic> json) {
+  return UserModel(name: json['name']?.toString());
+}
+```
+
+Kalau BE belum sesuai, fix di BE — bukan di mobile dengan alias field.

@@ -6,6 +6,8 @@ import 'package:ammar_fe_flutter/routes/app_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../routes/app_paths.dart';
+import '../../auth/models/app_role.dart';
+import '../../auth/storage/auth_storage.dart';
 
 part 'splash_provider.g.dart';
 
@@ -19,13 +21,17 @@ class Splash extends _$Splash {
       await Future<void>.delayed(const Duration(seconds: 1));
       if (!ref.mounted) return;
 
-      if (await ref.read(authProvider.notifier).checkToken() ==
+      if (await ref.read(authProvider.notifier).checkToken() !=
           AuthType.AUTHENTICATED) {
-        // TODO: arahkan ke kasir/kitchen berdasarkan role user
-        appRouter.go(AppPaths.kasirDashboard);
-      } else {
         appRouter.go(AppPaths.login);
+        return;
       }
+
+      final user = await AuthStorage().getUser();
+      if (!ref.mounted) return;
+
+      ref.read(sessionProvider.notifier).setUser(user);
+      appRouter.go(AppRole.fromValue(user?.role)?.homePath ?? AppPaths.login);
     } finally {
       keepAliveLink.close();
     }
@@ -35,5 +41,4 @@ class Splash extends _$Splash {
     // TODO: implement check app version / force update
     // bypass sementara
   }
-
 }

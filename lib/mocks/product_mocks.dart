@@ -1,0 +1,171 @@
+import '../models/addon_group_model.dart';
+import '../models/addon_model.dart';
+import '../models/category_model.dart';
+import '../models/product_model.dart';
+
+class ProductMocks {
+  const ProductMocks._();
+
+  static const List<CategoryModel> categories = [
+    CategoryModel(id: 1, name: 'Makanan'),
+    CategoryModel(id: 2, name: 'Cemilan'),
+    CategoryModel(id: 3, name: 'Minuman'),
+  ];
+
+  static const List<ProductModel> products = [
+    ProductModel(
+      id: 1,
+      branchId: 1,
+      categoryId: 1,
+      categoryName: 'Makanan',
+      name: 'Ayam Bakar Madu',
+      price: 28000,
+      isAvailable: true,
+      addonGroups: [
+        AddonGroupModel(
+          id: 1,
+          productId: 1,
+          name: 'Tingkat Pedas',
+          isRequired: true,
+          minQty: 1,
+          maxQty: 1,
+          addons: [
+            AddonModel(id: 1, groupId: 1, name: 'Tidak Pedas', price: 0, isAvailable: true),
+            AddonModel(id: 2, groupId: 1, name: 'Pedas Sedang', price: 0, isAvailable: true),
+            AddonModel(id: 3, groupId: 1, name: 'Pedas Banget', price: 2000, isAvailable: true),
+          ],
+        ),
+        AddonGroupModel(
+          id: 2,
+          productId: 1,
+          name: 'Tambahan',
+          isRequired: false,
+          minQty: 0,
+          maxQty: 3,
+          addons: [
+            AddonModel(id: 4, groupId: 2, name: 'Nasi Putih', price: 6000, isAvailable: true),
+            AddonModel(id: 5, groupId: 2, name: 'Lalapan', price: 5000, isAvailable: true),
+            AddonModel(id: 6, groupId: 2, name: 'Sambal Extra', price: 3000, isAvailable: true),
+          ],
+        ),
+      ],
+    ),
+    ProductModel(
+      id: 2,
+      branchId: 1,
+      categoryId: 1,
+      categoryName: 'Makanan',
+      name: 'Ayam Bakar Kecap',
+      price: 27000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 3,
+      branchId: 1,
+      categoryId: 1,
+      categoryName: 'Makanan',
+      name: 'Ayam Goreng Kremes',
+      price: 26000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 4,
+      branchId: 1,
+      categoryId: 1,
+      categoryName: 'Makanan',
+      name: 'Lele Bakar Sambal Ijo',
+      price: 24000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 5,
+      branchId: 1,
+      categoryId: 1,
+      categoryName: 'Makanan',
+      name: 'Nila Bakar',
+      price: 32000,
+      isAvailable: false,
+    ),
+    ProductModel(
+      id: 6,
+      branchId: 1,
+      categoryId: 1,
+      categoryName: 'Makanan',
+      name: 'Nasi Putih',
+      price: 6000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 7,
+      branchId: 1,
+      categoryId: 2,
+      categoryName: 'Cemilan',
+      name: 'Tahu Tempe Goreng',
+      price: 10000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 8,
+      branchId: 1,
+      categoryId: 2,
+      categoryName: 'Cemilan',
+      name: 'Kerupuk Udang',
+      price: 5000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 9,
+      branchId: 1,
+      categoryId: 2,
+      categoryName: 'Cemilan',
+      name: 'Lalapan Komplit',
+      price: 8000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 10,
+      branchId: 1,
+      categoryId: 3,
+      categoryName: 'Minuman',
+      name: 'Es Teh Manis',
+      price: 6000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 11,
+      branchId: 1,
+      categoryId: 3,
+      categoryName: 'Minuman',
+      name: 'Es Jeruk Peras',
+      price: 9000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 12,
+      branchId: 1,
+      categoryId: 3,
+      categoryName: 'Minuman',
+      name: 'Jus Alpukat',
+      price: 15000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 13,
+      branchId: 1,
+      categoryId: 3,
+      categoryName: 'Minuman',
+      name: 'Teh Hangat',
+      price: 5000,
+      isAvailable: true,
+    ),
+    ProductModel(
+      id: 14,
+      branchId: 1,
+      categoryId: 3,
+      categoryName: 'Minuman',
+      name: 'Air Mineral',
+      price: 4000,
+      isAvailable: false,
+    ),
+  ];
+}
