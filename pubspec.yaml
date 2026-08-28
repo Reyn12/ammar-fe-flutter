@@ -58,9 +58,6 @@ flutter:
     - assets/icons/2.0x/
     - assets/icons/3.0x/
 
-    - assets/dummy_doc.pdf
-    - assets/dummy_doc_img.jpeg
-
   fonts:
     - family: Kiro
       fonts:
@@ -104,13 +101,13 @@ flutter_gen:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo_mobile_ueu.png"
+  image_path: "assets/images/ic_logo_dapurself.png"
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/images/logo_mobile_ueu.png
+  image: assets/images/ic_logo_dapurself.png
   android: true
   ios: true
   android_12:
     color: "#ffffff"
-    image: assets/images/logo_mobile_ueu.png
+    image: assets/images/ic_logo_dapurself.png

@@ -7,10 +7,7 @@ import 'environment.dart';
 part 'api_service.g.dart';
 
 @riverpod
-ApiService apiService(Ref ref) {
-  final dio = ref.watch(dioClientProvider);
-  return ApiService(dio);
-}
+ApiService apiService(Ref ref) => ApiService(ref.watch(dioClientProvider));
 
 class ApiService {
   ApiService(this.dio);

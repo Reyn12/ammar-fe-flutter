@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:ammar_fe_flutter/gen/assets.gen.dart';
 import 'package:ammar_fe_flutter/helper/validator.dart';
 import 'package:ammar_fe_flutter/resources/app_typography.dart';
 import 'package:ammar_fe_flutter/resources/resources.dart';
-import 'package:ammar_fe_flutter/widget/image_load.dart';
 
 class CustomTextField<T> extends StatefulWidget {
   final String name;
@@ -249,11 +247,10 @@ class CustomTextField<T> extends StatefulWidget {
         onTap: onTapSend,
         child: Padding(
           padding: const EdgeInsets.only(right: 12),
-          child: ImageLoad(
-            src: Assets.icons.icSendMessage.path,
-            width: 24,
-            height: 24,
-            fit: BoxFit.contain,
+          child: Icon(
+            Icons.send,
+            size: 24,
+            color: AppColors.primary,
           ),
         ),
       ),

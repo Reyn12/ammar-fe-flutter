@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ammar_fe_flutter/features/home/pages/home_page.dart';
 import 'package:ammar_fe_flutter/features/main_navigation/providers/main_navigation_provider.dart';
 import 'package:ammar_fe_flutter/features/main_navigation/widgets/custom_bottom_nav.dart';
-import 'package:ammar_fe_flutter/gen/assets.gen.dart';
 import 'package:ammar_fe_flutter/widget/custom_snackbar.dart';
 
 class MainNavigationPage extends HookConsumerWidget {
@@ -14,8 +13,8 @@ class MainNavigationPage extends HookConsumerWidget {
   static List<NavItem> navItems = [
     NavItem(
       label: 'Beranda',
-      iconPath: Assets.icons.icHome.path,
-      activeIconPath: Assets.icons.icHomeActive.path,
+      iconPath: '',
+      activeIconPath: '',
     ),
   ];
 

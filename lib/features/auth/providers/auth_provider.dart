@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../network/api/auth_interceptor.dart';
-import '../../../network/api_service.dart';
 import '../models/auth_type.dart';
 import '../models/login_result_model.dart';
 import '../storage/auth_storage.dart';

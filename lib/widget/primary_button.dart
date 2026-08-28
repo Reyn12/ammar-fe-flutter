@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ammar_fe_flutter/gen/assets.gen.dart';
 import 'package:ammar_fe_flutter/resources/app_typography.dart';
 import 'package:ammar_fe_flutter/resources/resources.dart';
-import 'package:ammar_fe_flutter/widget/image_load.dart';
 
 ///  default button on this project with primary color
 ///  change it as needed
@@ -183,7 +181,7 @@ class PrimaryButton extends StatelessWidget {
     wrapContent: true,
     height: 48,
     radiusValue: 12,
-    leading: ImageLoad(src: Assets.icons.icChatbot.path, width: 20, height: 20),
+    leading: const Icon(Icons.smart_toy_outlined, size: 20),
     onPressed: onTap,
   );
 

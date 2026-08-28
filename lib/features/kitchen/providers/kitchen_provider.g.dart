@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'splash_provider.dart';
+part of 'kitchen_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,32 +9,32 @@ part of 'splash_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Splash)
-final splashProvider = SplashProvider._();
+@ProviderFor(Kitchen)
+final kitchenProvider = KitchenProvider._();
 
-final class SplashProvider extends $AsyncNotifierProvider<Splash, void> {
-  SplashProvider._()
+final class KitchenProvider extends $AsyncNotifierProvider<Kitchen, void> {
+  KitchenProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'splashProvider',
+        name: r'kitchenProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$splashHash();
+  String debugGetCreateSourceHash() => _$kitchenHash();
 
   @$internal
   @override
-  Splash create() => Splash();
+  Kitchen create() => Kitchen();
 }
 
-String _$splashHash() => r'28bb3e1ae67e9ffe76a1b162f4866bbcda9e5e98';
+String _$kitchenHash() => r'6300c127de2ba8d8e1e6e115eb0a839400352ace';
 
-abstract class _$Splash extends $AsyncNotifier<void> {
+abstract class _$Kitchen extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override

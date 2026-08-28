@@ -19,18 +19,10 @@ class Splash extends _$Splash {
       await Future<void>.delayed(const Duration(seconds: 1));
       if (!ref.mounted) return;
 
-      if (!await checkBoarding()) {
-        if (!ref.mounted) return;
-        ref.read(authProvider.notifier).setAuthType(AuthType.BOARDING);
-        appRouter.go(AppPaths.onboarding);
-        return;
-      }
-
-      if (!ref.mounted) return;
-
       if (await ref.read(authProvider.notifier).checkToken() ==
           AuthType.AUTHENTICATED) {
-        appRouter.go(AppPaths.mainNavigation);
+        // TODO: arahkan ke kasir/kitchen berdasarkan role user
+        appRouter.go(AppPaths.kasirDashboard);
       } else {
         appRouter.go(AppPaths.login);
       }
@@ -44,7 +36,4 @@ class Splash extends _$Splash {
     // bypass sementara
   }
 
-  Future<bool> checkBoarding() async {
-    return true;
-  }
 }

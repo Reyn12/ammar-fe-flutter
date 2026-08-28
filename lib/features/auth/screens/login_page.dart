@@ -42,7 +42,8 @@ class _LoginPageState extends ConsumerState<LoginPage> with DialogMixin {
       state: ref.watch(loginControllerProvider),
       onSuccess: () {
         if (!context.mounted) return;
-        context.go(AppPaths.mainNavigation);
+        // TODO: arahkan ke kasir/kitchen berdasarkan role user
+        context.go(AppPaths.kasirDashboard);
       },
     );
 
