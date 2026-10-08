@@ -9,6 +9,8 @@ import '../widgets/kasir_order_filter_tabs.dart';
 import '../widgets/kasir_order_list_builder.dart';
 import '../widgets/kasir_order_list_error.dart';
 import '../widgets/kasir_order_list_shimmer.dart';
+import '../widgets/kasir_order_pagination.dart';
+import '../widgets/kasir_order_search_field.dart';
 import '../widgets/kasir_page_header.dart';
 
 class KasirIncomingOrdersPage extends ConsumerWidget {
@@ -25,7 +27,7 @@ class KasirIncomingOrdersPage extends ConsumerWidget {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 18,
+            spacing: 14,
             children: [
               const KasirPageHeader(
                 title: 'Pesanan Masuk',
@@ -33,6 +35,7 @@ class KasirIncomingOrdersPage extends ConsumerWidget {
                     'Pesanan pelanggan yang sudah dibayar masuk otomatis ke sini.',
                 trailing: ConnectionIndicator(label: 'Sinkron Realtime'),
               ),
+              const KasirOrderSearchField(),
               const KasirOrderFilterTabs(),
               Expanded(
                 child: Row(
@@ -41,15 +44,24 @@ class KasirIncomingOrdersPage extends ConsumerWidget {
                   children: [
                     Expanded(
                       flex: 5,
-                      child: ordersAsync.when(
-                        loading: () => const KasirOrderListShimmer(),
-                        error: (_, _) => KasirOrderListError(
-                          onRetry: () =>
-                              ref.invalidate(incomingOrdersProvider),
-                        ),
-                        data: (_) => KasirOrderListBuilder(
-                          orders: ref.watch(filteredIncomingOrdersProvider),
-                        ),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ordersAsync.when(
+                              skipLoadingOnReload: true,
+                              skipLoadingOnRefresh: true,
+                              loading: () => const KasirOrderListShimmer(),
+                              error: (_, _) => KasirOrderListError(
+                                onRetry: () =>
+                                    ref.invalidate(incomingOrdersProvider),
+                              ),
+                              data: (_) => KasirOrderListBuilder(
+                                orders: ref.watch(pagedIncomingOrdersProvider),
+                              ),
+                            ),
+                          ),
+                          const KasirOrderPagination(),
+                        ],
                       ),
                     ),
                     const Expanded(flex: 4, child: KasirOrderDetailPanel()),
@@ -58,9 +70,9 @@ class KasirIncomingOrdersPage extends ConsumerWidget {
               ),
             ],
           ),
-          // Toast nimpa di bawah header — nggak geser filter/list.
+          // Toast di paling atas konten — nimpa, nggak geser layout.
           const Positioned(
-            top: 72,
+            top: 0,
             left: 0,
             right: 0,
             child: KasirIncomingToast(),

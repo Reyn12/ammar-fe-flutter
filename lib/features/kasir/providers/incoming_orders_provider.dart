@@ -6,6 +6,9 @@ import '../models/incoming_order_filter.dart';
 
 part 'incoming_orders_provider.g.dart';
 
+/// Jumlah kartu per halaman list Pesanan Masuk (mirip kitchen board).
+const int kasirOrdersPerPage = 6;
+
 @riverpod
 class IncomingOrders extends _$IncomingOrders {
   @override
@@ -37,7 +40,34 @@ class IncomingOrderFilterState extends _$IncomingOrderFilterState {
   @override
   IncomingOrderFilter build() => IncomingOrderFilter.all;
 
-  void select(IncomingOrderFilter filter) => state = filter;
+  void select(IncomingOrderFilter filter) {
+    state = filter;
+    ref.read(kasirOrderPageIndexProvider.notifier).select(0);
+  }
+}
+
+@riverpod
+class IncomingOrderSearchQuery extends _$IncomingOrderSearchQuery {
+  @override
+  String build() => '';
+
+  void setQuery(String value) {
+    state = value;
+    ref.read(kasirOrderPageIndexProvider.notifier).select(0);
+  }
+
+  void clear() {
+    state = '';
+    ref.read(kasirOrderPageIndexProvider.notifier).select(0);
+  }
+}
+
+@riverpod
+class KasirOrderPageIndex extends _$KasirOrderPageIndex {
+  @override
+  int build() => 0;
+
+  void select(int page) => state = page;
 }
 
 @riverpod
@@ -48,17 +78,64 @@ class SelectedOrderId extends _$SelectedOrderId {
   void select(int? orderId) => state = orderId;
 }
 
-/// Sync filter — jangan Future biar insert order baru nggak flash loading.
+bool _matchesSearch(OrderModel order, String query) {
+  final q = query.trim().toLowerCase();
+  if (q.isEmpty) return true;
+
+  final haystack = [
+    order.code,
+    order.customerName,
+    order.tableNumber,
+    order.placeLabel,
+    order.paymentMethod?.label,
+    ...(order.items ?? []).map((item) => item.productName),
+  ].whereType<String>().join(' ').toLowerCase();
+
+  return haystack.contains(q);
+}
+
+/// Filter + search (sebelum pagination).
 @riverpod
 List<OrderModel> filteredIncomingOrders(Ref ref) {
   final orders = ref.watch(incomingOrdersProvider).value ?? <OrderModel>[];
   final filter = ref.watch(incomingOrderFilterStateProvider);
-  return orders.where(filter.matches).toList();
+  final query = ref.watch(incomingOrderSearchQueryProvider);
+
+  return [
+    for (final order in orders)
+      if (filter.matches(order) && _matchesSearch(order, query)) order,
+  ];
+}
+
+@riverpod
+int kasirOrderTotalPages(Ref ref) {
+  final total = ref.watch(filteredIncomingOrdersProvider).length;
+  return (total / kasirOrdersPerPage).ceil().clamp(1, 999);
+}
+
+@riverpod
+List<OrderModel> pagedIncomingOrders(Ref ref) {
+  final filtered = ref.watch(filteredIncomingOrdersProvider);
+  final totalPages = (filtered.length / kasirOrdersPerPage).ceil().clamp(1, 999);
+  final pageIndex = ref.watch(kasirOrderPageIndexProvider).clamp(0, totalPages - 1);
+
+  if (pageIndex != ref.watch(kasirOrderPageIndexProvider)) {
+    Future.microtask(() {
+      if (!ref.mounted) return;
+      ref.read(kasirOrderPageIndexProvider.notifier).select(pageIndex);
+    });
+  }
+
+  return filtered
+      .skip(pageIndex * kasirOrdersPerPage)
+      .take(kasirOrdersPerPage)
+      .toList();
 }
 
 @riverpod
 OrderModel? selectedIncomingOrder(Ref ref) {
   final selectedId = ref.watch(selectedOrderIdProvider);
+  // Cari di semua hasil filter (bukan cuma halaman aktif).
   for (final order in ref.watch(filteredIncomingOrdersProvider)) {
     if (order.id == selectedId) return order;
   }

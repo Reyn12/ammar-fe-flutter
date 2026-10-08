@@ -48,7 +48,7 @@ final class KasirIncomingAlertProvider
 }
 
 String _$kasirIncomingAlertHash() =>
-    r'2ee803f3c62fe6cb3ac78cd3cbc13a3b518f8cc9';
+    r'3ebc48f61453d1cf6946ebd0fca194de13afd16b';
 
 /// Alert pesanan baru di kasir (toast + highlight card + badge filter).
 /// Nanti bisa dipicu SSE; sekarang ada simulate buat UI.

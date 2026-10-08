@@ -109,43 +109,57 @@ class _KasirOrderCardItemState extends State<KasirOrderCardItem>
             ? AppColors.primarySurface.withValues(alpha: 0.45)
             : AppColors.neutral10,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 10,
           children: [
             Row(
-              spacing: 12,
+              spacing: 8,
               children: [
                 Flexible(
-                  child: Text(
-                    order.code ?? '-',
-                    style: AppTypography.h9Bold.copyWith(
-                      color: AppColors.neutral100,
-                      height: 1.2,
+                  child: Row(
+                    spacing: 8,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          order.code ?? '-',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.h9Bold.copyWith(
+                            color: AppColors.neutral100,
+                            height: 1.2,
+                          ),
+                        ),
+                      ),
+                      if (widget.isNew)
+                        const StatusPill(
+                          label: 'BARU',
+                          foregroundColor: AppColors.neutral10,
+                          backgroundColor: AppColors.orangeMain,
+                          dense: true,
+                        ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 4,
+                  children: [
+                    // TODO: ganti Material icon ini dengan asset ikon final.
+                    const Icon(
+                      Icons.schedule_rounded,
+                      size: 15,
+                      color: AppColors.neutral60,
                     ),
-                  ),
-                ),
-                if (widget.isNew)
-                  const StatusPill(
-                    label: 'BARU',
-                    foregroundColor: AppColors.neutral10,
-                    backgroundColor: AppColors.orangeMain,
-                    dense: true,
-                  ),
-                const Spacer(),
-                // TODO: ganti Material icon ini dengan asset ikon final.
-                const Icon(
-                  Icons.schedule_rounded,
-                  size: 15,
-                  color: AppColors.neutral60,
-                ),
-                Text(
-                  order.createdAt == null
-                      ? '-'
-                      : '${formatClock(order.createdAt!)} · ${formatElapsed(order.createdAt!)}',
-                  style: AppTypography.bodyRegularS.copyWith(
-                    color: AppColors.neutral70,
-                    height: 1.2,
-                  ),
+                    Text(
+                      order.createdAt == null
+                          ? '-'
+                          : '${formatClock(order.createdAt!)} · ${formatElapsed(order.createdAt!)}',
+                      style: AppTypography.bodyRegularS.copyWith(
+                        color: AppColors.neutral70,
+                        height: 1.2,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

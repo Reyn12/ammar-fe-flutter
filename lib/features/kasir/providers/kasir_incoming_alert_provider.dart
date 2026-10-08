@@ -113,6 +113,7 @@ class KasirIncomingAlert extends _$KasirIncomingAlert {
 
     ref.read(incomingOrdersProvider.notifier).insertIncomingOrder(order);
     ref.read(kasirNavProvider.notifier).select(KasirNavItem.incomingOrders);
+    ref.read(kasirOrderPageIndexProvider.notifier).select(0);
     ref.read(selectedOrderIdProvider.notifier).select(order.id);
     announce(order);
   }
