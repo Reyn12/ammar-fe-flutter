@@ -33,7 +33,7 @@ final class KitchenOrdersProvider
   KitchenOrders create() => KitchenOrders();
 }
 
-String _$kitchenOrdersHash() => r'527c990e9cf1f1a8dc2f512d13228450230c8694';
+String _$kitchenOrdersHash() => r'6d7c409fc456c63e137f554b22e6d9ef2f2060e9';
 
 abstract class _$KitchenOrders extends $AsyncNotifier<List<OrderModel>> {
   FutureOr<List<OrderModel>> build();
@@ -137,7 +137,7 @@ final class KitchenTotalPagesProvider
   }
 }
 
-String _$kitchenTotalPagesHash() => r'4574cacf607ba92f344e0ea8a40203fff2902153';
+String _$kitchenTotalPagesHash() => r'1fbe484fa17e9e63d496a6dfdaa8a5a21d923dd0';
 
 @ProviderFor(pagedKitchenOrders)
 final pagedKitchenOrdersProvider = PagedKitchenOrdersProvider._();
@@ -177,4 +177,4 @@ final class PagedKitchenOrdersProvider
 }
 
 String _$pagedKitchenOrdersHash() =>
-    r'50cb1142fb6d8a64fd0afb51ec15550e72450451';
+    r'a29bd60f6f6703b7f29f883794ce305d34277dfd';

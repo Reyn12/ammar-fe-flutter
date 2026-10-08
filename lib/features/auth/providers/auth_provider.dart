@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../network/api/auth_interceptor.dart';
+import '../../kasir/providers/cashier_accounts_provider.dart';
+import '../../kasir/providers/owner_auth_provider.dart';
 import '../mocks/user_mocks.dart';
 import '../models/auth_token_model.dart';
 import '../models/auth_type.dart';
@@ -69,9 +71,11 @@ class LoginController extends _$LoginController {
       // TODO: ganti mock ini dengan POST /v1/auth/login.
       await Future<void>.delayed(const Duration(milliseconds: 900));
 
-      if (!UserMocks.isValidLogin(username, password)) {
+      final user = _resolveMockUser(username: username, password: password);
+      if (user == null) {
         throw Exception(
-          'Username atau password salah. Coba kasir/123456 atau dapur/123456.',
+          'Username atau password salah. '
+          'Coba owner/123456, kasir/123456, atau dapur/123456.',
         );
       }
 
@@ -82,7 +86,7 @@ class LoginController extends _$LoginController {
           tokenType: 'Bearer',
           expiresIn: 3600,
         ),
-        user: UserMocks.userForLogin(username),
+        user: user,
       );
 
       await AuthStorage().saveLogin(result);
@@ -91,5 +95,35 @@ class LoginController extends _$LoginController {
 
       return result;
     });
+  }
+
+  UserModel? _resolveMockUser({
+    required String username,
+    required String password,
+  }) {
+    final normalized = username.trim().toLowerCase();
+
+    if (normalized == UserMocks.demoOwnerUsername) {
+      if (password != ref.read(ownerAuthProvider)) return null;
+      return UserMocks.owner;
+    }
+
+    if (normalized == UserMocks.demoKitchenUsername) {
+      if (password != UserMocks.demoPassword) return null;
+      return UserMocks.kitchen;
+    }
+
+    for (final cashier in ref.read(cashierAccountsProvider)) {
+      if (cashier.username.toLowerCase() != normalized) continue;
+      if (!cashier.isActive) return null;
+      if (cashier.password != password) return null;
+      return UserMocks.cashierFromAccount(
+        id: cashier.id,
+        name: cashier.name,
+        username: cashier.username,
+      );
+    }
+
+    return null;
   }
 }

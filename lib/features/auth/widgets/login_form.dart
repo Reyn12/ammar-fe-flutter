@@ -73,8 +73,7 @@ class _LoginFormState extends ConsumerState<LoginForm> with DialogMixin {
                       ),
                     ),
                     Text(
-                      'Masuk pakai akun kasir atau dapur yang sudah '
-                      'didaftarkan pemilik.',
+                      'Masuk pakai akun owner, kasir, atau dapur.',
                       style: AppTypography.bodyRegularM.copyWith(
                         color: AppColors.neutral70,
                       ),

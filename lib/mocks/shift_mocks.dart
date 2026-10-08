@@ -16,4 +16,56 @@ class ShiftMocks {
     cashOrderCount: 12,
     qrisOrderCount: 27,
   );
+
+  /// Riwayat shift ditutup — dipakai manajemen owner.
+  static List<ShiftModel> get closedHistory {
+    final now = DateTime.now();
+    return [
+      ShiftModel(
+        id: 10,
+        userId: 3,
+        userName: 'Budi Kasir',
+        startTime: now.subtract(const Duration(hours: 12)),
+        endTime: now.subtract(const Duration(hours: 6)),
+        status: ShiftStatus.closed,
+        startingCash: 250000,
+        expectedCash: 980000,
+        actualCash: 975000,
+        cashOrderCount: 8,
+        qrisOrderCount: 15,
+      ),
+      ShiftModel(
+        id: 9,
+        userId: 1,
+        userName: 'Rani Kasir',
+        startTime: now.subtract(const Duration(days: 1, hours: 10)),
+        endTime: now.subtract(const Duration(days: 1, hours: 2)),
+        status: ShiftStatus.closed,
+        startingCash: 300000,
+        expectedCash: 1520000,
+        actualCash: 1520000,
+        cashOrderCount: 14,
+        qrisOrderCount: 31,
+      ),
+      ShiftModel(
+        id: 8,
+        userId: 3,
+        userName: 'Budi Kasir',
+        startTime: now.subtract(const Duration(days: 2, hours: 9)),
+        endTime: now.subtract(const Duration(days: 2, hours: 1)),
+        status: ShiftStatus.closed,
+        startingCash: 200000,
+        expectedCash: 640000,
+        actualCash: 655000,
+        cashOrderCount: 5,
+        qrisOrderCount: 9,
+      ),
+    ];
+  }
+
+  /// Seed awal list manajemen owner (ada 1 aktif + riwayat).
+  static List<ShiftModel> get managementList => [
+    activeShift,
+    ...closedHistory,
+  ];
 }

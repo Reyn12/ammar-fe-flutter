@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:ammar_fe_flutter/helper/validator.dart';
 import 'package:ammar_fe_flutter/resources/app_typography.dart';
@@ -56,6 +57,7 @@ class CustomTextField<T> extends StatefulWidget {
   final EdgeInsets? contentPadding;
   final BoxConstraints? suffixIconConstraints;
   final Widget? labelSuffix;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     super.key,
@@ -110,6 +112,7 @@ class CustomTextField<T> extends StatefulWidget {
     this.borderRadius,
     this.radius = 12,
     this.labelSuffix,
+    this.inputFormatters,
   });
 
   factory CustomTextField.dropdown({
@@ -404,6 +407,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>> {
                   : (widget.showCursor ?? true),
               keyboardType: widget.keyboardType,
               textInputAction: widget.action,
+              inputFormatters: widget.inputFormatters,
               obscureText: _obscure,
               obscuringCharacter: widget.obscureCharacter,
               onChanged: (value) {

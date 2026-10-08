@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
+import '../../auth/helpers/auth_permission.dart';
+import '../../auth/providers/auth_provider.dart';
 import 'kasir_sidebar_footer.dart';
 import 'kasir_sidebar_menu_builder.dart';
 
-class KasirSidebar extends StatelessWidget {
+class KasirSidebar extends ConsumerWidget {
   const KasirSidebar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final owner = isOwner(ref.watch(sessionProvider));
+
     return Container(
       width: 248,
       padding: const EdgeInsets.all(16),
@@ -50,7 +55,7 @@ class KasirSidebar extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Mode Kasir',
+                      owner ? 'Mode Owner' : 'Mode Kasir',
                       style: AppTypography.bodyRegularS.copyWith(
                         color: AppColors.neutral70,
                         height: 1.3,

@@ -33,7 +33,7 @@ final class KitchenBatchesProvider
   KitchenBatches create() => KitchenBatches();
 }
 
-String _$kitchenBatchesHash() => r'54e370cd333920dadddcf07015cb29eefc2584d1';
+String _$kitchenBatchesHash() => r'db2afaeeadb02a359984022bdad1d0b3228e4851';
 
 abstract class _$KitchenBatches
     extends $AsyncNotifier<List<KitchenBatchModel>> {
@@ -62,12 +62,12 @@ abstract class _$KitchenBatches
   }
 }
 
-/// Batch dikelompokkan per kategori untuk sidebar dapur.
+/// Batch aktif di sidebar: cuma yang masih pending (belum Process All).
 
 @ProviderFor(groupedKitchenBatches)
 final groupedKitchenBatchesProvider = GroupedKitchenBatchesProvider._();
 
-/// Batch dikelompokkan per kategori untuk sidebar dapur.
+/// Batch aktif di sidebar: cuma yang masih pending (belum Process All).
 
 final class GroupedKitchenBatchesProvider
     extends
@@ -79,7 +79,7 @@ final class GroupedKitchenBatchesProvider
     with
         $FutureModifier<Map<String, List<KitchenBatchModel>>>,
         $FutureProvider<Map<String, List<KitchenBatchModel>>> {
-  /// Batch dikelompokkan per kategori untuk sidebar dapur.
+  /// Batch aktif di sidebar: cuma yang masih pending (belum Process All).
   GroupedKitchenBatchesProvider._()
     : super(
         from: null,
@@ -107,4 +107,4 @@ final class GroupedKitchenBatchesProvider
 }
 
 String _$groupedKitchenBatchesHash() =>
-    r'fa5319fb8efb71737a1f960d511475328e7719a7';
+    r'5634bf199bcda0a2f0d97366ffc42f7fce250e71';

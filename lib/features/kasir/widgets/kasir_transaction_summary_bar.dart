@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../helper/format_currency_helper.dart';
 import '../../../models/order_enums.dart';
 import '../../../models/order_model.dart';
+import '../../../resources/resources.dart';
 import 'kasir_shift_summary_item.dart';
 
 class KasirTransactionSummaryBar extends StatelessWidget {
@@ -13,13 +14,11 @@ class KasirTransactionSummaryBar extends StatelessWidget {
   int get _totalRevenue =>
       orders.fold(0, (total, order) => total + (order.totalAmount ?? 0));
 
-  int get _cashCount => orders
-      .where((order) => order.paymentMethod == PaymentMethod.cash)
-      .length;
+  int get _cashCount =>
+      orders.where((order) => order.paymentMethod == PaymentMethod.cash).length;
 
-  int get _qrisCount => orders
-      .where((order) => order.paymentMethod == PaymentMethod.qris)
-      .length;
+  int get _qrisCount =>
+      orders.where((order) => order.paymentMethod == PaymentMethod.qris).length;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +31,8 @@ class KasirTransactionSummaryBar extends StatelessWidget {
             icon: Icons.receipt_rounded,
             label: 'Total Transaksi',
             value: '${orders.length} nota',
+            valueColor: AppColors.warningHover,
+            backgroundColor: AppColors.warningSurface,
           ),
         ),
         Expanded(
@@ -39,6 +40,8 @@ class KasirTransactionSummaryBar extends StatelessWidget {
             icon: Icons.attach_money_rounded,
             label: 'Total Omzet',
             value: formatRupiah(_totalRevenue),
+            valueColor: AppColors.primaryMain,
+            backgroundColor: AppColors.primarySurface,
           ),
         ),
         Expanded(
@@ -46,6 +49,8 @@ class KasirTransactionSummaryBar extends StatelessWidget {
             icon: Icons.payments_rounded,
             label: 'Bayar Tunai',
             value: '$_cashCount nota',
+            valueColor: AppColors.successMain,
+            backgroundColor: AppColors.successSoft,
           ),
         ),
         Expanded(
@@ -53,6 +58,8 @@ class KasirTransactionSummaryBar extends StatelessWidget {
             icon: Icons.qr_code_rounded,
             label: 'Bayar QRIS',
             value: '$_qrisCount nota',
+            valueColor: AppColors.orangeMain,
+            backgroundColor: AppColors.orangeMain.withValues(alpha: 0.06),
           ),
         ),
       ],

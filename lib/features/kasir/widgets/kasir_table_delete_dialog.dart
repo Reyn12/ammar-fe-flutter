@@ -1,0 +1,89 @@
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../resources/app_typography.dart';
+import '../../../resources/resources.dart';
+import '../../../widget/custom_snackbar.dart';
+import '../../../widget/primary_button.dart';
+import '../models/table_account_model.dart';
+import '../providers/table_accounts_provider.dart';
+
+class KasirTableDeleteDialog extends ConsumerWidget {
+  const KasirTableDeleteDialog({super.key, required this.table});
+
+  final TableAccountModel table;
+
+  static Future<void> show(BuildContext context, TableAccountModel table) {
+    return showDialog<void>(
+      context: context,
+      builder: (_) => KasirTableDeleteDialog(table: table),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Dialog(
+      backgroundColor: AppColors.neutral10,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 420),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16,
+            children: [
+              Text(
+                'Hapus meja ini?',
+                style: AppTypography.h8Bold.copyWith(
+                  color: AppColors.neutral100,
+                ),
+              ),
+              Text(
+                '${table.label} dan QR-nya tidak bisa dipakai customer lagi.',
+                style: AppTypography.bodyRegularM.copyWith(
+                  color: AppColors.neutral70,
+                ),
+              ),
+              Row(
+                spacing: 12,
+                children: [
+                  Expanded(
+                    child: PrimaryButton(
+                      text: 'Batal',
+                      reverse: true,
+                      borderColor: AppColors.neutral40,
+                      textColor: AppColors.neutral80,
+                      height: 48,
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                  Expanded(
+                    child: PrimaryButton(
+                      text: 'Hapus',
+                      color: AppColors.dangerMain,
+                      height: 48,
+                      onPressed: () async {
+                        await ref
+                            .read(tableAccountsProvider.notifier)
+                            .delete(table.id);
+                        if (!context.mounted) return;
+                        Navigator.of(context).pop();
+                        CustomSnackbar.success(
+                          context,
+                          '${table.label} sudah dihapus.',
+                          title: 'Meja Dihapus',
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

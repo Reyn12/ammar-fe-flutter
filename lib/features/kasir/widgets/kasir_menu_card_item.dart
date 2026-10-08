@@ -11,12 +11,14 @@ class KasirMenuCardItem extends StatelessWidget {
   const KasirMenuCardItem({
     super.key,
     required this.product,
+    required this.canManage,
     required this.onToggleAvailability,
     required this.onEdit,
     required this.onDelete,
   });
 
   final ProductModel product;
+  final bool canManage;
   final VoidCallback onToggleAvailability;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -83,50 +85,52 @@ class KasirMenuCardItem extends StatelessWidget {
                   ),
                 ),
               ),
-              Switch(
-                value: product.isAvailable ?? false,
-                activeTrackColor: AppColors.successMain,
-                onChanged: (_) => onToggleAvailability(),
-              ),
+              if (canManage)
+                Switch(
+                  value: product.isAvailable ?? false,
+                  activeTrackColor: AppColors.successMain,
+                  onChanged: (_) => onToggleAvailability(),
+                ),
             ],
           ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: onEdit,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primaryMain,
-                    side: const BorderSide(color: AppColors.primaryBorder),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+          if (canManage)
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: onEdit,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.primaryMain,
+                      side: const BorderSide(color: AppColors.primaryBorder),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    // TODO: ganti Material icon ini dengan asset ikon final.
+                    icon: const Icon(Icons.edit_rounded, size: 16),
+                    label: Text('Edit', style: AppTypography.bodySemiboldS),
+                  ),
+                ),
+                IconButton(
+                  onPressed: onDelete,
+                  tooltip: 'Hapus menu',
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppColors.dangerSurface,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   // TODO: ganti Material icon ini dengan asset ikon final.
-                  icon: const Icon(Icons.edit_rounded, size: 16),
-                  label: Text('Edit', style: AppTypography.bodySemiboldS),
-                ),
-              ),
-              IconButton(
-                onPressed: onDelete,
-                tooltip: 'Hapus menu',
-                style: IconButton.styleFrom(
-                  backgroundColor: AppColors.dangerSurface,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  icon: const Icon(
+                    Icons.delete_outline_rounded,
+                    size: 18,
+                    color: AppColors.dangerMain,
                   ),
                 ),
-                // TODO: ganti Material icon ini dengan asset ikon final.
-                icon: const Icon(
-                  Icons.delete_outline_rounded,
-                  size: 18,
-                  color: AppColors.dangerMain,
-                ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ],
       ),
     );

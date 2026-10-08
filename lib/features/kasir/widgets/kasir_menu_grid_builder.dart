@@ -9,33 +9,41 @@ import 'kasir_menu_delete_dialog.dart';
 import 'kasir_menu_form_dialog.dart';
 
 class KasirMenuGridBuilder extends ConsumerWidget {
-  const KasirMenuGridBuilder({super.key, required this.products});
+  const KasirMenuGridBuilder({
+    super.key,
+    required this.products,
+    required this.canManage,
+  });
 
   final List<ProductModel> products;
+  final bool canManage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (products.isEmpty) {
-      return const Center(
+      return Center(
         child: EmptyState(
           title: 'Belum ada menu',
-          subtitle: 'Tambah menu baru untuk kategori ini.',
+          subtitle: canManage
+              ? 'Tambah menu baru untuk kategori ini.'
+              : 'Belum ada menu untuk kategori ini.',
         ),
       );
     }
 
     return GridView.builder(
       padding: const EdgeInsets.only(bottom: 8),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 260,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
-        childAspectRatio: 0.72,
+        childAspectRatio: canManage ? 0.72 : 0.88,
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
         return KasirMenuCardItem(
           product: products[index],
+          canManage: canManage,
           onToggleAvailability: () => ref
               .read(kasirMenuProvider.notifier)
               .toggleAvailability(products[index].id ?? 0),

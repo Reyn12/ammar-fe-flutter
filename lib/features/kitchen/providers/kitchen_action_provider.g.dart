@@ -37,7 +37,7 @@ final class KitchenActionControllerProvider
 }
 
 String _$kitchenActionControllerHash() =>
-    r'aeb5172a650476631823dea9eda25bcb74edd597';
+    r'70f648bc1e3cc854a37fc351d826e1fcf87b5f56';
 
 /// Aksi kitchen (proses/sajikan/process-all) — loading dialog via DialogMixin.
 

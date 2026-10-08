@@ -26,23 +26,37 @@ class UserMocks {
     ],
   );
 
+  static const owner = UserModel(
+    id: 99,
+    name: 'Pak Ammar',
+    email: 'owner@ammar.id',
+    role: 'owner',
+    roles: [
+      UserRoleModel(id: 3, name: 'owner', description: 'Pemilik toko'),
+    ],
+  );
+
   /// Password demo sementara (mock UI, belum API).
   static const demoPassword = '123456';
 
   static const demoCashierUsername = 'kasir';
   static const demoKitchenUsername = 'dapur';
+  static const demoOwnerUsername = 'owner';
 
-  static bool isValidLogin(String username, String password) {
-    final normalized = username.trim().toLowerCase();
-    if (password != demoPassword) return false;
-
-    return normalized == demoCashierUsername ||
-        normalized == demoKitchenUsername;
-  }
-
-  static UserModel userForLogin(String username) {
-    final normalized = username.trim().toLowerCase();
-    return normalized == demoKitchenUsername ? kitchen : cashier;
+  static UserModel cashierFromAccount({
+    required int id,
+    required String name,
+    required String username,
+  }) {
+    return UserModel(
+      id: id,
+      name: name,
+      email: '$username@ammar.id',
+      role: 'cashier',
+      roles: const [
+        UserRoleModel(id: 1, name: 'cashier', description: 'Kasir cabang'),
+      ],
+    );
   }
 
   static AppRole roleOf(UserModel user) =>

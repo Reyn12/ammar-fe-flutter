@@ -3,7 +3,7 @@ import '../../../routes/app_paths.dart';
 enum AppRole {
   cashier('cashier', 'Kasir', AppPaths.kasirDashboard),
   kitchen('kitchen', 'Koki / Dapur', AppPaths.kitchenDashboard),
-  owner('owner', 'Pemilik', AppPaths.login);
+  owner('owner', 'Pemilik', AppPaths.kasirDashboard);
 
   const AppRole(this.value, this.label, this.homePath);
 

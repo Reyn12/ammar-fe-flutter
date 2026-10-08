@@ -28,6 +28,12 @@ class LoginDemoHint extends StatelessWidget {
             ),
           ),
           Text(
+            'Owner: ${UserMocks.demoOwnerUsername} / ${UserMocks.demoPassword}',
+            style: AppTypography.bodyRegularM.copyWith(
+              color: AppColors.neutral80,
+            ),
+          ),
+          Text(
             'Kasir: ${UserMocks.demoCashierUsername} / ${UserMocks.demoPassword}',
             style: AppTypography.bodyRegularM.copyWith(
               color: AppColors.neutral80,
