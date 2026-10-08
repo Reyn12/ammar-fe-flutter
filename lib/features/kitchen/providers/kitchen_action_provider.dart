@@ -45,13 +45,23 @@ class KitchenActionController extends _$KitchenActionController {
     resetAfterAction();
   }
 
-  Future<void> processBatch(int batchId, int productId) async {
+  Future<void> processBatch({
+    required int batchId,
+    required int productId,
+    required List<int> orderIds,
+  }) async {
+    if (orderIds.isEmpty) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(apiServiceProvider).processKitchenBatch(batchId);
-      await ref
-          .read(kitchenBatchesProvider.notifier)
-          .applyProcessAll(batchId, productId);
+      await ref.read(apiServiceProvider).processKitchenBatch(
+            batchId,
+            orderIds: orderIds,
+          );
+      await ref.read(kitchenBatchesProvider.notifier).applyProcessSelected(
+            batchId: batchId,
+            productId: productId,
+            orderIds: orderIds,
+          );
       return true;
     });
     resetAfterAction();

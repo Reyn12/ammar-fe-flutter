@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../../helper/status_color_helper.dart';
-import '../../../models/order_enums.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
 import '../../../widget/primary_button.dart';
 import '../../../widget/status_pill.dart';
 import '../../../widget/surface_card.dart';
 import '../models/kitchen_batch_model.dart';
+import 'kitchen_batch_detail_dialog.dart';
 import 'kitchen_batch_table_chip_item.dart';
 
 class KitchenBatchItem extends StatelessWidget {
-  const KitchenBatchItem({
-    super.key,
-    required this.batch,
-    required this.onProcessAll,
-  });
+  const KitchenBatchItem({super.key, required this.batch});
 
   final KitchenBatchModel batch;
-  final VoidCallback onProcessAll;
 
   @override
   Widget build(BuildContext context) {
@@ -84,14 +79,11 @@ class KitchenBatchItem extends StatelessWidget {
             ],
           ),
           PrimaryButton(
-            text: batch.status == OrderItemStatus.pending
-                ? 'Process All'
-                : 'Sudah Diproses',
+            text: 'Lihat Detail',
             color: AppColors.orangeMain,
             height: 42,
             radiusValue: 10,
-            enabled: batch.status == OrderItemStatus.pending,
-            onPressed: onProcessAll,
+            onPressed: () => KitchenBatchDetailDialog.show(context, batch),
           ),
         ],
       ),

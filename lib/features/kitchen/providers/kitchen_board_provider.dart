@@ -69,22 +69,30 @@ class KitchenOrders extends _$KitchenOrders {
     ]);
   }
 
-  /// Update lokal setelah Process All batch sukses.
-  void applyMarkProductCooking(int productId) {
+  /// Update lokal: item product di order terpilih jadi cooking.
+  void applyMarkProductCooking({
+    required int productId,
+    required List<int> orderIds,
+  }) {
+    if (orderIds.isEmpty) return;
+    final selectedOrders = orderIds.toSet();
     state = AsyncData([
       for (final order in state.value ?? <OrderModel>[])
-        syncOrderStatus(
-          order.copyWith(
-            items: [
-              for (final item in order.items ?? [])
-                if (item.productId == productId &&
-                    item.status == OrderItemStatus.pending)
-                  item.copyWith(status: OrderItemStatus.cooking)
-                else
-                  item,
-            ],
+        if (!selectedOrders.contains(order.id))
+          order
+        else
+          syncOrderStatus(
+            order.copyWith(
+              items: [
+                for (final item in order.items ?? [])
+                  if (item.productId == productId &&
+                      item.status == OrderItemStatus.pending)
+                    item.copyWith(status: OrderItemStatus.cooking)
+                  else
+                    item,
+              ],
+            ),
           ),
-        ),
     ]);
   }
 

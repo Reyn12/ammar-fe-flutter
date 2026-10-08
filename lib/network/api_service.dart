@@ -89,12 +89,23 @@ class ApiService {
   }
 
   /// POST /v1/kitchen/batches/{id}/process
-  Future<void> processKitchenBatch(int batchId, {bool? mock}) async {
+  /// Body opsional: `{ "order_ids": [241, 246] }` untuk proses sebagian nota.
+  Future<void> processKitchenBatch(
+    int batchId, {
+    List<int>? orderIds,
+    bool? mock,
+  }) async {
     if (useMock(mock)) {
       await Future<void>.delayed(const Duration(milliseconds: 800));
       return;
     }
 
-    await dio.post('/v1/kitchen/batches/$batchId/process');
+    await dio.post(
+      '/v1/kitchen/batches/$batchId/process',
+      data: {
+        if (orderIds != null) 'order_ids': orderIds,
+      },
+    );
   }
 }
+

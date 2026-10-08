@@ -27,15 +27,19 @@ class KitchenBatchModel {
 
   bool get isFull => notaCount >= maxNotaPerBatch;
 
-  KitchenBatchModel copyWith({OrderItemStatus? status}) {
+  KitchenBatchModel copyWith({
+    OrderItemStatus? status,
+    int? totalQty,
+    List<KitchenBatchTableModel>? tables,
+  }) {
     return KitchenBatchModel(
       id: id,
       categoryName: categoryName,
       productId: productId,
       productName: productName,
-      totalQty: totalQty,
+      totalQty: totalQty ?? this.totalQty,
       status: status ?? this.status,
-      tables: tables,
+      tables: tables ?? this.tables,
     );
   }
 
