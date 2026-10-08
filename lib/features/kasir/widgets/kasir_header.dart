@@ -8,6 +8,7 @@ import '../../../widget/connection_indicator.dart';
 import '../../../widget/live_clock.dart';
 import '../../../widget/status_pill.dart';
 import '../providers/incoming_orders_provider.dart';
+import '../providers/kasir_incoming_alert_provider.dart';
 import '../providers/kasir_shift_provider.dart';
 
 class KasirHeader extends ConsumerWidget {
@@ -68,13 +69,24 @@ class KasirHeader extends ConsumerWidget {
                 : AppColors.warningSurface,
           ),
           StatusPill(
-            label: '${ref.watch(waitingCashCountProvider).value ?? 0} Tunai',
+            label: '${ref.watch(waitingCashCountProvider)} Tunai',
             // TODO: ganti Material icon ini dengan asset ikon final.
             icon: Icons.payments_rounded,
             foregroundColor: paymentStatusColor(null).foreground,
             backgroundColor: paymentStatusColor(null).background,
           ),
           const ConnectionIndicator(),
+          // TODO: hapus tombol simulate setelah SSE pesanan baru siap.
+          IconButton(
+            tooltip: 'Simulasi pesanan baru',
+            onPressed: () => ref
+                .read(kasirIncomingAlertProvider.notifier)
+                .simulateIncomingOrder(),
+            icon: const Icon(
+              Icons.add_alert_rounded,
+              color: AppColors.orangeMain,
+            ),
+          ),
           IconButton(
             tooltip: 'Muat ulang pesanan',
             onPressed: () => ref.invalidate(incomingOrdersProvider),

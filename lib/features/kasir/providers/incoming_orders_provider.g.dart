@@ -33,7 +33,7 @@ final class IncomingOrdersProvider
   IncomingOrders create() => IncomingOrders();
 }
 
-String _$incomingOrdersHash() => r'5636554c88f158a9e5c6ab91c371c928ac034cb0';
+String _$incomingOrdersHash() => r'782e0e10989c8c9a06f0ff1f61883dcd85d40f92';
 
 abstract class _$IncomingOrders extends $AsyncNotifier<List<OrderModel>> {
   FutureOr<List<OrderModel>> build();
@@ -160,17 +160,22 @@ abstract class _$SelectedOrderId extends $Notifier<int?> {
   }
 }
 
+/// Sync filter — jangan Future biar insert order baru nggak flash loading.
+
 @ProviderFor(filteredIncomingOrders)
 final filteredIncomingOrdersProvider = FilteredIncomingOrdersProvider._();
+
+/// Sync filter — jangan Future biar insert order baru nggak flash loading.
 
 final class FilteredIncomingOrdersProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<OrderModel>>,
           List<OrderModel>,
-          FutureOr<List<OrderModel>>
+          List<OrderModel>,
+          List<OrderModel>
         >
-    with $FutureModifier<List<OrderModel>>, $FutureProvider<List<OrderModel>> {
+    with $Provider<List<OrderModel>> {
+  /// Sync filter — jangan Future biar insert order baru nggak flash loading.
   FilteredIncomingOrdersProvider._()
     : super(
         from: null,
@@ -187,30 +192,32 @@ final class FilteredIncomingOrdersProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<OrderModel>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $ProviderElement<List<OrderModel>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  FutureOr<List<OrderModel>> create(Ref ref) {
+  List<OrderModel> create(Ref ref) {
     return filteredIncomingOrders(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<OrderModel> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<OrderModel>>(value),
+    );
   }
 }
 
 String _$filteredIncomingOrdersHash() =>
-    r'd630698b1afdd654fbcfa5a282c01e0a68139010';
+    r'32ddd536a49899b0731336c6f819c60d8dc3c50a';
 
 @ProviderFor(selectedIncomingOrder)
 final selectedIncomingOrderProvider = SelectedIncomingOrderProvider._();
 
 final class SelectedIncomingOrderProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<OrderModel?>,
-          OrderModel?,
-          FutureOr<OrderModel?>
-        >
-    with $FutureModifier<OrderModel?>, $FutureProvider<OrderModel?> {
+    extends $FunctionalProvider<OrderModel?, OrderModel?, OrderModel?>
+    with $Provider<OrderModel?> {
   SelectedIncomingOrderProvider._()
     : super(
         from: null,
@@ -227,18 +234,25 @@ final class SelectedIncomingOrderProvider
 
   @$internal
   @override
-  $FutureProviderElement<OrderModel?> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $ProviderElement<OrderModel?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  FutureOr<OrderModel?> create(Ref ref) {
+  OrderModel? create(Ref ref) {
     return selectedIncomingOrder(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(OrderModel? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<OrderModel?>(value),
+    );
   }
 }
 
 String _$selectedIncomingOrderHash() =>
-    r'65e33a339cc6cc6fd4efce759943c90c89bf08df';
+    r'61687897610cad80e5bf2029419fabb211be8ad3';
 
 /// Jumlah order tunai yang masih menunggu konfirmasi, dipakai badge sidebar.
 
@@ -247,9 +261,8 @@ final waitingCashCountProvider = WaitingCashCountProvider._();
 
 /// Jumlah order tunai yang masih menunggu konfirmasi, dipakai badge sidebar.
 
-final class WaitingCashCountProvider
-    extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
-    with $FutureModifier<int>, $FutureProvider<int> {
+final class WaitingCashCountProvider extends $FunctionalProvider<int, int, int>
+    with $Provider<int> {
   /// Jumlah order tunai yang masih menunggu konfirmasi, dipakai badge sidebar.
   WaitingCashCountProvider._()
     : super(
@@ -267,13 +280,21 @@ final class WaitingCashCountProvider
 
   @$internal
   @override
-  $FutureProviderElement<int> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  FutureOr<int> create(Ref ref) {
+  int create(Ref ref) {
     return waitingCashCount(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
   }
 }
 
-String _$waitingCashCountHash() => r'24a0553f3c796143746320e6c0cf59ce099f3f1c';
+String _$waitingCashCountHash() => r'2ed6c20ab40ec5cabb3e0be66d5ce8cc2e32de74';

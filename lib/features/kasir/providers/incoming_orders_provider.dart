@@ -14,6 +14,11 @@ class IncomingOrders extends _$IncomingOrders {
     return ref.watch(apiServiceProvider).fetchIncomingOrders();
   }
 
+  /// Sisipkan pesanan baru di depan list (simulasi SSE / event paid).
+  void insertIncomingOrder(OrderModel order) {
+    state = AsyncData([order, ...state.value ?? <OrderModel>[]]);
+  }
+
   /// SKPL-F-006 — set pembayaran tunai jadi lunas.
   Future<void> confirmCashPayment(int orderId) async {
     final updated = await ref
@@ -43,25 +48,27 @@ class SelectedOrderId extends _$SelectedOrderId {
   void select(int? orderId) => state = orderId;
 }
 
+/// Sync filter — jangan Future biar insert order baru nggak flash loading.
 @riverpod
-Future<List<OrderModel>> filteredIncomingOrders(Ref ref) async {
-  return (await ref.watch(incomingOrdersProvider.future))
-      .where(ref.watch(incomingOrderFilterStateProvider).matches)
-      .toList();
+List<OrderModel> filteredIncomingOrders(Ref ref) {
+  final orders = ref.watch(incomingOrdersProvider).value ?? <OrderModel>[];
+  final filter = ref.watch(incomingOrderFilterStateProvider);
+  return orders.where(filter.matches).toList();
 }
 
 @riverpod
-Future<OrderModel?> selectedIncomingOrder(Ref ref) async {
-  for (final order in await ref.watch(filteredIncomingOrdersProvider.future)) {
-    if (order.id == ref.watch(selectedOrderIdProvider)) return order;
+OrderModel? selectedIncomingOrder(Ref ref) {
+  final selectedId = ref.watch(selectedOrderIdProvider);
+  for (final order in ref.watch(filteredIncomingOrdersProvider)) {
+    if (order.id == selectedId) return order;
   }
   return null;
 }
 
 /// Jumlah order tunai yang masih menunggu konfirmasi, dipakai badge sidebar.
 @riverpod
-Future<int> waitingCashCount(Ref ref) async {
-  return (await ref.watch(incomingOrdersProvider.future))
+int waitingCashCount(Ref ref) {
+  return (ref.watch(incomingOrdersProvider).value ?? <OrderModel>[])
       .where((order) => order.needCashConfirmation)
       .length;
 }

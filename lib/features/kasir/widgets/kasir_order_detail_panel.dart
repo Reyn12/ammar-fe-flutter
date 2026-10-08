@@ -22,15 +22,13 @@ class KasirOrderDetailPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final order = ref.watch(selectedIncomingOrderProvider);
+
     return SurfaceCard(
       padding: const EdgeInsets.all(20),
-      child: ref
-          .watch(selectedIncomingOrderProvider)
-          .maybeWhen(
-            orElse: () => const KasirOrderDetailEmpty(),
-            data: (order) => order == null
-                ? const KasirOrderDetailEmpty()
-                : Column(
+      child: order == null
+          ? const KasirOrderDetailEmpty()
+          : Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     spacing: 16,
                     children: [
@@ -175,7 +173,6 @@ class KasirOrderDetailPanel extends ConsumerWidget {
                         ),
                     ],
                   ),
-          ),
     );
   }
 }

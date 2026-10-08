@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../models/order_model.dart';
 import '../../../widget/empty_state.dart';
 import '../providers/incoming_orders_provider.dart';
+import '../providers/kasir_incoming_alert_provider.dart';
 import 'kasir_order_card_item.dart';
 
 class KasirOrderListBuilder extends ConsumerWidget {
@@ -22,18 +23,28 @@ class KasirOrderListBuilder extends ConsumerWidget {
       );
     }
 
+    final newOrderIds = ref.watch(
+      kasirIncomingAlertProvider.select((state) => state.newOrderIds),
+    );
+
     return ListView.separated(
       padding: const EdgeInsets.only(bottom: 8),
       itemCount: orders.length,
       separatorBuilder: (_, _) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
+        final order = orders[index];
+        final orderId = order.id ?? 0;
+        final isNew = newOrderIds.contains(orderId);
+
         return KasirOrderCardItem(
-          order: orders[index],
-          isSelected:
-              ref.watch(selectedOrderIdProvider) == orders[index].id,
-          onTap: () => ref
-              .read(selectedOrderIdProvider.notifier)
-              .select(orders[index].id),
+          key: ValueKey('kasir-order-$orderId'),
+          order: order,
+          isSelected: ref.watch(selectedOrderIdProvider) == order.id,
+          isNew: isNew,
+          onTap: () =>
+              ref.read(selectedOrderIdProvider.notifier).select(order.id),
+          onSeen: () =>
+              ref.read(kasirIncomingAlertProvider.notifier).clearNew(orderId),
         );
       },
     );

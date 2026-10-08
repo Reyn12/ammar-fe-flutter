@@ -28,7 +28,7 @@ class KasirSidebarMenuBuilder extends ConsumerWidget {
           icon: item.icon,
           isSelected: ref.watch(kasirNavProvider) == item,
           badgeCount: item == KasirNavItem.incomingOrders
-              ? ref.watch(waitingCashCountProvider).value ?? 0
+              ? ref.watch(waitingCashCountProvider)
               : 0,
           onTap: () => ref.read(kasirNavProvider.notifier).select(item),
         );
