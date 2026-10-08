@@ -6,9 +6,11 @@ import '../features/auth/models/auth_token_model.dart';
 import '../features/auth/models/login_result_model.dart';
 import '../features/auth/models/user_model.dart';
 import '../features/kasir/models/cashier_account_model.dart';
+import '../features/kasir/models/kitchen_account_model.dart';
 import '../features/kasir/models/table_account_model.dart';
 import '../features/kitchen/models/kitchen_batch_model.dart';
 import '../mocks/cashier_account_mocks.dart';
+import '../mocks/kitchen_account_mocks.dart';
 import '../mocks/kitchen_batch_mocks.dart';
 import '../mocks/order_mocks.dart';
 import '../mocks/product_mocks.dart';
@@ -427,6 +429,67 @@ class ApiService {
   }
 
   // ---------------------------------------------------------------------------
+  // Kitchen staff (Owner)
+  // ---------------------------------------------------------------------------
+
+  /// GET /v1/users?role=kitchen
+  Future<List<KitchenAccountModel>> fetchKitchenStaff({bool? mock}) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      return [...KitchenAccountMocks.initial];
+    }
+
+    final res = await dio.get(
+      '/v1/users',
+      queryParameters: {'role': 'kitchen'},
+    );
+    return Converter.list(res.data, KitchenAccountModel.fromJson);
+  }
+
+  /// POST /v1/users
+  Future<KitchenAccountModel> createKitchenStaff(
+    KitchenAccountModel account, {
+    bool? mock,
+  }) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      return account.copyWith(
+        id: DateTime.now().millisecondsSinceEpoch,
+        username: account.username.trim().toLowerCase(),
+      );
+    }
+
+    final res = await dio.post('/v1/users', data: _kitchenBody(account));
+    return Converter.single(res.data, KitchenAccountModel.fromJson);
+  }
+
+  /// PUT /v1/users/{id}
+  Future<KitchenAccountModel> updateKitchenStaff(
+    KitchenAccountModel account, {
+    bool? mock,
+  }) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      return account.copyWith(username: account.username.trim().toLowerCase());
+    }
+
+    final res = await dio.put(
+      '/v1/users/${account.id}',
+      data: _kitchenBody(account),
+    );
+    return Converter.single(res.data, KitchenAccountModel.fromJson);
+  }
+
+  /// DELETE /v1/users/{id}
+  Future<void> deleteKitchenStaff(int userId, {bool? mock}) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      return;
+    }
+    await dio.delete('/v1/users/$userId');
+  }
+
+  // ---------------------------------------------------------------------------
   // Tables (Owner)
   // ---------------------------------------------------------------------------
 
@@ -598,8 +661,17 @@ class ApiService {
     if (password != UserMocks.demoPassword) return null;
 
     if (normalized == UserMocks.demoOwnerUsername) return UserMocks.owner;
-    if (normalized == UserMocks.demoKitchenUsername) return UserMocks.kitchen;
-    if (normalized == UserMocks.demoCashierUsername) return UserMocks.cashier;
+
+    for (final kitchen in KitchenAccountMocks.initial) {
+      if (kitchen.username.toLowerCase() != normalized) continue;
+      if (!kitchen.isActive) return null;
+      if (kitchen.password != password) return null;
+      return UserMocks.kitchenFromAccount(
+        id: kitchen.id,
+        name: kitchen.name,
+        username: kitchen.username,
+      );
+    }
 
     for (final cashier in CashierAccountMocks.initial) {
       if (cashier.username.toLowerCase() != normalized) continue;
@@ -628,6 +700,14 @@ class ApiService {
     'name': account.name,
     'password': account.password,
     'role': 'cashier',
+    'is_active': account.isActive,
+  };
+
+  Map<String, dynamic> _kitchenBody(KitchenAccountModel account) => {
+    'username': account.username,
+    'name': account.name,
+    'password': account.password,
+    'role': 'kitchen',
     'is_active': account.isActive,
   };
 }

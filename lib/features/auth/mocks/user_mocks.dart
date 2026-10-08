@@ -59,6 +59,22 @@ class UserMocks {
     );
   }
 
+  static UserModel kitchenFromAccount({
+    required int id,
+    required String name,
+    required String username,
+  }) {
+    return UserModel(
+      id: id,
+      name: name,
+      email: '$username@ammar.id',
+      role: 'kitchen',
+      roles: const [
+        UserRoleModel(id: 2, name: 'kitchen', description: 'Koki / dapur'),
+      ],
+    );
+  }
+
   static AppRole roleOf(UserModel user) =>
       AppRole.fromValue(user.role) ?? AppRole.cashier;
 }

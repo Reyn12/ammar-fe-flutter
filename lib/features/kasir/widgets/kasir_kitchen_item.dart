@@ -4,10 +4,10 @@ import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
 import '../../../widget/status_pill.dart';
 import '../../../widget/surface_card.dart';
-import '../models/cashier_account_model.dart';
+import '../models/kitchen_account_model.dart';
 
-class KasirCashierItem extends StatelessWidget {
-  const KasirCashierItem({
+class KasirKitchenItem extends StatelessWidget {
+  const KasirKitchenItem({
     super.key,
     required this.account,
     required this.onEdit,
@@ -15,7 +15,7 @@ class KasirCashierItem extends StatelessWidget {
     required this.onToggleActive,
   });
 
-  final CashierAccountModel account;
+  final KitchenAccountModel account;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onToggleActive;
@@ -66,7 +66,7 @@ class KasirCashierItem extends StatelessWidget {
               height: 72,
               decoration: BoxDecoration(
                 color: active
-                    ? AppColors.primarySurface
+                    ? AppColors.orangeMain.withValues(alpha: 0.12)
                     : AppColors.neutral30,
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -75,7 +75,7 @@ class KasirCashierItem extends StatelessWidget {
                 _initials,
                 style: AppTypography.h7Bold.copyWith(
                   color: active
-                      ? AppColors.primaryMain
+                      ? AppColors.orangeMain
                       : AppColors.neutral70,
                   height: 1,
                 ),
@@ -115,8 +115,10 @@ class KasirCashierItem extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: onEdit,
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primaryMain,
-                    side: const BorderSide(color: AppColors.primaryBorder),
+                    foregroundColor: AppColors.orangeMain,
+                    side: BorderSide(
+                      color: AppColors.orangeMain.withValues(alpha: 0.35),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -129,7 +131,7 @@ class KasirCashierItem extends StatelessWidget {
               ),
               IconButton(
                 onPressed: onDelete,
-                tooltip: 'Hapus kasir',
+                tooltip: 'Hapus dapur',
                 style: IconButton.styleFrom(
                   backgroundColor: AppColors.dangerSurface,
                   shape: RoundedRectangleBorder(

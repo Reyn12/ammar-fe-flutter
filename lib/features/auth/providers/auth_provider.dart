@@ -6,6 +6,7 @@ import '../../../network/api/auth_interceptor.dart';
 import '../../../network/api_service.dart';
 import '../../../network/environment.dart';
 import '../../kasir/providers/cashier_accounts_provider.dart';
+import '../../kasir/providers/kitchen_accounts_provider.dart';
 import '../../kasir/providers/owner_auth_provider.dart';
 import '../mocks/user_mocks.dart';
 import '../models/auth_token_model.dart';
@@ -120,9 +121,15 @@ class LoginController extends _$LoginController {
       return UserMocks.owner;
     }
 
-    if (normalized == UserMocks.demoKitchenUsername) {
-      if (password != UserMocks.demoPassword) return null;
-      return UserMocks.kitchen;
+    for (final kitchen in ref.read(kitchenAccountsProvider)) {
+      if (kitchen.username.toLowerCase() != normalized) continue;
+      if (!kitchen.isActive) return null;
+      if (kitchen.password != password) return null;
+      return UserMocks.kitchenFromAccount(
+        id: kitchen.id,
+        name: kitchen.name,
+        username: kitchen.username,
+      );
     }
 
     for (final cashier in ref.read(cashierAccountsProvider)) {

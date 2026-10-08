@@ -4,13 +4,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../resources/resources.dart';
 import '../../../widget/empty_state.dart';
 import '../../../widget/primary_button.dart';
-import '../../../widget/surface_card.dart';
 import '../providers/table_accounts_provider.dart';
 import '../widgets/kasir_page_header.dart';
 import '../widgets/kasir_table_delete_dialog.dart';
 import '../widgets/kasir_table_form_dialog.dart';
 import '../widgets/kasir_table_item.dart';
 import '../widgets/kasir_table_qr_dialog.dart';
+import '../widgets/kasir_table_summary_bar.dart';
 
 class KasirTablesPage extends ConsumerWidget {
   const KasirTablesPage({super.key});
@@ -31,8 +31,8 @@ class KasirTablesPage extends ConsumerWidget {
               KasirPageHeader(
                 title: 'Kelola Meja',
                 subtitle:
-                    'Atur meja cabang, generate QR order, download, atau '
-                    'generate ulang.',
+                    'QR tiap meja buat customer scan & pesan. '
+                    'Download sticker, atau generate ulang kalau perlu.',
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   spacing: 12,
@@ -62,6 +62,7 @@ class KasirTablesPage extends ConsumerWidget {
                   ],
                 ),
               ),
+              if (tables.isNotEmpty) KasirTableSummaryBar(tables: tables),
               Expanded(
                 child: tables.isEmpty
                     ? const Center(
@@ -71,30 +72,31 @@ class KasirTablesPage extends ConsumerWidget {
                               'Tambah meja supaya customer bisa scan QR order.',
                         ),
                       )
-                    : SurfaceCard(
-                        padding: EdgeInsets.zero,
-                        child: ListView.separated(
-                          itemCount: tables.length,
-                          separatorBuilder: (_, _) => const Divider(
-                            height: 1,
-                            color: AppColors.neutral30,
-                          ),
-                          itemBuilder: (context, index) {
-                            final table = tables[index];
-                            return KasirTableItem(
-                              table: table,
-                              onShowQr: () =>
-                                  KasirTableQrDialog.show(context, table),
-                              onEdit: () =>
-                                  KasirTableFormDialog.show(context, table),
-                              onDelete: () =>
-                                  KasirTableDeleteDialog.show(context, table),
-                              onToggleActive: () => ref
-                                  .read(tableAccountsProvider.notifier)
-                                  .toggleActive(table.id),
-                            );
-                          },
-                        ),
+                    : GridView.builder(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 280,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.78,
+                            ),
+                        itemCount: tables.length,
+                        itemBuilder: (context, index) {
+                          final table = tables[index];
+                          return KasirTableItem(
+                            table: table,
+                            onShowQr: () =>
+                                KasirTableQrDialog.show(context, table),
+                            onEdit: () =>
+                                KasirTableFormDialog.show(context, table),
+                            onDelete: () =>
+                                KasirTableDeleteDialog.show(context, table),
+                            onToggleActive: () => ref
+                                .read(tableAccountsProvider.notifier)
+                                .toggleActive(table.id),
+                          );
+                        },
                       ),
               ),
             ],
