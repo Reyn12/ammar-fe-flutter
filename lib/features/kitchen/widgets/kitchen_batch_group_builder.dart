@@ -23,16 +23,17 @@ class KitchenBatchGroupBuilder extends ConsumerWidget {
           children: [
             Text(
               groupedBatches.keys.elementAt(groupIndex).toUpperCase(),
-              style: AppTypography.bodySemiboldS.copyWith(
-                color: AppColors.neutral60,
+              style: AppTypography.bodySemiboldM.copyWith(
+                color: AppColors.neutral70,
                 letterSpacing: 1.1,
               ),
             ),
             ...List.generate(
               groupedBatches.values.elementAt(groupIndex).length,
               (index) {
-                final batch =
-                    groupedBatches.values.elementAt(groupIndex)[index];
+                final batch = groupedBatches.values.elementAt(
+                  groupIndex,
+                )[index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: KitchenBatchItem(batch: batch),

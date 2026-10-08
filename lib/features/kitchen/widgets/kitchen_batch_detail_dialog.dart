@@ -210,13 +210,26 @@ class _KitchenBatchDetailDialogState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 spacing: 4,
                                 children: [
-                                  Text(
-                                    '${table.tableLabel ?? '-'} · '
-                                    '${table.orderCode ?? '-'} · '
-                                    '×${table.qty ?? 0}',
-                                    style: AppTypography.bodySemiboldM.copyWith(
-                                      color: AppColors.neutral100,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${table.tableLabel ?? '-'} · '
+                                          '${table.orderCode ?? '-'}',
+                                          style: AppTypography.bodySemiboldM
+                                              .copyWith(
+                                            color: AppColors.neutral100,
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        '×${table.qty ?? 0}',
+                                        style: AppTypography.bodySemiboldM
+                                            .copyWith(
+                                          color: AppColors.neutral100,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   if (addons.isNotEmpty)
                                     Text(

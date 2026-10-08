@@ -3,14 +3,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../resources/resources.dart';
 import '../../../widget/dialog_mixin.dart';
-import '../../../widget/empty_state.dart';
 import '../providers/kitchen_action_provider.dart';
-import '../providers/kitchen_board_provider.dart';
 import '../widgets/kitchen_batch_sidebar.dart';
 import '../widgets/kitchen_footer.dart';
 import '../widgets/kitchen_header.dart';
-import '../widgets/kitchen_order_grid_builder.dart';
-import '../widgets/kitchen_order_grid_shimmer.dart';
+import '../widgets/kitchen_order_page_view.dart';
 import '../widgets/kitchen_pagination.dart';
 
 class KitchenBoardPage extends ConsumerStatefulWidget {
@@ -39,25 +36,10 @@ class _KitchenBoardPageState extends ConsumerState<KitchenBoardPage>
               child: Column(
                 children: [
                   const KitchenHeader(),
-                  Expanded(
+                  const Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: ref
-                          .watch(pagedKitchenOrdersProvider)
-                          .when(
-                            skipLoadingOnReload: true,
-                            skipLoadingOnRefresh: true,
-                            loading: () => const KitchenOrderGridShimmer(),
-                            error: (_, _) => const Center(
-                              child: EmptyState(
-                                title: 'Gagal memuat pesanan',
-                                subtitle:
-                                    'Cek koneksi ke server lalu muat ulang.',
-                              ),
-                            ),
-                            data: (orders) =>
-                                KitchenOrderGridBuilder(orders: orders),
-                          ),
+                      padding: EdgeInsets.all(20),
+                      child: KitchenOrderPageView(),
                     ),
                   ),
                   const KitchenPagination(),
