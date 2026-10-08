@@ -40,7 +40,7 @@ final class AuthProvider extends $NotifierProvider<Auth, AuthType> {
   }
 }
 
-String _$authHash() => r'79d118bf01390bdda8d6edd6404e145647f3e5eb';
+String _$authHash() => r'02d768df2c013282b99966780e554260ec720320';
 
 abstract class _$Auth extends $Notifier<AuthType> {
   AuthType build();
@@ -141,7 +141,7 @@ final class LoginControllerProvider
   LoginController create() => LoginController();
 }
 
-String _$loginControllerHash() => r'ecce41311ed336e800e288c087ae14e92c0055aa';
+String _$loginControllerHash() => r'c3db5ea066e3962a6d1d53331b8e0a567d933fee';
 
 abstract class _$LoginController extends $AsyncNotifier<LoginResultModel?> {
   FutureOr<LoginResultModel?> build();

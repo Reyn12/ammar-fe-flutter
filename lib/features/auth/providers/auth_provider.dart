@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../network/api/auth_interceptor.dart';
+import '../../../network/api_service.dart';
+import '../../../network/environment.dart';
 import '../../kasir/providers/cashier_accounts_provider.dart';
 import '../../kasir/providers/owner_auth_provider.dart';
 import '../mocks/user_mocks.dart';
@@ -39,7 +41,11 @@ class Auth extends _$Auth {
   void setAuthType(AuthType type) => state = type;
 
   Future<void> logout() async {
-    // TODO: panggil POST /v1/auth/logout sebelum clear storage.
+    try {
+      await ref.read(apiServiceProvider).logout();
+    } catch (_) {
+      // Tetap clear lokal meskipun logout API gagal.
+    }
     await AuthStorage().clear();
     ref.read(sessionProvider.notifier).clear();
     state = AuthType.UNAUTHENTICATED;
@@ -68,26 +74,32 @@ class LoginController extends _$LoginController {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      // TODO: ganti mock ini dengan POST /v1/auth/login.
-      await Future<void>.delayed(const Duration(milliseconds: 900));
+      final LoginResultModel result;
 
-      final user = _resolveMockUser(username: username, password: password);
-      if (user == null) {
-        throw Exception(
-          'Username atau password salah. '
-          'Coba owner/123456, kasir/123456, atau dapur/123456.',
+      if (mockStatus) {
+        // Mock: pakai daftar kasir lokal + password owner yang bisa diganti.
+        await Future<void>.delayed(const Duration(milliseconds: 900));
+        final user = _resolveMockUser(username: username, password: password);
+        if (user == null) {
+          throw Exception(
+            'Username atau password salah. '
+            'Coba owner/123456, kasir/123456, atau dapur/123456.',
+          );
+        }
+        result = LoginResultModel(
+          token: const AuthTokenModel(
+            accessToken: 'mock-access-token',
+            refreshToken: 'mock-refresh-token',
+            tokenType: 'Bearer',
+            expiresIn: 3600,
+          ),
+          user: user,
         );
+      } else {
+        result = await ref
+            .read(apiServiceProvider)
+            .login(username: username, password: password);
       }
-
-      final result = LoginResultModel(
-        token: const AuthTokenModel(
-          accessToken: 'mock-access-token',
-          refreshToken: 'mock-refresh-token',
-          tokenType: 'Bearer',
-          expiresIn: 3600,
-        ),
-        user: user,
-      );
 
       await AuthStorage().saveLogin(result);
       ref.read(sessionProvider.notifier).setUser(result.user);

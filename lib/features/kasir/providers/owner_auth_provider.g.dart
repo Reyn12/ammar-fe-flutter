@@ -43,7 +43,7 @@ final class OwnerAuthProvider extends $NotifierProvider<OwnerAuth, String> {
   }
 }
 
-String _$ownerAuthHash() => r'23640484d125020b5a64e113ca609c1eac6fb8c8';
+String _$ownerAuthHash() => r'd59cd66628064c17eb48633cc2b159b0ded514a0';
 
 /// Password owner untuk mock login lokal.
 

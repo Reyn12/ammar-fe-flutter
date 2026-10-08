@@ -33,7 +33,7 @@ final class KasirMenuProvider
   KasirMenu create() => KasirMenu();
 }
 
-String _$kasirMenuHash() => r'4c87d4807dbf1d87b174fc6fe55168547624a87d';
+String _$kasirMenuHash() => r'5ed421530382fe8959ccce984bd43819b2fc33f4';
 
 abstract class _$KasirMenu extends $AsyncNotifier<List<ProductModel>> {
   FutureOr<List<ProductModel>> build();

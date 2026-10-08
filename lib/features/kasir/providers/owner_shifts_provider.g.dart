@@ -36,7 +36,7 @@ final class OwnerShiftsProvider
   OwnerShifts create() => OwnerShifts();
 }
 
-String _$ownerShiftsHash() => r'9682ac62eea5e85480c342556b5d46cda462f639';
+String _$ownerShiftsHash() => r'b3494e49e414cc0e5b7bb2c724c46b5ea9a53e49';
 
 /// Manajemen shift dari sisi owner (pantau + force close).
 

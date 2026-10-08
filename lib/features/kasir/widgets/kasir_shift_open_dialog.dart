@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -11,12 +12,16 @@ import '../../../widget/primary_button.dart';
 import '../providers/kasir_shift_provider.dart';
 
 class KasirShiftOpenDialog extends ConsumerStatefulWidget {
-  const KasirShiftOpenDialog({super.key});
+  const KasirShiftOpenDialog({super.key, this.forced = false});
 
-  static Future<void> show(BuildContext context) {
+  /// Kalau true: dialog wajib diisi (tidak bisa batal / tap luar).
+  final bool forced;
+
+  static Future<void> show(BuildContext context, {bool forced = false}) {
     return showDialog<void>(
       context: context,
-      builder: (_) => const KasirShiftOpenDialog(),
+      barrierDismissible: !forced,
+      builder: (_) => KasirShiftOpenDialog(forced: forced),
     );
   }
 
@@ -57,66 +62,74 @@ class _KasirShiftOpenDialogState extends ConsumerState<KasirShiftOpenDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: AppColors.neutral10,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 460),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: FormBuilder(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 18,
-              children: [
-                Text(
-                  'Buka Shift',
-                  style: AppTypography.h8Bold.copyWith(
-                    color: AppColors.neutral100,
-                  ),
-                ),
-                Text(
-                  'Masukkan modal awal laci kas sebelum mulai menerima '
-                  'pembayaran tunai.',
-                  style: AppTypography.bodyRegularM.copyWith(
-                    color: AppColors.neutral70,
-                  ),
-                ),
-                CustomTextField(
-                  name: 'starting_cash',
-                  label: 'Modal Awal',
-                  hint: 'Contoh: 300000',
-                  keyboardType: TextInputType.number,
-                  action: TextInputAction.done,
-                  controller: startingCashController,
-                  isRequired: false,
-                  onChanged: (_) => setState(() {}),
-                ),
-                Row(
-                  spacing: 12,
-                  children: [
-                    Expanded(
-                      child: PrimaryButton(
-                        text: 'Batal',
-                        reverse: true,
-                        borderColor: AppColors.neutral40,
-                        textColor: AppColors.neutral80,
-                        height: 48,
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
+    return PopScope(
+      canPop: !widget.forced,
+      child: Dialog(
+        backgroundColor: AppColors.neutral10,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 460),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: FormBuilder(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 18,
+                children: [
+                  Text(
+                    'Buka Shift',
+                    style: AppTypography.h8Bold.copyWith(
+                      color: AppColors.neutral100,
                     ),
-                    Expanded(
-                      child: PrimaryButton(
-                        text: isSubmitting ? 'Memproses...' : 'Buka Shift',
-                        height: 48,
-                        enabled: !isSubmitting && _startingCash > 0,
-                        onPressed: _submit,
-                      ),
+                  ),
+                  Text(
+                    widget.forced
+                        ? 'Shift belum dibuka. Isi modal awal dulu sebelum '
+                              'mulai terima pesanan dan konfirmasi tunai.'
+                        : 'Masukkan modal awal laci kas sebelum mulai menerima '
+                              'pembayaran tunai.',
+                    style: AppTypography.bodyRegularM.copyWith(
+                      color: AppColors.neutral70,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  CustomTextField(
+                    name: 'starting_cash',
+                    label: 'Modal Awal',
+                    hint: 'Contoh: 300000',
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    action: TextInputAction.done,
+                    controller: startingCashController,
+                    isRequired: false,
+                    onChanged: (_) => setState(() {}),
+                  ),
+                  Row(
+                    spacing: 12,
+                    children: [
+                      if (!widget.forced)
+                        Expanded(
+                          child: PrimaryButton(
+                            text: 'Batal',
+                            reverse: true,
+                            borderColor: AppColors.neutral40,
+                            textColor: AppColors.neutral80,
+                            height: 48,
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ),
+                      Expanded(
+                        child: PrimaryButton(
+                          text: isSubmitting ? 'Memproses...' : 'Buka Shift',
+                          height: 48,
+                          enabled: !isSubmitting && _startingCash > 0,
+                          onPressed: _submit,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

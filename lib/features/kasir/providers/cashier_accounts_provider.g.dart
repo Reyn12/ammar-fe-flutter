@@ -41,7 +41,7 @@ final class CashierAccountsProvider
   }
 }
 
-String _$cashierAccountsHash() => r'e1f9be645cb064109831f3154d1dc950f8066d37';
+String _$cashierAccountsHash() => r'843ff1045038765572f948b8cf18b5fbabd03c05';
 
 abstract class _$CashierAccounts extends $Notifier<List<CashierAccountModel>> {
   List<CashierAccountModel> build();

@@ -41,7 +41,7 @@ final class TableAccountsProvider
   }
 }
 
-String _$tableAccountsHash() => r'66442408fb6b144be917ac2433f6c9d6b25338f1';
+String _$tableAccountsHash() => r'0b909830d798292ed94201f44dca1b1c97f721d9';
 
 abstract class _$TableAccounts extends $Notifier<List<TableAccountModel>> {
   List<TableAccountModel> build();

@@ -1,8 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../mocks/order_mocks.dart';
-import '../../../models/order_enums.dart';
 import '../../../models/order_model.dart';
+import '../../../network/api_service.dart';
 import '../models/incoming_order_filter.dart';
 
 part 'incoming_orders_provider.g.dart';
@@ -11,22 +10,19 @@ part 'incoming_orders_provider.g.dart';
 class IncomingOrders extends _$IncomingOrders {
   @override
   Future<List<OrderModel>> build() async {
-    // TODO: ganti mock ini dengan GET /v1/orders?status=paid|pending_cash + SSE.
-    await Future<void>.delayed(const Duration(milliseconds: 700));
-    return OrderMocks.incomingOrders;
+    // TODO: tambah SSE GET /v1/stream/orders untuk live update.
+    return ref.watch(apiServiceProvider).fetchIncomingOrders();
   }
 
   /// SKPL-F-006 — set pembayaran tunai jadi lunas.
   Future<void> confirmCashPayment(int orderId) async {
-    // TODO: ganti dengan POST /v1/orders/{id}/confirm-cash.
-    await Future<void>.delayed(const Duration(milliseconds: 500));
+    final updated = await ref
+        .read(apiServiceProvider)
+        .confirmCashPayment(orderId: orderId);
 
     state = AsyncData([
       for (final order in state.value ?? <OrderModel>[])
-        if (order.id == orderId)
-          order.copyWith(paymentStatus: PaymentStatus.paid)
-        else
-          order,
+        if (order.id == orderId) updated else order,
     ]);
   }
 }

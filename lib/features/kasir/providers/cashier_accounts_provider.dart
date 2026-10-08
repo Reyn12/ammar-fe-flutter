@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../mocks/cashier_account_mocks.dart';
+import '../../../network/api_service.dart';
 import '../models/cashier_account_model.dart';
 
 part 'cashier_accounts_provider.g.dart';
@@ -11,9 +12,7 @@ class CashierAccounts extends _$CashierAccounts {
   List<CashierAccountModel> build() => [...CashierAccountMocks.initial];
 
   Future<void> save(CashierAccountModel account) async {
-    // TODO: ganti dengan POST/PUT /v1/users (role cashier).
-    await Future<void>.delayed(const Duration(milliseconds: 400));
-
+    final api = ref.read(apiServiceProvider);
     final username = account.username.trim().toLowerCase();
     final duplicate = state.any(
       (item) =>
@@ -23,37 +22,41 @@ class CashierAccounts extends _$CashierAccounts {
       throw Exception('Username "$username" sudah dipakai.');
     }
 
+    final payload = account.copyWith(username: username);
+    final saved = account.id == 0
+        ? await api.createCashier(payload)
+        : await api.updateCashier(payload);
+
     if (account.id == 0) {
-      state = [
-        ...state,
-        account.copyWith(
-          id: DateTime.now().millisecondsSinceEpoch,
-          username: username,
-        ),
-      ];
+      state = [...state, saved];
       return;
     }
 
     state = [
       for (final item in state)
-        if (item.id == account.id)
-          account.copyWith(username: username)
-        else
-          item,
+        if (item.id == account.id) saved else item,
     ];
   }
 
   Future<void> delete(int id) async {
-    // TODO: ganti dengan DELETE /v1/users/{id}.
-    await Future<void>.delayed(const Duration(milliseconds: 400));
+    await ref.read(apiServiceProvider).deleteCashier(id);
     state = [for (final item in state) if (item.id != id) item];
   }
 
   Future<void> toggleActive(int id) async {
-    // TODO: ganti dengan PUT /v1/users/{id}.
+    CashierAccountModel? current;
+    for (final item in state) {
+      if (item.id == id) current = item;
+    }
+    if (current == null) return;
+
+    final updated = await ref
+        .read(apiServiceProvider)
+        .updateCashier(current.copyWith(isActive: !current.isActive));
+
     state = [
       for (final item in state)
-        if (item.id == id) item.copyWith(isActive: !item.isActive) else item,
+        if (item.id == id) updated else item,
     ];
   }
 }

@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../mocks/table_account_mocks.dart';
+import '../../../network/api_service.dart';
 import '../models/table_account_model.dart';
 
 part 'table_accounts_provider.g.dart';
@@ -10,15 +11,8 @@ class TableAccounts extends _$TableAccounts {
   @override
   List<TableAccountModel> build() => [...TableAccountMocks.initial];
 
-  String _newToken(String tableNumber) {
-    final stamp = DateTime.now().millisecondsSinceEpoch.toRadixString(36);
-    return 'tbl$tableNumber-$stamp';
-  }
-
   Future<void> save(TableAccountModel table) async {
-    // TODO: ganti dengan POST/PUT /v1/tables.
-    await Future<void>.delayed(const Duration(milliseconds: 400));
-
+    final api = ref.read(apiServiceProvider);
     final number = table.tableNumber.trim().padLeft(2, '0');
     final duplicate = state.any(
       (item) => item.tableNumber == number && item.id != table.id,
@@ -27,53 +21,60 @@ class TableAccounts extends _$TableAccounts {
       throw Exception('Nomor meja $number sudah ada.');
     }
 
+    final payload = table.copyWith(tableNumber: number);
+    final saved = table.id == 0
+        ? await api.createTable(payload)
+        : await api.updateTable(payload);
+
     if (table.id == 0) {
-      state = [
-        ...state,
-        table.copyWith(
-          id: DateTime.now().millisecondsSinceEpoch,
-          tableNumber: number,
-          qrToken: _newToken(number),
-        ),
-      ]..sort((a, b) => a.tableNumber.compareTo(b.tableNumber));
+      state = [...state, saved]
+        ..sort((a, b) => a.tableNumber.compareTo(b.tableNumber));
       return;
     }
 
     state = [
       for (final item in state)
-        if (item.id == table.id)
-          table.copyWith(tableNumber: number)
-        else
-          item,
+        if (item.id == table.id) saved else item,
     ]..sort((a, b) => a.tableNumber.compareTo(b.tableNumber));
   }
 
   Future<void> delete(int id) async {
-    // TODO: ganti dengan DELETE /v1/tables/{id}.
-    await Future<void>.delayed(const Duration(milliseconds: 400));
+    await ref.read(apiServiceProvider).deleteTable(id);
     state = [for (final item in state) if (item.id != id) item];
   }
 
   Future<void> toggleActive(int id) async {
-    // TODO: ganti dengan PUT /v1/tables/{id}.
+    TableAccountModel? current;
+    for (final item in state) {
+      if (item.id == id) current = item;
+    }
+    if (current == null) return;
+
+    final updated = await ref
+        .read(apiServiceProvider)
+        .updateTable(current.copyWith(isActive: !current.isActive));
+
     state = [
       for (final item in state)
-        if (item.id == id) item.copyWith(isActive: !item.isActive) else item,
+        if (item.id == id) updated else item,
     ];
   }
 
-  /// Generate ulang token QR — QR lama tidak valid lagi.
   Future<TableAccountModel> regenerateQr(int id) async {
-    // TODO: ganti dengan POST /v1/tables/{id}/regenerate-qr.
-    await Future<void>.delayed(const Duration(milliseconds: 400));
+    TableAccountModel? current;
+    for (final item in state) {
+      if (item.id == id) current = item;
+    }
+    if (current == null) {
+      throw Exception('Meja tidak ditemukan.');
+    }
 
-    late TableAccountModel updated;
+    final updated = await ref
+        .read(apiServiceProvider)
+        .regenerateTableQr(current);
     state = [
       for (final item in state)
-        if (item.id == id)
-          updated = item.copyWith(qrToken: _newToken(item.tableNumber))
-        else
-          item,
+        if (item.id == id) updated else item,
     ];
     return updated;
   }

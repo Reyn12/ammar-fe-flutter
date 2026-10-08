@@ -33,7 +33,7 @@ final class KasirTransactionsProvider
   KasirTransactions create() => KasirTransactions();
 }
 
-String _$kasirTransactionsHash() => r'aca31fe31df5e324dcdec448ceac1151b3f413be';
+String _$kasirTransactionsHash() => r'1145a9281de8b5a2c42f341ea45199261c415975';
 
 abstract class _$KasirTransactions extends $AsyncNotifier<List<OrderModel>> {
   FutureOr<List<OrderModel>> build();

@@ -36,4 +36,16 @@ class TableAccountModel {
       isActive: isActive ?? this.isActive,
     );
   }
+
+  factory TableAccountModel.fromJson(Map<String, dynamic> json) {
+    return TableAccountModel(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      branchId: (json['branch_id'] as num?)?.toInt() ?? 1,
+      tableNumber: json['table_number']?.toString() ?? '',
+      qrToken: json['qr_token']?.toString() ??
+          json['qr_code_url']?.toString() ??
+          '',
+      isActive: json['is_active'] as bool? ?? true,
+    );
+  }
 }

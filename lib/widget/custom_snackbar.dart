@@ -233,95 +233,103 @@ class _AnimatedSnackbarState extends State<_AnimatedSnackbar>
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width * 0.5;
+
     return Positioned(
       top: widget.position == SnackbarPosition.top ? 65 : null,
       bottom: widget.position == SnackbarPosition.bottom ? 70 : null,
-      left: 16,
-      right: 16,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: Material(
-            color: Colors.transparent,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: widget.borderColor.withValues(alpha: 1),
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Icon dalam kotak rounded
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: widget.iconColor,
-                      borderRadius: BorderRadius.circular(8),
+      left: 0,
+      right: 0,
+      child: Align(
+        alignment: Alignment.center,
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Material(
+              color: Colors.transparent,
+              child: SizedBox(
+                width: width,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: widget.borderColor.withValues(alpha: 1),
+                      width: 1,
                     ),
-                    child: Icon(widget.icon, color: Colors.white, size: 12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                        spreadRadius: 0,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  // Title dan Message
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          widget.title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF0A0A0A),
-                          ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Icon dalam kotak rounded
+                      Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: widget.iconColor,
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.message,
-                          style: const TextStyle(
-                            fontSize: 14,
+                        child: Icon(widget.icon, color: Colors.white, size: 12),
+                      ),
+                      const SizedBox(width: 12),
+                      // Title dan Message
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              widget.title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF0A0A0A),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              widget.message,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF757575),
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Close button
+                      GestureDetector(
+                        onTap: _animateOut,
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Icon(
+                            Icons.close,
+                            size: 18,
                             color: Color(0xFF757575),
-                            height: 1.4,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Close button
-                  GestureDetector(
-                    onTap: _animateOut,
-                    child: Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(4),
                       ),
-                      child: const Icon(
-                        Icons.close,
-                        size: 18,
-                        color: Color(0xFF757575),
-                      ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

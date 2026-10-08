@@ -1,8 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../mocks/shift_mocks.dart';
-import '../../../models/order_enums.dart';
 import '../../../models/shift_model.dart';
+import '../../../network/api_service.dart';
 
 part 'kasir_shift_provider.g.dart';
 
@@ -10,43 +9,26 @@ part 'kasir_shift_provider.g.dart';
 class KasirShift extends _$KasirShift {
   @override
   Future<ShiftModel?> build() async {
-    // TODO: ganti mock ini dengan GET /v1/shifts/active.
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-    return null;
+    return ref.watch(apiServiceProvider).fetchActiveShift();
   }
 
   /// SKPL-F-008 — buka shift dengan modal awal.
   Future<void> openShift(int startingCash) async {
-    // TODO: ganti dengan POST /v1/shifts/open.
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-
-    state = AsyncData(
-      ShiftModel(
-        id: ShiftMocks.activeShift.id,
-        userId: ShiftMocks.activeShift.userId,
-        userName: ShiftMocks.activeShift.userName,
-        startTime: DateTime.now(),
-        status: ShiftStatus.active,
-        startingCash: startingCash,
-        expectedCash: ShiftMocks.activeShift.expectedCash,
-        cashOrderCount: ShiftMocks.activeShift.cashOrderCount,
-        qrisOrderCount: ShiftMocks.activeShift.qrisOrderCount,
-      ),
-    );
+    final shift = await ref
+        .read(apiServiceProvider)
+        .openShift(startingCash: startingCash);
+    state = AsyncData(shift);
   }
 
   /// SKPL-F-008 — tutup shift dan bandingkan uang fisik vs perkiraan sistem.
   Future<void> closeShift(int actualCash) async {
-    // TODO: ganti dengan POST /v1/shifts/{id}/close.
-    await Future<void>.delayed(const Duration(milliseconds: 500));
+    final current = state.value;
+    if (current?.id == null) return;
 
-    state = AsyncData(
-      state.value?.copyWith(
-        endTime: DateTime.now(),
-        status: ShiftStatus.closed,
-        actualCash: actualCash,
-      ),
-    );
+    final closed = await ref
+        .read(apiServiceProvider)
+        .closeShift(shiftId: current!.id!, actualCash: actualCash);
+    state = AsyncData(closed);
   }
 
   void reset() => state = const AsyncData(null);

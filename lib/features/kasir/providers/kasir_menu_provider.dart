@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../mocks/product_mocks.dart';
 import '../../../models/category_model.dart';
 import '../../../models/product_model.dart';
+import '../../../network/api_service.dart';
 
 part 'kasir_menu_provider.g.dart';
 
@@ -10,54 +11,49 @@ part 'kasir_menu_provider.g.dart';
 class KasirMenu extends _$KasirMenu {
   @override
   Future<List<ProductModel>> build() async {
-    // TODO: ganti mock ini dengan GET /v1/products.
-    await Future<void>.delayed(const Duration(milliseconds: 700));
-    return ProductMocks.products;
+    return ref.watch(apiServiceProvider).fetchProducts();
   }
 
   Future<void> toggleAvailability(int productId) async {
-    // TODO: ganti dengan PUT /v1/products/{id}.
+    final current = state.value ?? <ProductModel>[];
+    ProductModel? product;
+    for (final item in current) {
+      if (item.id == productId) product = item;
+    }
+    if (product == null) return;
+
+    final updated = await ref
+        .read(apiServiceProvider)
+        .updateProductAvailability(
+          productId: productId,
+          isAvailable: !(product.isAvailable ?? false),
+        );
+
     state = AsyncData([
-      for (final product in state.value ?? <ProductModel>[])
-        if (product.id == productId)
-          product.copyWith(isAvailable: !(product.isAvailable ?? false))
-        else
-          product,
+      for (final item in current)
+        if (item.id == productId) updated else item,
     ]);
   }
 
   Future<void> saveProduct(ProductModel product) async {
-    // TODO: ganti dengan POST/PUT /v1/products.
-    await Future<void>.delayed(const Duration(milliseconds: 400));
+    final api = ref.read(apiServiceProvider);
+    final saved = product.id == null
+        ? await api.createProduct(product)
+        : await api.updateProduct(product);
 
     if (product.id == null) {
-      state = AsyncData([
-        ...?state.value,
-        ProductModel(
-          id: DateTime.now().millisecondsSinceEpoch,
-          branchId: product.branchId,
-          categoryId: product.categoryId,
-          categoryName: product.categoryName,
-          imageUrl: product.imageUrl,
-          name: product.name,
-          price: product.price,
-          isAvailable: product.isAvailable,
-          addonGroups: product.addonGroups,
-        ),
-      ]);
+      state = AsyncData([...?state.value, saved]);
       return;
     }
 
     state = AsyncData([
       for (final item in state.value ?? <ProductModel>[])
-        if (item.id == product.id) product else item,
+        if (item.id == product.id) saved else item,
     ]);
   }
 
   Future<void> deleteProduct(int productId) async {
-    // TODO: ganti dengan DELETE /v1/products/{id}.
-    await Future<void>.delayed(const Duration(milliseconds: 400));
-
+    await ref.read(apiServiceProvider).deleteProduct(productId);
     state = AsyncData([
       for (final product in state.value ?? <ProductModel>[])
         if (product.id != productId) product,

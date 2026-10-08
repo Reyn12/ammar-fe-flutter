@@ -30,4 +30,14 @@ class CashierAccountModel {
       isActive: isActive ?? this.isActive,
     );
   }
+
+  factory CashierAccountModel.fromJson(Map<String, dynamic> json) {
+    return CashierAccountModel(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      username: json['username']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      password: json['password']?.toString() ?? '',
+      isActive: json['is_active'] as bool? ?? true,
+    );
+  }
 }

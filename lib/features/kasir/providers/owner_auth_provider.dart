@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../network/api_service.dart';
 import '../../auth/mocks/user_mocks.dart';
 
 part 'owner_auth_provider.g.dart';
@@ -14,15 +15,19 @@ class OwnerAuth extends _$OwnerAuth {
     required String currentPassword,
     required String newPassword,
   }) async {
-    // TODO: ganti dengan POST /v1/auth/change-password.
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-
     if (currentPassword != state) {
       throw Exception('Password lama tidak sesuai.');
     }
     if (newPassword == currentPassword) {
       throw Exception('Password baru harus berbeda dari password lama.');
     }
+
+    await ref
+        .read(apiServiceProvider)
+        .changePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        );
 
     state = newPassword;
   }
