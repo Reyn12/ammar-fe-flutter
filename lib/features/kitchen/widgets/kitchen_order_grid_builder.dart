@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../models/order_model.dart';
 import '../../../widget/empty_state.dart';
-import '../providers/kitchen_board_provider.dart';
+import '../providers/kitchen_action_provider.dart';
 import 'kitchen_order_card_item.dart';
 
 class KitchenOrderGridBuilder extends ConsumerWidget {
@@ -22,24 +22,32 @@ class KitchenOrderGridBuilder extends ConsumerWidget {
       );
     }
 
+    final isBusy = ref.watch(kitchenActionControllerProvider).isLoading;
+
     return GridView.builder(
       padding: EdgeInsets.zero,
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 420,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
-        childAspectRatio: 1.15,
+        // Card lebih tinggi biar list item + scrollbar kebaca.
+        childAspectRatio: 0.9,
       ),
       itemCount: orders.length,
       itemBuilder: (context, index) {
+        final order = orders[index];
         return KitchenOrderCardItem(
-          order: orders[index],
-          onProcess: (itemIds) => ref
-              .read(kitchenOrdersProvider.notifier)
-              .processSelectedItems(orders[index].id ?? 0, itemIds),
-          onServe: (itemIds) => ref
-              .read(kitchenOrdersProvider.notifier)
-              .serveSelectedItems(orders[index].id ?? 0, itemIds),
+          order: order,
+          onProcess: isBusy
+              ? (_) {}
+              : (itemIds) => ref
+                    .read(kitchenActionControllerProvider.notifier)
+                    .processSelectedItems(order.id ?? 0, itemIds),
+          onServe: isBusy
+              ? (_) {}
+              : (itemIds) => ref
+                    .read(kitchenActionControllerProvider.notifier)
+                    .serveSelectedItems(order.id ?? 0, itemIds),
         );
       },
     );

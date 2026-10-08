@@ -19,17 +19,17 @@ class KitchenOrderItemRow extends StatelessWidget {
   final bool isSelected;
   final VoidCallback? onTap;
 
-  bool get _isReady => item.status == OrderItemStatus.ready;
+  bool get isReady => item.status == OrderItemStatus.ready;
 
   /// Pending (proses) & cooking (sajikan) bisa di-select; ready tidak.
-  bool get _canSelect =>
+  bool get canSelect =>
       item.status == OrderItemStatus.pending ||
       item.status == OrderItemStatus.cooking;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: _canSelect ? onTap : null,
+      onTap: canSelect ? onTap : null,
       borderRadius: BorderRadius.circular(10),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
@@ -39,17 +39,17 @@ class KitchenOrderItemRow extends StatelessWidget {
           children: [
             // TODO: ganti Material icon ini dengan asset ikon final.
             Icon(
-              _isReady
+              isReady
                   ? Icons.check_circle_rounded
                   : isSelected
-                  ? Icons.radio_button_checked_rounded
-                  : Icons.radio_button_unchecked_rounded,
+                      ? Icons.radio_button_checked_rounded
+                      : Icons.radio_button_unchecked_rounded,
               size: 20,
-              color: _isReady
+              color: isReady
                   ? orderItemStatusColor(item.status).foreground
                   : isSelected
-                  ? AppColors.orangeMain
-                  : AppColors.neutral50,
+                      ? AppColors.orangeMain
+                      : AppColors.neutral50,
             ),
             Expanded(
               child: Column(
@@ -59,11 +59,11 @@ class KitchenOrderItemRow extends StatelessWidget {
                   Text(
                     '${item.qty ?? 0}× ${item.productName ?? '-'}',
                     style: AppTypography.bodySemiboldM.copyWith(
-                      color: _isReady
+                      color: isReady
                           ? AppColors.neutral60
                           : AppColors.neutral100,
                       height: 1.3,
-                      decoration: _isReady ? TextDecoration.lineThrough : null,
+                      decoration: isReady ? TextDecoration.lineThrough : null,
                     ),
                   ),
                   if ((item.addons ?? []).isNotEmpty)

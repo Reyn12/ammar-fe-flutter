@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
 import '../models/kitchen_batch_model.dart';
-import '../providers/kitchen_batch_provider.dart';
+import '../providers/kitchen_action_provider.dart';
 import 'kitchen_batch_item.dart';
 
 class KitchenBatchGroupBuilder extends ConsumerWidget {
@@ -14,6 +14,8 @@ class KitchenBatchGroupBuilder extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isBusy = ref.watch(kitchenActionControllerProvider).isLoading;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 18,
@@ -31,20 +33,24 @@ class KitchenBatchGroupBuilder extends ConsumerWidget {
             ),
             ...List.generate(
               groupedBatches.values.elementAt(groupIndex).length,
-              (index) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: KitchenBatchItem(
-                  batch: groupedBatches.values.elementAt(groupIndex)[index],
-                  onProcessAll: () => ref
-                      .read(kitchenBatchesProvider.notifier)
-                      .processAll(
-                        groupedBatches.values
-                                .elementAt(groupIndex)[index]
-                                .id ??
-                            0,
-                      ),
-                ),
-              ),
+              (index) {
+                final batch =
+                    groupedBatches.values.elementAt(groupIndex)[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: KitchenBatchItem(
+                    batch: batch,
+                    onProcessAll: isBusy
+                        ? () {}
+                        : () => ref
+                              .read(kitchenActionControllerProvider.notifier)
+                              .processBatch(
+                                batch.id ?? 0,
+                                batch.productId ?? 0,
+                              ),
+                  ),
+                );
+              },
             ),
           ],
         );

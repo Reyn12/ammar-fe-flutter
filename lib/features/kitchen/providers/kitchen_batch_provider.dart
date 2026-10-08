@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../mocks/kitchen_batch_mocks.dart';
 import '../../../models/order_enums.dart';
+import '../../../network/api_service.dart';
 import '../models/kitchen_batch_model.dart';
 import 'kitchen_board_provider.dart';
 
@@ -11,14 +11,11 @@ part 'kitchen_batch_provider.g.dart';
 class KitchenBatches extends _$KitchenBatches {
   @override
   Future<List<KitchenBatchModel>> build() async {
-    // TODO: ganti mock ini dengan GET /v1/kitchen/batches.
-    await Future<void>.delayed(const Duration(milliseconds: 700));
-    return KitchenBatchMocks.batches;
+    return ref.watch(apiServiceProvider).fetchKitchenBatches();
   }
 
-  /// SKPL-F-010 — satu aksi memasak untuk banyak nota sekaligus.
-  Future<void> processAll(int batchId) async {
-    // TODO: ganti dengan POST /v1/kitchen/batches/{id}/process.
+  /// Update lokal setelah POST process batch sukses.
+  Future<void> applyProcessAll(int batchId, int productId) async {
     state = AsyncData([
       for (final batch in state.value ?? <KitchenBatchModel>[])
         if (batch.id == batchId)
@@ -27,13 +24,7 @@ class KitchenBatches extends _$KitchenBatches {
           batch,
     ]);
 
-    for (final batch in state.value ?? <KitchenBatchModel>[]) {
-      if (batch.id == batchId) {
-        await ref
-            .read(kitchenOrdersProvider.notifier)
-            .markProductCooking(batch.productId ?? 0);
-      }
-    }
+    ref.read(kitchenOrdersProvider.notifier).applyMarkProductCooking(productId);
   }
 }
 

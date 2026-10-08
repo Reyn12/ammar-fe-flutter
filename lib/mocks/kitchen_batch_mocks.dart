@@ -49,9 +49,10 @@ class KitchenBatchMocks {
       categoryName: 'Makanan',
       productId: 4,
       productName: 'Lele Bakar Sambal Ijo',
-      totalQty: 2,
+      totalQty: 3,
       status: OrderItemStatus.cooking,
       tables: [
+        KitchenBatchTableModel(orderId: 241, orderCode: '#AMR241', tableLabel: 'Meja 12', qty: 1),
         KitchenBatchTableModel(orderId: 242, orderCode: '#AMR242', tableLabel: 'Meja 04', qty: 1),
         KitchenBatchTableModel(orderId: 247, orderCode: '#AMR247', tableLabel: 'Meja 09', qty: 1),
       ],
@@ -61,10 +62,22 @@ class KitchenBatchMocks {
       categoryName: 'Cemilan',
       productId: 7,
       productName: 'Tahu Tempe Goreng',
+      totalQty: 2,
+      status: OrderItemStatus.pending,
+      tables: [
+        KitchenBatchTableModel(orderId: 241, orderCode: '#AMR241', tableLabel: 'Meja 12', qty: 1),
+        KitchenBatchTableModel(orderId: 243, orderCode: '#AMR243', tableLabel: 'Takeaway', qty: 1),
+      ],
+    ),
+    KitchenBatchModel(
+      id: 9,
+      categoryName: 'Minuman',
+      productId: 11,
+      productName: 'Es Jeruk Peras',
       totalQty: 1,
       status: OrderItemStatus.pending,
       tables: [
-        KitchenBatchTableModel(orderId: 243, orderCode: '#AMR243', tableLabel: 'Takeaway', qty: 1),
+        KitchenBatchTableModel(orderId: 241, orderCode: '#AMR241', tableLabel: 'Meja 12', qty: 1),
       ],
     ),
     KitchenBatchModel(

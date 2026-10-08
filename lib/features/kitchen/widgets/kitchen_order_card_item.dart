@@ -28,14 +28,15 @@ class KitchenOrderCardItem extends StatefulWidget {
 }
 
 class _KitchenOrderCardItemState extends State<KitchenOrderCardItem> {
-  final Set<int> _selectedItemIds = {};
+  final Set<int> selectedItemIds = {};
+  final ScrollController itemsScrollController = ScrollController();
 
   OrderModel get order => widget.order;
 
-  List<OrderItemModel> get _items => order.items ?? [];
+  List<OrderItemModel> get items => order.items ?? [];
 
   /// Warna timer makin mendesak seiring lamanya pesanan menunggu.
-  Color get _timerColor {
+  Color get timerColor {
     if (order.createdAt == null) return AppColors.neutral70;
     if (DateTime.now().difference(order.createdAt!).inMinutes >= 10) {
       return AppColors.dangerMain;
@@ -46,17 +47,17 @@ class _KitchenOrderCardItemState extends State<KitchenOrderCardItem> {
     return AppColors.successMain;
   }
 
-  OrderItemModel? _itemById(int id) {
-    for (final item in _items) {
+  OrderItemModel? itemById(int id) {
+    for (final item in items) {
       if (item.id == id) return item;
     }
     return null;
   }
 
   /// Status item yang lagi dipilih (pending = proses, cooking = sajikan).
-  OrderItemStatus? get _selectionStatus {
-    for (final id in _selectedItemIds) {
-      final status = _itemById(id)?.status;
+  OrderItemStatus? get selectionStatus {
+    for (final id in selectedItemIds) {
+      final status = itemById(id)?.status;
       if (status != null) return status;
     }
     return null;
@@ -66,7 +67,7 @@ class _KitchenOrderCardItemState extends State<KitchenOrderCardItem> {
   void didUpdateWidget(covariant KitchenOrderCardItem oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Buang selection yang udah ready / hilang biar state tetap rapi.
-    final validIds = _items
+    final validIds = items
         .where(
           (item) =>
               item.status == OrderItemStatus.pending ||
@@ -75,39 +76,45 @@ class _KitchenOrderCardItemState extends State<KitchenOrderCardItem> {
         .map((item) => item.id ?? 0)
         .where((id) => id != 0)
         .toSet();
-    _selectedItemIds.removeWhere((id) => !validIds.contains(id));
+    selectedItemIds.removeWhere((id) => !validIds.contains(id));
   }
 
-  void _toggleItem(OrderItemModel item) {
+  void toggleItem(OrderItemModel item) {
     final itemId = item.id ?? 0;
     if (itemId == 0) return;
     if (item.status == OrderItemStatus.ready) return;
 
     setState(() {
-      if (_selectedItemIds.contains(itemId)) {
-        _selectedItemIds.remove(itemId);
+      if (selectedItemIds.contains(itemId)) {
+        selectedItemIds.remove(itemId);
         return;
       }
 
       // Satu aksi per klik button: jangan campur pending + cooking.
-      final currentStatus = _selectionStatus;
+      final currentStatus = selectionStatus;
       if (currentStatus != null && currentStatus != item.status) {
-        _selectedItemIds.clear();
+        selectedItemIds.clear();
       }
-      _selectedItemIds.add(itemId);
+      selectedItemIds.add(itemId);
     });
   }
 
-  void _runAction(void Function(List<int> itemIds) action) {
-    final ids = _selectedItemIds.toList();
-    setState(_selectedItemIds.clear);
+  void runAction(void Function(List<int> itemIds) action) {
+    final ids = selectedItemIds.toList();
+    setState(selectedItemIds.clear);
     action(ids);
   }
 
   @override
+  void dispose() {
+    itemsScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final selectedCount = _selectedItemIds.length;
-    final selectionStatus = _selectionStatus;
+    final selectedCount = selectedItemIds.length;
+    final currentSelectionStatus = selectionStatus;
 
     return SurfaceCard(
       padding: const EdgeInsets.all(16),
@@ -148,24 +155,29 @@ class _KitchenOrderCardItemState extends State<KitchenOrderCardItem> {
                     : formatElapsed(order.createdAt!),
                 // TODO: ganti Material icon ini dengan asset ikon final.
                 icon: Icons.timer_outlined,
-                foregroundColor: _timerColor,
-                backgroundColor: _timerColor.withValues(alpha: 0.12),
+                foregroundColor: timerColor,
+                backgroundColor: timerColor.withValues(alpha: 0.12),
               ),
             ],
           ),
           const Divider(height: 1, color: AppColors.neutral30),
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: _items.length,
-              itemBuilder: (context, index) {
-                final item = _items[index];
-                return KitchenOrderItemRow(
-                  item: item,
-                  isSelected: _selectedItemIds.contains(item.id ?? 0),
-                  onTap: () => _toggleItem(item),
-                );
-              },
+            child: Scrollbar(
+              controller: itemsScrollController,
+              thumbVisibility: true,
+              child: ListView.builder(
+                controller: itemsScrollController,
+                padding: EdgeInsets.zero,
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return KitchenOrderItemRow(
+                    item: item,
+                    isSelected: selectedItemIds.contains(item.id ?? 0),
+                    onTap: () => toggleItem(item),
+                  );
+                },
+              ),
             ),
           ),
           const Divider(height: 1, color: AppColors.neutral30),
@@ -178,21 +190,21 @@ class _KitchenOrderCardItemState extends State<KitchenOrderCardItem> {
               enabled: false,
               onPressed: () {},
             )
-          else if (selectionStatus == OrderItemStatus.cooking)
+          else if (currentSelectionStatus == OrderItemStatus.cooking)
             PrimaryButton(
               text: 'Sajikan Makanan · $selectedCount dipilih',
               color: AppColors.successMain,
               height: 46,
               radiusValue: 10,
-              onPressed: () => _runAction(widget.onServe),
+              onPressed: () => runAction(widget.onServe),
             )
-          else if (selectionStatus == OrderItemStatus.pending)
+          else if (currentSelectionStatus == OrderItemStatus.pending)
             PrimaryButton(
               text: 'Proses Makanan · $selectedCount dipilih',
               color: AppColors.orangeMain,
               height: 46,
               radiusValue: 10,
-              onPressed: () => _runAction(widget.onProcess),
+              onPressed: () => runAction(widget.onProcess),
             )
           else
             PrimaryButton(

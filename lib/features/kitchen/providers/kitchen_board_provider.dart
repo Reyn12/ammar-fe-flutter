@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../mocks/order_mocks.dart';
 import '../../../models/order_enums.dart';
 import '../../../models/order_model.dart';
+import '../../../network/api_service.dart';
 
 part 'kitchen_board_provider.g.dart';
 
@@ -13,14 +13,11 @@ const int kitchenOrdersPerPage = 6;
 class KitchenOrders extends _$KitchenOrders {
   @override
   Future<List<OrderModel>> build() async {
-    // TODO: ganti mock ini dengan GET /v1/kitchen/orders + SSE.
-    await Future<void>.delayed(const Duration(milliseconds: 700));
-    return OrderMocks.kitchenOrders;
+    return ref.watch(apiServiceProvider).fetchKitchenOrders();
   }
 
-  /// SKPL-F-011 — item terpilih jadi `cooking` (baru setelah user klik button).
-  Future<void> processSelectedItems(int orderId, List<int> itemIds) async {
-    // TODO: ganti dengan PATCH /v1/order-items/{id}/status.
+  /// Update lokal setelah API process item terpilih sukses.
+  void applyProcessSelected(int orderId, List<int> itemIds) {
     if (itemIds.isEmpty) return;
     final selected = itemIds.toSet();
     state = AsyncData([
@@ -28,7 +25,7 @@ class KitchenOrders extends _$KitchenOrders {
         if (order.id != orderId)
           order
         else
-          _syncOrderStatus(
+          syncOrderStatus(
             order.copyWith(
               items: [
                 for (final item in order.items ?? [])
@@ -43,9 +40,8 @@ class KitchenOrders extends _$KitchenOrders {
     ]);
   }
 
-  /// SKPL-F-011 — item terpilih jadi `ready` (baru setelah user klik button).
-  Future<void> serveSelectedItems(int orderId, List<int> itemIds) async {
-    // TODO: ganti dengan PATCH /v1/order-items/{id}/status.
+  /// Update lokal setelah API serve item terpilih sukses.
+  void applyServeSelected(int orderId, List<int> itemIds) {
     if (itemIds.isEmpty) return;
     final selected = itemIds.toSet();
     state = AsyncData([
@@ -53,7 +49,7 @@ class KitchenOrders extends _$KitchenOrders {
         if (order.id != orderId)
           order
         else
-          _syncOrderStatus(
+          syncOrderStatus(
             order.copyWith(
               items: [
                 for (final item in order.items ?? [])
@@ -68,11 +64,11 @@ class KitchenOrders extends _$KitchenOrders {
     ]);
   }
 
-  /// Dipakai aksi "Process All" pada batch: semua item menu tsb jadi `cooking`.
-  Future<void> markProductCooking(int productId) async {
+  /// Update lokal setelah Process All batch sukses.
+  void applyMarkProductCooking(int productId) {
     state = AsyncData([
       for (final order in state.value ?? <OrderModel>[])
-        _syncOrderStatus(
+        syncOrderStatus(
           order.copyWith(
             items: [
               for (final item in order.items ?? [])
@@ -88,7 +84,7 @@ class KitchenOrders extends _$KitchenOrders {
   }
 
   /// Status order mengikuti status item-nya.
-  OrderModel _syncOrderStatus(OrderModel order) {
+  OrderModel syncOrderStatus(OrderModel order) {
     if ((order.items ?? []).isEmpty) return order;
 
     if ((order.items ?? []).every(

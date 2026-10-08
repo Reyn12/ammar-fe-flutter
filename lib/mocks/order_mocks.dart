@@ -24,11 +24,11 @@ class OrderMocks {
       status: OrderStatus.cooking,
       paymentMethod: PaymentMethod.qris,
       paymentStatus: PaymentStatus.paid,
-      totalAmount: 89100,
-      taxAmount: 8100,
+      totalAmount: 147400,
+      taxAmount: 13400,
       createdAt: _minutesAgo(3),
       items: [
-        // Campur 3 status biar bisa test select proses/sajikan di 1 kartu.
+        // 2 cooking + 2 pending + 1 ready buat test select di 1 kartu.
         OrderItemModel(
           id: 1,
           orderId: 241,
@@ -40,19 +40,30 @@ class OrderMocks {
           status: OrderItemStatus.cooking,
           notes: 'Sayapnya jangan gosong ya',
           addons: [
-            OrderItemAddonModel(id: 1, addonId: 2, name: 'Pedas Sedang', price: 0),
-            OrderItemAddonModel(id: 2, addonId: 4, name: 'Nasi Putih', price: 6000),
+            OrderItemAddonModel(
+              id: 1,
+              addonId: 2,
+              name: 'Pedas Sedang',
+              price: 0,
+            ),
+            OrderItemAddonModel(
+              id: 2,
+              addonId: 4,
+              name: 'Nasi Putih',
+              price: 6000,
+            ),
           ],
         ),
         OrderItemModel(
-          id: 2,
+          id: 20,
           orderId: 241,
-          productId: 10,
-          productName: 'Es Teh Manis',
-          categoryName: 'Minuman',
-          qty: 2,
-          price: 6000,
-          status: OrderItemStatus.ready,
+          productId: 4,
+          productName: 'Lele Bakar Sambal Ijo',
+          categoryName: 'Makanan',
+          qty: 1,
+          price: 24000,
+          status: OrderItemStatus.cooking,
+          notes: 'Sambal ekstra',
         ),
         OrderItemModel(
           id: 18,
@@ -63,6 +74,26 @@ class OrderMocks {
           qty: 1,
           price: 9000,
           status: OrderItemStatus.pending,
+        ),
+        OrderItemModel(
+          id: 21,
+          orderId: 241,
+          productId: 7,
+          productName: 'Tahu Tempe Goreng',
+          categoryName: 'Cemilan',
+          qty: 1,
+          price: 10000,
+          status: OrderItemStatus.pending,
+        ),
+        OrderItemModel(
+          id: 2,
+          orderId: 241,
+          productId: 10,
+          productName: 'Es Teh Manis',
+          categoryName: 'Minuman',
+          qty: 2,
+          price: 6000,
+          status: OrderItemStatus.ready,
         ),
       ],
     ),
@@ -92,7 +123,12 @@ class OrderMocks {
           price: 26000,
           status: OrderItemStatus.pending,
           addons: [
-            OrderItemAddonModel(id: 3, addonId: 5, name: 'Lalapan', price: 5000),
+            OrderItemAddonModel(
+              id: 3,
+              addonId: 5,
+              name: 'Lalapan',
+              price: 5000,
+            ),
           ],
         ),
         OrderItemModel(
@@ -190,7 +226,12 @@ class OrderMocks {
           price: 28000,
           status: OrderItemStatus.ready,
           addons: [
-            OrderItemAddonModel(id: 4, addonId: 3, name: 'Pedas Banget', price: 2000),
+            OrderItemAddonModel(
+              id: 4,
+              addonId: 3,
+              name: 'Pedas Banget',
+              price: 2000,
+            ),
           ],
         ),
         OrderItemModel(

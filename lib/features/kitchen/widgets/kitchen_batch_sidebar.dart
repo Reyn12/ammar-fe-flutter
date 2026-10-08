@@ -49,6 +49,9 @@ class KitchenBatchSidebar extends ConsumerWidget {
             child: ref
                 .watch(groupedKitchenBatchesProvider)
                 .when(
+                  // Refresh/update: tetap tampil data lama, jangan shimmer lagi.
+                  skipLoadingOnReload: true,
+                  skipLoadingOnRefresh: true,
                   loading: () => const KitchenBatchSidebarShimmer(),
                   error: (_, _) => const Center(
                     child: EmptyState(

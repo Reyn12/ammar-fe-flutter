@@ -33,7 +33,7 @@ final class KitchenBatchesProvider
   KitchenBatches create() => KitchenBatches();
 }
 
-String _$kitchenBatchesHash() => r'dea62a073cf92b0a14c1a26666e457743feb7f9b';
+String _$kitchenBatchesHash() => r'54e370cd333920dadddcf07015cb29eefc2584d1';
 
 abstract class _$KitchenBatches
     extends $AsyncNotifier<List<KitchenBatchModel>> {
