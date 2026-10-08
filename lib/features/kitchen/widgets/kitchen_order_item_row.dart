@@ -42,14 +42,14 @@ class KitchenOrderItemRow extends StatelessWidget {
               isReady
                   ? Icons.check_circle_rounded
                   : isSelected
-                      ? Icons.radio_button_checked_rounded
-                      : Icons.radio_button_unchecked_rounded,
+                  ? Icons.radio_button_checked_rounded
+                  : Icons.radio_button_unchecked_rounded,
               size: 20,
               color: isReady
                   ? orderItemStatusColor(item.status).foreground
                   : isSelected
-                      ? AppColors.orangeMain
-                      : AppColors.neutral50,
+                  ? AppColors.orangeMain
+                  : AppColors.neutral50,
             ),
             Expanded(
               child: Column(
@@ -91,6 +91,7 @@ class KitchenOrderItemRow extends StatelessWidget {
               backgroundColor: orderItemStatusColor(item.status).background,
               dense: true,
             ),
+            const SizedBox(width: 8),
           ],
         ),
       ),

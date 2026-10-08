@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../models/order_model.dart';
 import '../../../widget/empty_state.dart';
 import '../providers/kitchen_action_provider.dart';
+import '../providers/kitchen_incoming_provider.dart';
 import 'kitchen_order_card_item.dart';
 
 class KitchenOrderGridBuilder extends ConsumerWidget {
@@ -23,6 +24,9 @@ class KitchenOrderGridBuilder extends ConsumerWidget {
     }
 
     final isBusy = ref.watch(kitchenActionControllerProvider).isLoading;
+    final newOrderIds = ref.watch(
+      kitchenIncomingAlertProvider.select((state) => state.newOrderIds),
+    );
 
     return GridView.builder(
       padding: EdgeInsets.zero,
@@ -36,18 +40,22 @@ class KitchenOrderGridBuilder extends ConsumerWidget {
       itemCount: orders.length,
       itemBuilder: (context, index) {
         final order = orders[index];
+        final orderId = order.id ?? 0;
         return KitchenOrderCardItem(
           order: order,
+          isNew: newOrderIds.contains(orderId),
+          onSeen: () =>
+              ref.read(kitchenIncomingAlertProvider.notifier).clearNew(orderId),
           onProcess: isBusy
               ? (_) {}
               : (itemIds) => ref
                     .read(kitchenActionControllerProvider.notifier)
-                    .processSelectedItems(order.id ?? 0, itemIds),
+                    .processSelectedItems(orderId, itemIds),
           onServe: isBusy
               ? (_) {}
               : (itemIds) => ref
                     .read(kitchenActionControllerProvider.notifier)
-                    .serveSelectedItems(order.id ?? 0, itemIds),
+                    .serveSelectedItems(orderId, itemIds),
         );
       },
     );

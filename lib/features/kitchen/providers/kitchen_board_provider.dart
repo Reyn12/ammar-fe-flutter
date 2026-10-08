@@ -16,6 +16,11 @@ class KitchenOrders extends _$KitchenOrders {
     return ref.watch(apiServiceProvider).fetchKitchenOrders();
   }
 
+  /// Sisipkan pesanan baru di depan list (simulasi SSE / event paid).
+  void insertIncomingOrder(OrderModel order) {
+    state = AsyncData([order, ...state.value ?? <OrderModel>[]]);
+  }
+
   /// Update lokal setelah API process item terpilih sukses.
   void applyProcessSelected(int orderId, List<int> itemIds) {
     if (itemIds.isEmpty) return;

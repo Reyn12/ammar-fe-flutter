@@ -33,7 +33,7 @@ final class KitchenOrdersProvider
   KitchenOrders create() => KitchenOrders();
 }
 
-String _$kitchenOrdersHash() => r'348bafc1b7da98aeaee12a321d197abd24cea547';
+String _$kitchenOrdersHash() => r'527c990e9cf1f1a8dc2f512d13228450230c8694';
 
 abstract class _$KitchenOrders extends $AsyncNotifier<List<OrderModel>> {
   FutureOr<List<OrderModel>> build();
