@@ -114,18 +114,42 @@ class KitchenPageIndex extends _$KitchenPageIndex {
   void select(int page) => state = page;
 }
 
+/// Order yang masih dikerjakan di board (belum semua item disajikan).
+List<OrderModel> activeKitchenOrders(List<OrderModel> orders) {
+  return [
+    for (final order in orders)
+      if (order.status != OrderStatus.ready &&
+          order.status != OrderStatus.completed)
+        order,
+  ];
+}
+
 @riverpod
 Future<int> kitchenTotalPages(Ref ref) async {
-  return ((await ref.watch(kitchenOrdersProvider.future)).length /
-          kitchenOrdersPerPage)
-      .ceil()
-      .clamp(1, 999);
+  final active = activeKitchenOrders(
+    await ref.watch(kitchenOrdersProvider.future),
+  );
+  return (active.length / kitchenOrdersPerPage).ceil().clamp(1, 999);
 }
 
 @riverpod
 Future<List<OrderModel>> pagedKitchenOrders(Ref ref) async {
-  return (await ref.watch(kitchenOrdersProvider.future))
-      .skip(ref.watch(kitchenPageIndexProvider) * kitchenOrdersPerPage)
+  final active = activeKitchenOrders(
+    await ref.watch(kitchenOrdersProvider.future),
+  );
+  final totalPages = (active.length / kitchenOrdersPerPage).ceil().clamp(1, 999);
+  final pageIndex = ref.watch(kitchenPageIndexProvider).clamp(0, totalPages - 1);
+
+  // Kalau order hilang (full ready), page index bisa kepalang — tarik ke halaman valid.
+  if (pageIndex != ref.watch(kitchenPageIndexProvider)) {
+    Future.microtask(() {
+      if (!ref.mounted) return;
+      ref.read(kitchenPageIndexProvider.notifier).select(pageIndex);
+    });
+  }
+
+  return active
+      .skip(pageIndex * kitchenOrdersPerPage)
       .take(kitchenOrdersPerPage)
       .toList();
 }

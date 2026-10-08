@@ -14,21 +14,18 @@ class KitchenBatches extends _$KitchenBatches {
     return ref.watch(apiServiceProvider).fetchKitchenBatches();
   }
 
-  /// Update lokal setelah POST process batch sukses.
+  /// Update lokal setelah POST process batch sukses — kartu batch dihapus dari antrean.
   Future<void> applyProcessAll(int batchId, int productId) async {
     state = AsyncData([
       for (final batch in state.value ?? <KitchenBatchModel>[])
-        if (batch.id == batchId)
-          batch.copyWith(status: OrderItemStatus.cooking)
-        else
-          batch,
+        if (batch.id != batchId) batch,
     ]);
 
     ref.read(kitchenOrdersProvider.notifier).applyMarkProductCooking(productId);
   }
 }
 
-/// Batch dikelompokkan per kategori untuk sidebar dapur.
+/// Batch aktif di sidebar: cuma yang masih pending (belum Process All).
 @riverpod
 Future<Map<String, List<KitchenBatchModel>>> groupedKitchenBatches(
   Ref ref,
@@ -36,6 +33,7 @@ Future<Map<String, List<KitchenBatchModel>>> groupedKitchenBatches(
   final grouped = <String, List<KitchenBatchModel>>{};
 
   for (final batch in await ref.watch(kitchenBatchesProvider.future)) {
+    if (batch.status != OrderItemStatus.pending) continue;
     grouped.putIfAbsent(batch.categoryName ?? 'Lainnya', () => []).add(batch);
   }
 
