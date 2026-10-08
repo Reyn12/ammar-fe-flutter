@@ -10,6 +10,7 @@ import '../../../widget/custom_text_field.dart';
 import '../../../widget/primary_button.dart';
 import '../providers/kasir_menu_provider.dart';
 import 'kasir_menu_category_item.dart';
+import 'kasir_menu_photo_picker.dart';
 
 class KasirMenuFormDialog extends ConsumerStatefulWidget {
   const KasirMenuFormDialog({super.key, this.product});
@@ -35,6 +36,7 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
   late final TextEditingController priceController;
   late int? selectedCategoryId;
   late bool isAvailable;
+  String? imagePath;
   bool isSubmitting = false;
 
   bool get _isEdit => widget.product?.id != null;
@@ -48,6 +50,7 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
     );
     selectedCategoryId = widget.product?.categoryId;
     isAvailable = widget.product?.isAvailable ?? true;
+    imagePath = widget.product?.imageUrl;
   }
 
   @override
@@ -69,7 +72,9 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
             branchId: widget.product?.branchId ?? 1,
             categoryId: selectedCategoryId,
             categoryName: _categoryNameOf(selectedCategoryId),
-            imageUrl: widget.product?.imageUrl,
+            // TODO: upload foto ke backend, simpan URL hasil upload — sekarang
+            // masih path lokal dari kamera/galeri (mock UI).
+            imageUrl: imagePath,
             name: nameController.text.trim(),
             price:
                 int.tryParse(
@@ -119,6 +124,10 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
                   style: AppTypography.h8Bold.copyWith(
                     color: AppColors.neutral100,
                   ),
+                ),
+                KasirMenuPhotoPicker(
+                  imagePath: imagePath,
+                  onChanged: (path) => setState(() => imagePath = path),
                 ),
                 CustomTextField(
                   name: 'name',
@@ -194,21 +203,6 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
                       onChanged: (value) => setState(() => isAvailable = value),
                     ),
                   ],
-                ),
-                Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: AppColors.primarySurface,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    'Pengelolaan foto menu dan addon group menyusul setelah '
-                    'endpoint produk siap.',
-                    style: AppTypography.bodyRegularS.copyWith(
-                      color: AppColors.primaryPressed,
-                      height: 1.35,
-                    ),
-                  ),
                 ),
                 Row(
                   spacing: 12,

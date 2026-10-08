@@ -4,6 +4,7 @@ import '../../../helper/format_currency_helper.dart';
 import '../../../models/product_model.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
+import '../../../widget/image_load.dart';
 import '../../../widget/surface_card.dart';
 
 class KasirMenuCardItem extends StatelessWidget {
@@ -29,17 +30,25 @@ class KasirMenuCardItem extends StatelessWidget {
         spacing: 10,
         children: [
           Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: ColoredBox(
                 color: AppColors.neutral20,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              // TODO: tampilkan product.image_url kalau asset/foto menu sudah ada.
-              child: const Icon(
-                Icons.ramen_dining_rounded,
-                size: 42,
-                color: AppColors.neutral50,
+                child: (product.imageUrl ?? '').isEmpty
+                    // TODO: ganti Material icon ini dengan asset ilustrasi final.
+                    ? const Center(
+                        child: Icon(
+                          Icons.ramen_dining_rounded,
+                          size: 42,
+                          color: AppColors.neutral50,
+                        ),
+                      )
+                    : ImageLoad(
+                        src: product.imageUrl,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
           ),
