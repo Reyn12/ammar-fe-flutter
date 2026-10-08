@@ -34,15 +34,12 @@ class KitchenOrderGridBuilder extends ConsumerWidget {
       itemBuilder: (context, index) {
         return KitchenOrderCardItem(
           order: orders[index],
-          onProcess: () => ref
+          onProcess: (itemIds) => ref
               .read(kitchenOrdersProvider.notifier)
-              .processOrder(orders[index].id ?? 0),
-          onServe: () => ref
+              .processSelectedItems(orders[index].id ?? 0, itemIds),
+          onServe: (itemIds) => ref
               .read(kitchenOrdersProvider.notifier)
-              .serveOrder(orders[index].id ?? 0),
-          onItemTap: (itemId) => ref
-              .read(kitchenOrdersProvider.notifier)
-              .advanceItemStatus(orders[index].id ?? 0, itemId),
+              .serveSelectedItems(orders[index].id ?? 0, itemIds),
         );
       },
     );

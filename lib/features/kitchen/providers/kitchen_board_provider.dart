@@ -7,7 +7,7 @@ import '../../../models/order_model.dart';
 part 'kitchen_board_provider.g.dart';
 
 /// Jumlah kartu order per halaman board (murni paginasi UI, bukan batch).
-const int kitchenOrdersPerPage = 4;
+const int kitchenOrdersPerPage = 6;
 
 @riverpod
 class KitchenOrders extends _$KitchenOrders {
@@ -18,29 +18,11 @@ class KitchenOrders extends _$KitchenOrders {
     return OrderMocks.kitchenOrders;
   }
 
-  /// SKPL-F-011 — semua item pada satu order jadi `cooking`.
-  Future<void> processOrder(int orderId) async {
-    // TODO: ganti dengan PATCH /v1/orders/{id}/status.
-    _updateOrder(
-      orderId,
-      itemStatus: OrderItemStatus.cooking,
-      orderStatus: OrderStatus.cooking,
-      onlyWhenPending: true,
-    );
-  }
-
-  /// SKPL-F-011 — semua item pada satu order jadi `ready`.
-  Future<void> serveOrder(int orderId) async {
-    _updateOrder(
-      orderId,
-      itemStatus: OrderItemStatus.ready,
-      orderStatus: OrderStatus.ready,
-    );
-  }
-
-  /// Naikkan status satu item: pending → cooking → ready.
-  Future<void> advanceItemStatus(int orderId, int itemId) async {
+  /// SKPL-F-011 — item terpilih jadi `cooking` (baru setelah user klik button).
+  Future<void> processSelectedItems(int orderId, List<int> itemIds) async {
     // TODO: ganti dengan PATCH /v1/order-items/{id}/status.
+    if (itemIds.isEmpty) return;
+    final selected = itemIds.toSet();
     state = AsyncData([
       for (final order in state.value ?? <OrderModel>[])
         if (order.id != orderId)
@@ -50,8 +32,34 @@ class KitchenOrders extends _$KitchenOrders {
             order.copyWith(
               items: [
                 for (final item in order.items ?? [])
-                  if (item.id == itemId)
-                    item.copyWith(status: _nextStatus(item.status))
+                  if (selected.contains(item.id) &&
+                      item.status == OrderItemStatus.pending)
+                    item.copyWith(status: OrderItemStatus.cooking)
+                  else
+                    item,
+              ],
+            ),
+          ),
+    ]);
+  }
+
+  /// SKPL-F-011 — item terpilih jadi `ready` (baru setelah user klik button).
+  Future<void> serveSelectedItems(int orderId, List<int> itemIds) async {
+    // TODO: ganti dengan PATCH /v1/order-items/{id}/status.
+    if (itemIds.isEmpty) return;
+    final selected = itemIds.toSet();
+    state = AsyncData([
+      for (final order in state.value ?? <OrderModel>[])
+        if (order.id != orderId)
+          order
+        else
+          _syncOrderStatus(
+            order.copyWith(
+              items: [
+                for (final item in order.items ?? [])
+                  if (selected.contains(item.id) &&
+                      item.status == OrderItemStatus.cooking)
+                    item.copyWith(status: OrderItemStatus.ready)
                   else
                     item,
               ],
@@ -77,41 +85,6 @@ class KitchenOrders extends _$KitchenOrders {
           ),
         ),
     ]);
-  }
-
-  void _updateOrder(
-    int orderId, {
-    required OrderItemStatus itemStatus,
-    required OrderStatus orderStatus,
-    bool onlyWhenPending = false,
-  }) {
-    state = AsyncData([
-      for (final order in state.value ?? <OrderModel>[])
-        if (order.id != orderId)
-          order
-        else
-          order.copyWith(
-            status: orderStatus,
-            items: [
-              for (final item in order.items ?? [])
-                if (!onlyWhenPending || item.status == OrderItemStatus.pending)
-                  item.copyWith(status: itemStatus)
-                else
-                  item,
-            ],
-          ),
-    ]);
-  }
-
-  OrderItemStatus _nextStatus(OrderItemStatus? current) {
-    switch (current) {
-      case OrderItemStatus.pending:
-        return OrderItemStatus.cooking;
-      case OrderItemStatus.cooking:
-      case OrderItemStatus.ready:
-      case null:
-        return OrderItemStatus.ready;
-    }
   }
 
   /// Status order mengikuti status item-nya.
