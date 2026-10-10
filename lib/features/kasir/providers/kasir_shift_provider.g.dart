@@ -33,7 +33,7 @@ final class KasirShiftProvider
   KasirShift create() => KasirShift();
 }
 
-String _$kasirShiftHash() => r'775c1599ac8bf89ef489450628ccfc7d4f35f3bb';
+String _$kasirShiftHash() => r'fe1d55b86aae88c296b572e543f9b17ffac99982';
 
 abstract class _$KasirShift extends $AsyncNotifier<ShiftModel?> {
   FutureOr<ShiftModel?> build();

@@ -9,17 +9,17 @@ part of 'kasir_incoming_alert_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Alert pesanan baru di kasir (toast + highlight card + badge filter).
-/// Nanti bisa dipicu SSE; sekarang ada simulate buat UI.
+/// Dipicu event SSE dari backend (lihat KasirShellPage / KitchenBoardPage).
 
 @ProviderFor(KasirIncomingAlert)
 final kasirIncomingAlertProvider = KasirIncomingAlertProvider._();
 
 /// Alert pesanan baru di kasir (toast + highlight card + badge filter).
-/// Nanti bisa dipicu SSE; sekarang ada simulate buat UI.
+/// Dipicu event SSE dari backend (lihat KasirShellPage / KitchenBoardPage).
 final class KasirIncomingAlertProvider
     extends $NotifierProvider<KasirIncomingAlert, KasirIncomingState> {
   /// Alert pesanan baru di kasir (toast + highlight card + badge filter).
-  /// Nanti bisa dipicu SSE; sekarang ada simulate buat UI.
+  /// Dipicu event SSE dari backend (lihat KasirShellPage / KitchenBoardPage).
   KasirIncomingAlertProvider._()
     : super(
         from: null,
@@ -48,10 +48,10 @@ final class KasirIncomingAlertProvider
 }
 
 String _$kasirIncomingAlertHash() =>
-    r'3ebc48f61453d1cf6946ebd0fca194de13afd16b';
+    r'7d2d1c10af8316bdab5af571cd9e49ebf1033f9f';
 
 /// Alert pesanan baru di kasir (toast + highlight card + badge filter).
-/// Nanti bisa dipicu SSE; sekarang ada simulate buat UI.
+/// Dipicu event SSE dari backend (lihat KasirShellPage / KitchenBoardPage).
 
 abstract class _$KasirIncomingAlert extends $Notifier<KasirIncomingState> {
   KasirIncomingState build();

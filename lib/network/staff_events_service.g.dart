@@ -120,4 +120,4 @@ final class StaffEventsProvider
   }
 }
 
-String _$staffEventsHash() => r'd91c96c6ce0ed310c9c24f262dde9f6413026064';
+String _$staffEventsHash() => r'ef6331e2fc3f039c0b0b5697182502cc81a178f9';

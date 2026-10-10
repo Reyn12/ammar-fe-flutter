@@ -23,11 +23,6 @@ class IncomingOrders extends _$IncomingOrders {
     state = AsyncData(orders);
   }
 
-  /// Sisipkan pesanan baru di depan list (simulasi SSE / event paid).
-  void insertIncomingOrder(OrderModel order) {
-    state = AsyncData([order, ...state.value ?? <OrderModel>[]]);
-  }
-
   /// SKPL-F-006 — set pembayaran tunai jadi lunas.
   Future<void> confirmCashPayment(int orderId, {int? receivedAmount}) async {
     final updated = await ref

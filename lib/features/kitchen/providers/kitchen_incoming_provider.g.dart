@@ -9,17 +9,17 @@ part of 'kitchen_incoming_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Alert pesanan baru di kitchen (toast + highlight card).
-/// Nanti bisa dipicu SSE; sekarang ada simulate buat UI.
+/// Dipicu event SSE dari backend (lihat KasirShellPage / KitchenBoardPage).
 
 @ProviderFor(KitchenIncomingAlert)
 final kitchenIncomingAlertProvider = KitchenIncomingAlertProvider._();
 
 /// Alert pesanan baru di kitchen (toast + highlight card).
-/// Nanti bisa dipicu SSE; sekarang ada simulate buat UI.
+/// Dipicu event SSE dari backend (lihat KasirShellPage / KitchenBoardPage).
 final class KitchenIncomingAlertProvider
     extends $NotifierProvider<KitchenIncomingAlert, KitchenIncomingState> {
   /// Alert pesanan baru di kitchen (toast + highlight card).
-  /// Nanti bisa dipicu SSE; sekarang ada simulate buat UI.
+  /// Dipicu event SSE dari backend (lihat KasirShellPage / KitchenBoardPage).
   KitchenIncomingAlertProvider._()
     : super(
         from: null,
@@ -48,10 +48,10 @@ final class KitchenIncomingAlertProvider
 }
 
 String _$kitchenIncomingAlertHash() =>
-    r'5a7a4f880958aed5a3e5e9551c2d71bfe71a5973';
+    r'4bee4c14684808c8f2b65b6de60b956244ef24a9';
 
 /// Alert pesanan baru di kitchen (toast + highlight card).
-/// Nanti bisa dipicu SSE; sekarang ada simulate buat UI.
+/// Dipicu event SSE dari backend (lihat KasirShellPage / KitchenBoardPage).
 
 abstract class _$KitchenIncomingAlert extends $Notifier<KitchenIncomingState> {
   KitchenIncomingState build();

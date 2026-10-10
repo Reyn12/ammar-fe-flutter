@@ -22,11 +22,6 @@ class KitchenOrders extends _$KitchenOrders {
     state = AsyncData(orders);
   }
 
-  /// Sisipkan pesanan baru di depan list (simulasi SSE / event paid).
-  void insertIncomingOrder(OrderModel order) {
-    state = AsyncData([order, ...state.value ?? <OrderModel>[]]);
-  }
-
   /// Update lokal setelah API process item terpilih sukses.
   void applyProcessSelected(int orderId, List<int> itemIds) {
     if (itemIds.isEmpty) return;

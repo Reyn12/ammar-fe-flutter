@@ -9,7 +9,6 @@ import '../../../widget/live_clock.dart';
 import '../../../widget/logout_dialog.dart';
 import '../providers/kitchen_batch_provider.dart';
 import '../providers/kitchen_board_provider.dart';
-import '../providers/kitchen_incoming_provider.dart';
 
 class KitchenHeader extends ConsumerWidget {
   const KitchenHeader({super.key});
@@ -63,17 +62,6 @@ class KitchenHeader extends ConsumerWidget {
             ),
           ),
           ConnectionIndicator(isOnline: ref.watch(staffEventsConnectionProvider)),
-          // TODO: hapus tombol simulate setelah SSE pesanan baru siap.
-          IconButton(
-            tooltip: 'Simulasi pesanan baru',
-            onPressed: () => ref
-                .read(kitchenIncomingAlertProvider.notifier)
-                .simulateIncomingOrder(),
-            icon: const Icon(
-              Icons.add_alert_rounded,
-              color: AppColors.orangeMain,
-            ),
-          ),
           IconButton(
             tooltip: 'Muat ulang antrean',
             onPressed: () {
