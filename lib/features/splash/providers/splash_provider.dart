@@ -5,6 +5,7 @@ import 'package:ammar_fe_flutter/features/auth/providers/auth_provider.dart';
 import 'package:ammar_fe_flutter/routes/app_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../network/push_notification_service.dart';
 import '../../../routes/app_paths.dart';
 import '../../auth/models/app_role.dart';
 import '../../auth/storage/auth_storage.dart';
@@ -31,6 +32,7 @@ class Splash extends _$Splash {
       if (!ref.mounted) return;
 
       ref.read(sessionProvider.notifier).setUser(user);
+      unawaited(ref.read(pushNotificationServiceProvider).register());
       appRouter.go(AppRole.fromValue(user?.role)?.homePath ?? AppPaths.login);
     } finally {
       keepAliveLink.close();

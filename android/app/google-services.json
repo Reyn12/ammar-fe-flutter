@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "408643593597",
+    "project_id": "ammar-ayam-bakar",
+    "storage_bucket": "ammar-ayam-bakar.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408643593597:android:4ef6fe58272b0206489814",
+        "android_client_info": {
+          "package_name": "com.ammar.flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "408643593597-vhme24jmbqo9cojtb0ajktb6eaoq2h5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4CyujOfh9WKQclH-uE7CFkaV0E93RVyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "408643593597-vhme24jmbqo9cojtb0ajktb6eaoq2h5k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

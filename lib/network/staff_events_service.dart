@@ -97,7 +97,7 @@ Stream<StaffEvent> staffEvents(Ref ref) async* {
   }
 }
 
-Map<String, dynamic> _decode(String raw) {
+Map<String, dynamic> decode(String raw) {
   try {
     final decoded = jsonDecode(raw);
     if (decoded is Map) return decoded.cast<String, dynamic>();
@@ -120,7 +120,7 @@ Stream<StaffEvent> parseSseEvents(
       // Baris kosong = akhir satu event.
       if (data.isNotEmpty) {
         if (id != null) onId?.call(id);
-        yield StaffEvent(type: type, data: _decode(data.toString()), id: id);
+        yield StaffEvent(type: type, data: decode(data.toString()), id: id);
       }
       id = null;
       type = 'message';

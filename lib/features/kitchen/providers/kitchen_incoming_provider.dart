@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../helper/order_sound_provider.dart';
 import '../../../models/order_model.dart';
 import '../models/kitchen_incoming_state.dart';
 import '../models/kitchen_incoming_toast_model.dart';
@@ -29,6 +30,8 @@ class KitchenIncomingAlert extends _$KitchenIncomingAlert {
   void announce(OrderModel order) {
     final orderId = order.id;
     if (orderId == null) return;
+
+    unawaited(ref.read(orderSoundProvider).play());
 
     state = state.copyWith(
       newOrderIds: {...state.newOrderIds, orderId},

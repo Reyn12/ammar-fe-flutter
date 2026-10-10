@@ -48,7 +48,7 @@ final class KitchenIncomingAlertProvider
 }
 
 String _$kitchenIncomingAlertHash() =>
-    r'4bee4c14684808c8f2b65b6de60b956244ef24a9';
+    r'e0eb0803b33c778aec8e490e81d7ce08ec62e2e3';
 
 /// Alert pesanan baru di kitchen (toast + highlight card).
 /// Dipicu event SSE dari backend (lihat KasirShellPage / KitchenBoardPage).

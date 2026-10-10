@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../network/api/auth_interceptor.dart';
 import '../../../network/api_service.dart';
 import '../../../network/environment.dart';
+import '../../../network/push_notification_service.dart';
 import '../../kasir/providers/cashier_accounts_provider.dart';
 import '../../kasir/providers/kitchen_accounts_provider.dart';
 import '../../kasir/providers/owner_auth_provider.dart';
@@ -42,6 +43,8 @@ class Auth extends _$Auth {
   void setAuthType(AuthType type) => state = type;
 
   Future<void> logout() async {
+    // Lepas token push selagi masih terautentikasi, supaya akun yang keluar tidak menerima push.
+    await ref.read(pushNotificationServiceProvider).unregister();
     try {
       await ref.read(apiServiceProvider).logout();
     } catch (_) {
@@ -105,6 +108,7 @@ class LoginController extends _$LoginController {
       await AuthStorage().saveLogin(result);
       ref.read(sessionProvider.notifier).setUser(result.user);
       ref.read(authProvider.notifier).setAuthType(AuthType.AUTHENTICATED);
+      unawaited(ref.read(pushNotificationServiceProvider).register());
 
       return result;
     });

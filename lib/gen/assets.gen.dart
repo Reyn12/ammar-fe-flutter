@@ -33,11 +33,22 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [icLogoDapurself];
 }
 
+class $AssetsSoundsGen {
+  const $AssetsSoundsGen();
+
+  /// File path: assets/sounds/notif-order-masuk.mp3
+  String get notifOrderMasuk => 'assets/sounds/notif-order-masuk.mp3';
+
+  /// List of all assets
+  List<String> get values => [notifOrderMasuk];
+}
+
 class Assets {
   const Assets._();
 
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsSoundsGen sounds = $AssetsSoundsGen();
 }
 
 class AssetGenImage {

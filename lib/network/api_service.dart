@@ -81,6 +81,18 @@ class ApiService {
     await dio.post('/v1/auth/logout');
   }
 
+  /// POST /v1/devices - daftarkan token FCM perangkat untuk push pesanan masuk.
+  Future<void> registerDevice({required String token, bool? mock}) async {
+    if (useMock(mock)) return;
+    await dio.post('/v1/devices', data: {'token': token, 'platform': 'android'});
+  }
+
+  /// DELETE /v1/devices - lepas token FCM perangkat (saat logout).
+  Future<void> unregisterDevice({required String token, bool? mock}) async {
+    if (useMock(mock)) return;
+    await dio.delete('/v1/devices', data: {'token': token});
+  }
+
   /// POST /v1/auth/change-password
   Future<void> changePassword({
     required String currentPassword,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'network/push_notification_service.dart';
 import 'resources/app_theme.dart';
 import 'routes/app_router.dart';
 
@@ -13,6 +14,8 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
+
+  await PushNotificationService.initialize();
 
   runApp(
     ProviderScope(
