@@ -26,8 +26,11 @@ class PushNotificationService {
 
   final ApiService api;
 
+  static final FlutterLocalNotificationsPlugin _local =
+      FlutterLocalNotificationsPlugin();
   static bool _firebaseReady = false;
   static StreamSubscription<String>? _tokenRefresh;
+  static StreamSubscription<RemoteMessage>? _foregroundMessages;
   static String? _registeredToken;
 
   /// Dipanggil sekali di main(): inisialisasi Firebase dan buat channel dengan suara kustom.
@@ -35,7 +38,12 @@ class PushNotificationService {
   static Future<void> initialize() async {
     try {
       await Firebase.initializeApp();
-      await FlutterLocalNotificationsPlugin()
+      await _local.initialize(
+        settings: const InitializationSettings(
+          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        ),
+      );
+      await _local
           .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin
           >()
@@ -65,6 +73,11 @@ class PushNotificationService {
       if (token == null) return;
       await _send(token);
 
+      // FCM tidak menampilkan notifikasi saat app terbuka. Order asli sudah ditangani SSE,
+      // jadi hanya notifikasi tes (tombol bel) yang ditampilkan manual.
+      await _foregroundMessages?.cancel();
+      _foregroundMessages = FirebaseMessaging.onMessage.listen(_showIfTest);
+
       // Token bisa berganti sewaktu-waktu; daftarkan ulang otomatis.
       await _tokenRefresh?.cancel();
       _tokenRefresh = FirebaseMessaging.instance.onTokenRefresh.listen(
@@ -81,6 +94,8 @@ class PushNotificationService {
 
     await _tokenRefresh?.cancel();
     _tokenRefresh = null;
+    await _foregroundMessages?.cancel();
+    _foregroundMessages = null;
 
     final token = _registeredToken;
     if (token == null) return;
@@ -91,6 +106,24 @@ class PushNotificationService {
     } catch (e) {
       debugPrint('Gagal melepas perangkat dari push: $e');
     }
+  }
+
+  Future<void> _showIfTest(RemoteMessage message) async {
+    if (message.data['type'] != 'test') return;
+
+    await _local.show(
+      id: 0,
+      title: message.notification?.title,
+      body: message.notification?.body,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          _orderChannelId,
+          'Pesanan masuk',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+    );
   }
 
   Future<void> _send(String token) async {

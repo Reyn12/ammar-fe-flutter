@@ -93,6 +93,16 @@ class ApiService {
     await dio.delete('/v1/devices', data: {'token': token});
   }
 
+  /// POST /v1/devices/test - kirim notifikasi tes ke perangkat akun ini. Mengembalikan pesan hasilnya.
+  Future<String> sendTestPush({bool? mock}) async {
+    if (useMock(mock)) {
+      return 'Mode mock: tidak ada push yang dikirim.';
+    }
+    final res = await dio.post('/v1/devices/test');
+    return (res.data as Map<String, dynamic>)['message']?.toString() ??
+        'Notifikasi tes dikirim.';
+  }
+
   /// POST /v1/auth/change-password
   Future<void> changePassword({
     required String currentPassword,
