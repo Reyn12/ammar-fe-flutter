@@ -33,7 +33,7 @@ final class KasirMenuProvider
   KasirMenu create() => KasirMenu();
 }
 
-String _$kasirMenuHash() => r'5ed421530382fe8959ccce984bd43819b2fc33f4';
+String _$kasirMenuHash() => r'a413738c15d313d2ff443bfeaa0ff718b4e10ed3';
 
 abstract class _$KasirMenu extends $AsyncNotifier<List<ProductModel>> {
   FutureOr<List<ProductModel>> build();
@@ -53,6 +53,52 @@ abstract class _$KasirMenu extends $AsyncNotifier<List<ProductModel>> {
     element.handleCreate(ref, build);
   }
 }
+
+/// Kategori menu dari backend (GET /v1/categories).
+
+@ProviderFor(categories)
+final categoriesProvider = CategoriesProvider._();
+
+/// Kategori menu dari backend (GET /v1/categories).
+
+final class CategoriesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<CategoryModel>>,
+          List<CategoryModel>,
+          FutureOr<List<CategoryModel>>
+        >
+    with
+        $FutureModifier<List<CategoryModel>>,
+        $FutureProvider<List<CategoryModel>> {
+  /// Kategori menu dari backend (GET /v1/categories).
+  CategoriesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'categoriesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$categoriesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<CategoryModel>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<CategoryModel>> create(Ref ref) {
+    return categories(ref);
+  }
+}
+
+String _$categoriesHash() => r'db89a1998ca9c4ba26294ad6a347062c85bf3042';
 
 /// `null` berarti tab "Semua".
 
@@ -158,7 +204,7 @@ final class KasirMenuCategoriesProvider
 }
 
 String _$kasirMenuCategoriesHash() =>
-    r'bc911d26dd9e555c5bd1776a3e5a37851ede2199';
+    r'0ebfd0cc1d1c385443cbc12e650cb416c48bbbc2';
 
 @ProviderFor(filteredKasirMenu)
 final filteredKasirMenuProvider = FilteredKasirMenuProvider._();

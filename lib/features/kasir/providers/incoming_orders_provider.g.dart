@@ -33,7 +33,7 @@ final class IncomingOrdersProvider
   IncomingOrders create() => IncomingOrders();
 }
 
-String _$incomingOrdersHash() => r'782e0e10989c8c9a06f0ff1f61883dcd85d40f92';
+String _$incomingOrdersHash() => r'2b5f415bae4c3596b42f3737cdb21b591335db21';
 
 abstract class _$IncomingOrders extends $AsyncNotifier<List<OrderModel>> {
   FutureOr<List<OrderModel>> build();

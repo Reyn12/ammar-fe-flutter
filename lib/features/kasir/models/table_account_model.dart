@@ -4,6 +4,7 @@ class TableAccountModel {
     required this.branchId,
     required this.tableNumber,
     required this.qrToken,
+    this.qrUrl,
     this.isActive = true,
   });
 
@@ -13,11 +14,15 @@ class TableAccountModel {
 
   /// Token unik di URL QR meja (di-rotate saat generate ulang).
   final String qrToken;
+
+  /// Isi QR dari backend (halaman customer + token meja).
+  final String? qrUrl;
   final bool isActive;
 
-  /// URL mock yang di-scan customer (Next.js order page).
+  /// URL yang di-scan customer. Dari backend (`qr_url`); fallback ke bentuk standar.
   String get qrPayload =>
-      'https://order.ammar.id/m/$tableNumber?t=$qrToken';
+      qrUrl ??
+      'https://ammar-fe-nextjs.vercel.app/m/$tableNumber?t=$qrToken';
 
   String get label => 'Meja $tableNumber';
 
@@ -26,6 +31,7 @@ class TableAccountModel {
     int? branchId,
     String? tableNumber,
     String? qrToken,
+    String? qrUrl,
     bool? isActive,
   }) {
     return TableAccountModel(
@@ -33,6 +39,7 @@ class TableAccountModel {
       branchId: branchId ?? this.branchId,
       tableNumber: tableNumber ?? this.tableNumber,
       qrToken: qrToken ?? this.qrToken,
+      qrUrl: qrUrl ?? this.qrUrl,
       isActive: isActive ?? this.isActive,
     );
   }
@@ -45,6 +52,7 @@ class TableAccountModel {
       qrToken: json['qr_token']?.toString() ??
           json['qr_code_url']?.toString() ??
           '',
+      qrUrl: json['qr_url']?.toString(),
       isActive: json['is_active'] as bool? ?? true,
     );
   }

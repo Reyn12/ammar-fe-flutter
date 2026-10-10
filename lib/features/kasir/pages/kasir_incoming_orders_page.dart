@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../network/staff_events_service.dart';
 import '../../../widget/connection_indicator.dart';
 import '../providers/incoming_orders_provider.dart';
 import '../widgets/kasir_incoming_toast.dart';
@@ -29,11 +30,14 @@ class KasirIncomingOrdersPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 14,
             children: [
-              const KasirPageHeader(
+              KasirPageHeader(
                 title: 'Pesanan Masuk',
                 subtitle:
                     'Pesanan pelanggan yang sudah dibayar masuk otomatis ke sini.',
-                trailing: ConnectionIndicator(label: 'Sinkron Realtime'),
+                trailing: ConnectionIndicator(
+                  isOnline: ref.watch(staffEventsConnectionProvider),
+                  label: 'Sinkron Realtime',
+                ),
               ),
               const KasirOrderSearchField(),
               const KasirOrderFilterTabs(),

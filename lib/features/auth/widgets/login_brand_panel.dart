@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../network/environment.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
@@ -51,6 +52,8 @@ class LoginBrandPanel extends StatelessWidget {
               ),
             ],
           ),
+          // Akun demo hanya relevan saat memakai data mock.
+          if (mockStatus)
           Column(
             spacing: 12,
             children: [

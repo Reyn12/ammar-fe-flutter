@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../helper/status_color_helper.dart';
+import '../../../network/staff_events_service.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
 import '../../../widget/connection_indicator.dart';
@@ -75,7 +76,7 @@ class KasirHeader extends ConsumerWidget {
             foregroundColor: paymentStatusColor(null).foreground,
             backgroundColor: paymentStatusColor(null).background,
           ),
-          const ConnectionIndicator(),
+          ConnectionIndicator(isOnline: ref.watch(staffEventsConnectionProvider)),
           // TODO: hapus tombol simulate setelah SSE pesanan baru siap.
           IconButton(
             tooltip: 'Simulasi pesanan baru',

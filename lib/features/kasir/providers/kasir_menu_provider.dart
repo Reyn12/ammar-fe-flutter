@@ -1,6 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../mocks/product_mocks.dart';
 import '../../../models/category_model.dart';
 import '../../../models/product_model.dart';
 import '../../../network/api_service.dart';
@@ -35,11 +34,20 @@ class KasirMenu extends _$KasirMenu {
     ]);
   }
 
+  /// Foto dari kamera/galeri berupa path lokal; backend hanya menerima URL,
+  /// jadi foto diunggah dulu lalu produk disimpan dengan URL hasilnya.
   Future<void> saveProduct(ProductModel product) async {
     final api = ref.read(apiServiceProvider);
-    final saved = product.id == null
-        ? await api.createProduct(product)
-        : await api.updateProduct(product);
+    final imageUrl = product.imageUrl;
+    final needsUpload =
+        imageUrl != null && imageUrl.isNotEmpty && !_isRemoteUrl(imageUrl);
+    final toSave = needsUpload
+        ? product.copyWith(imageUrl: await api.uploadProductImage(imageUrl))
+        : product;
+
+    final saved = toSave.id == null
+        ? await api.createProduct(toSave)
+        : await api.updateProduct(toSave);
 
     if (product.id == null) {
       state = AsyncData([...?state.value, saved]);
@@ -61,6 +69,15 @@ class KasirMenu extends _$KasirMenu {
   }
 }
 
+bool _isRemoteUrl(String value) =>
+    value.startsWith('http://') || value.startsWith('https://');
+
+/// Kategori menu dari backend (GET /v1/categories).
+@riverpod
+Future<List<CategoryModel>> categories(Ref ref) {
+  return ref.watch(apiServiceProvider).fetchCategories();
+}
+
 /// `null` berarti tab "Semua".
 @riverpod
 class KasirMenuCategory extends _$KasirMenuCategory {
@@ -71,7 +88,8 @@ class KasirMenuCategory extends _$KasirMenuCategory {
 }
 
 @riverpod
-List<CategoryModel> kasirMenuCategories(Ref ref) => ProductMocks.categories;
+List<CategoryModel> kasirMenuCategories(Ref ref) =>
+    ref.watch(categoriesProvider).value ?? const <CategoryModel>[];
 
 @riverpod
 Future<List<ProductModel>> filteredKasirMenu(Ref ref) async {

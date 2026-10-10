@@ -23,13 +23,13 @@ class ProductModel {
   final bool? isAvailable;
   final List<AddonGroupModel>? addonGroups;
 
-  ProductModel copyWith({bool? isAvailable}) {
+  ProductModel copyWith({bool? isAvailable, String? imageUrl}) {
     return ProductModel(
       id: id,
       branchId: branchId,
       categoryId: categoryId,
       categoryName: categoryName,
-      imageUrl: imageUrl,
+      imageUrl: imageUrl ?? this.imageUrl,
       name: name,
       price: price,
       isAvailable: isAvailable ?? this.isAvailable,

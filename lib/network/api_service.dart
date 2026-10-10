@@ -16,6 +16,7 @@ import '../mocks/order_mocks.dart';
 import '../mocks/product_mocks.dart';
 import '../mocks/shift_mocks.dart';
 import '../mocks/table_account_mocks.dart';
+import '../models/category_model.dart';
 import '../models/order_enums.dart';
 import '../models/order_model.dart';
 import '../models/product_model.dart';
@@ -298,6 +299,34 @@ class ApiService {
 
     final res = await dio.get('/v1/products');
     return Converter.list(res.data, ProductModel.fromJson);
+  }
+
+  /// GET /v1/categories
+  Future<List<CategoryModel>> fetchCategories({bool? mock}) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      return ProductMocks.categories;
+    }
+
+    final res = await dio.get('/v1/categories');
+    return Converter.list(res.data, CategoryModel.fromJson);
+  }
+
+  /// POST /v1/uploads/product-image (multipart) -> URL foto yang dipakai di `image_url` produk.
+  Future<String> uploadProductImage(String filePath, {bool? mock}) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      return filePath;
+    }
+
+    final form = FormData.fromMap({
+      'image': await MultipartFile.fromFile(
+        filePath,
+        filename: filePath.split(RegExp(r'[\\/]')).last,
+      ),
+    });
+    final res = await dio.post('/v1/uploads/product-image', data: form);
+    return Converter.single(res.data, (json) => json['url'].toString());
   }
 
   /// POST /v1/products

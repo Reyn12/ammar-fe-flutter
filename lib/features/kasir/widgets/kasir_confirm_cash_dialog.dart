@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../helper/dialog_error_helper.dart';
 import '../../../helper/format_currency_helper.dart';
 import '../../../models/order_model.dart';
 import '../../../resources/app_typography.dart';
@@ -59,9 +60,21 @@ class _KasirConfirmCashDialogState
 
   Future<void> _submit() async {
     setState(() => isSubmitting = true);
-    await ref
-        .read(incomingOrdersProvider.notifier)
-        .confirmCashPayment(widget.order.id ?? 0);
+    try {
+      await ref
+          .read(incomingOrdersProvider.notifier)
+          .confirmCashPayment(
+            widget.order.id ?? 0,
+            // Kosong = uang pas; backend menolak kalau kurang dari total.
+            receivedAmount: _received > 0 ? _received : null,
+          );
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => isSubmitting = false);
+      final parsed = parseDialogError(error);
+      CustomSnackbar.error(context, parsed.message, title: parsed.title);
+      return;
+    }
 
     if (!mounted) return;
     setState(() => isSubmitting = false);

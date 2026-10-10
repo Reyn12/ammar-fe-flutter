@@ -19,7 +19,8 @@ enum OrderStatus {
   pending('pending', 'Belum Diproses'),
   cooking('cooking', 'Sedang Dimasak'),
   ready('ready', 'Siap Disajikan'),
-  completed('completed', 'Selesai');
+  completed('completed', 'Selesai'),
+  cancelled('cancelled', 'Dibatalkan');
 
   const OrderStatus(this.value, this.label);
 
@@ -71,7 +72,8 @@ enum PaymentMethod {
 
 enum PaymentStatus {
   unpaid('unpaid', 'Belum Dibayar'),
-  paid('paid', 'Dibayar');
+  paid('paid', 'Dibayar'),
+  expired('expired', 'Kedaluwarsa');
 
   const PaymentStatus(this.value, this.label);
 

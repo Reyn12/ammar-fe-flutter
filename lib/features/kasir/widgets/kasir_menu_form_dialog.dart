@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../helper/dialog_error_helper.dart';
 import '../../../models/product_model.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
@@ -64,27 +65,34 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
     if (!(_formKey.currentState?.saveAndValidate() ?? false)) return;
 
     setState(() => isSubmitting = true);
-    await ref
-        .read(kasirMenuProvider.notifier)
-        .saveProduct(
-          ProductModel(
-            id: widget.product?.id,
-            branchId: widget.product?.branchId ?? 1,
-            categoryId: selectedCategoryId,
-            categoryName: _categoryNameOf(selectedCategoryId),
-            // TODO: upload foto ke backend, simpan URL hasil upload — sekarang
-            // masih path lokal dari kamera/galeri (mock UI).
-            imageUrl: imagePath,
-            name: nameController.text.trim(),
-            price:
-                int.tryParse(
-                  priceController.text.replaceAll(RegExp(r'[^0-9]'), ''),
-                ) ??
-                0,
-            isAvailable: isAvailable,
-            addonGroups: widget.product?.addonGroups,
-          ),
-        );
+    try {
+      // Foto lokal diunggah otomatis oleh saveProduct sebelum produk disimpan.
+      await ref
+          .read(kasirMenuProvider.notifier)
+          .saveProduct(
+            ProductModel(
+              id: widget.product?.id,
+              branchId: widget.product?.branchId ?? 1,
+              categoryId: selectedCategoryId,
+              categoryName: _categoryNameOf(selectedCategoryId),
+              imageUrl: imagePath,
+              name: nameController.text.trim(),
+              price:
+                  int.tryParse(
+                    priceController.text.replaceAll(RegExp(r'[^0-9]'), ''),
+                  ) ??
+                  0,
+              isAvailable: isAvailable,
+              addonGroups: widget.product?.addonGroups,
+            ),
+          );
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => isSubmitting = false);
+      final parsed = parseDialogError(error);
+      CustomSnackbar.error(context, parsed.message, title: parsed.title);
+      return;
+    }
 
     if (!mounted) return;
     setState(() => isSubmitting = false);

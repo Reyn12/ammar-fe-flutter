@@ -64,8 +64,8 @@ class AuthInterceptor extends Interceptor {
 
   bool shouldSkipRefresh(RequestOptions options) {
     final path = options.path;
-    return path.contains('/api/auth/login') ||
-        path.contains('/api/auth/refresh');
+    // Backend tidak punya refresh token: 401 selalu berarti sesi habis -> login ulang.
+    return path.contains('/v1/auth/login') || path.contains('/auth/refresh');
   }
 
   Future<void> refreshTokens() async {

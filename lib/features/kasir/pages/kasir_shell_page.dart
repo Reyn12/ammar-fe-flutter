@@ -1,10 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../network/api_service.dart';
+import '../../../network/staff_events_service.dart';
 import '../../../resources/resources.dart';
 import '../../auth/helpers/auth_permission.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../models/kasir_nav_item.dart';
+import '../providers/incoming_orders_provider.dart';
+import '../providers/kasir_incoming_alert_provider.dart';
 import '../providers/kasir_nav_provider.dart';
 import '../providers/kasir_shift_provider.dart';
 import '../widgets/kasir_header.dart';
@@ -32,6 +38,30 @@ class _KasirShellPageState extends ConsumerState<KasirShellPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkCashierShift());
   }
 
+  /// Event realtime: segarkan daftar pesanan dan munculkan alert untuk pesanan yang
+  /// perlu perhatian kasir (tunai baru menunggu konfirmasi, atau QRIS yang baru lunas).
+  Future<void> _onStaffEvent(StaffEvent event) async {
+    try {
+      await ref.read(incomingOrdersProvider.notifier).refresh();
+
+      if (event.type == 'order.paid' && !isOwner(ref.read(sessionProvider))) {
+        unawaited(ref.read(kasirShiftProvider.notifier).refresh());
+      }
+
+      final needsAttention =
+          (event.type == 'order.created' && event.paymentMethod == 'cash') ||
+          (event.type == 'order.paid' && event.paymentMethod == 'qris');
+      final orderId = event.orderId;
+      if (!needsAttention || orderId == null) return;
+
+      final order = await ref.read(apiServiceProvider).fetchOrderDetail(orderId);
+      if (!mounted) return;
+      ref.read(kasirIncomingAlertProvider.notifier).announce(order);
+    } catch (_) {
+      // Gagal menyegarkan: event berikutnya atau tombol muat ulang akan memperbaiki.
+    }
+  }
+
   /// Kasir masuk → cek GET /v1/shifts/active. Belum buka → pindah ke Shift + dialog.
   Future<void> _checkCashierShift() async {
     if (_shiftPromptHandled || !mounted) return;
@@ -54,6 +84,11 @@ class _KasirShellPageState extends ConsumerState<KasirShellPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<StaffEvent>>(staffEventsProvider, (_, next) {
+      final event = next.value;
+      if (event != null) unawaited(_onStaffEvent(event));
+    });
+
     return Scaffold(
       backgroundColor: AppColors.neutral20,
       body: SafeArea(

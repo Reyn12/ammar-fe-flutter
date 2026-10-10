@@ -16,6 +16,12 @@ class KitchenOrders extends _$KitchenOrders {
     return ref.watch(apiServiceProvider).fetchKitchenOrders();
   }
 
+  /// Ambil ulang tanpa menampilkan loading (dipanggil saat ada event SSE).
+  Future<void> refresh() async {
+    final orders = await ref.read(apiServiceProvider).fetchKitchenOrders();
+    state = AsyncData(orders);
+  }
+
   /// Sisipkan pesanan baru di depan list (simulasi SSE / event paid).
   void insertIncomingOrder(OrderModel order) {
     state = AsyncData([order, ...state.value ?? <OrderModel>[]]);

@@ -59,6 +59,11 @@ StatusColor orderStatusColor(OrderStatus? status) {
         foreground: AppColors.primaryMain,
         background: AppColors.primarySurface,
       );
+    case OrderStatus.cancelled:
+      return const StatusColor(
+        foreground: AppColors.dangerMain,
+        background: AppColors.dangerSurface,
+      );
     case null:
       return _neutralStatus;
   }
@@ -72,6 +77,7 @@ StatusColor paymentStatusColor(PaymentStatus? status) {
         background: AppColors.successSoft,
       );
     case PaymentStatus.unpaid:
+    case PaymentStatus.expired:
       return const StatusColor(
         foreground: AppColors.dangerMain,
         background: AppColors.dangerSurface,

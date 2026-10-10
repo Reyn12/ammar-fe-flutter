@@ -17,16 +17,22 @@ class IncomingOrders extends _$IncomingOrders {
     return ref.watch(apiServiceProvider).fetchIncomingOrders();
   }
 
+  /// Ambil ulang tanpa menampilkan loading (dipanggil saat ada event SSE).
+  Future<void> refresh() async {
+    final orders = await ref.read(apiServiceProvider).fetchIncomingOrders();
+    state = AsyncData(orders);
+  }
+
   /// Sisipkan pesanan baru di depan list (simulasi SSE / event paid).
   void insertIncomingOrder(OrderModel order) {
     state = AsyncData([order, ...state.value ?? <OrderModel>[]]);
   }
 
   /// SKPL-F-006 — set pembayaran tunai jadi lunas.
-  Future<void> confirmCashPayment(int orderId) async {
+  Future<void> confirmCashPayment(int orderId, {int? receivedAmount}) async {
     final updated = await ref
         .read(apiServiceProvider)
-        .confirmCashPayment(orderId: orderId);
+        .confirmCashPayment(orderId: orderId, receivedAmount: receivedAmount);
 
     state = AsyncData([
       for (final order in state.value ?? <OrderModel>[])

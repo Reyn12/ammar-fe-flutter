@@ -30,7 +30,7 @@ Future<void> _pumpTablet(WidgetTester tester, Widget child) async {
 void main() {
   testWidgets('login page renders in landscape', (tester) async {
     await _pumpTablet(tester, const LoginPage());
-    expect(find.text('Ammar POS'), findsOneWidget);
+    expect(find.text('Masuk'), findsWidgets);
   });
 
   testWidgets('kasir shell renders in landscape', (tester) async {

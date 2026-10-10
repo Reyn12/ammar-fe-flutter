@@ -15,6 +15,12 @@ class KitchenBatches extends _$KitchenBatches {
     return ref.watch(apiServiceProvider).fetchKitchenBatches();
   }
 
+  /// Ambil ulang tanpa menampilkan loading (dipanggil saat ada event SSE).
+  Future<void> refresh() async {
+    final batches = await ref.read(apiServiceProvider).fetchKitchenBatches();
+    state = AsyncData(batches);
+  }
+
   /// Proses sebagian/semua nota di batch.
   /// Nota terpilih dihapus; kalau habis, kartu batch ikut hilang.
   Future<void> applyProcessSelected({

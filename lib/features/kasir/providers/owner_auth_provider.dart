@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../network/api_service.dart';
+import '../../../network/environment.dart';
 import '../../auth/mocks/user_mocks.dart';
 
 part 'owner_auth_provider.g.dart';
@@ -15,11 +16,15 @@ class OwnerAuth extends _$OwnerAuth {
     required String currentPassword,
     required String newPassword,
   }) async {
-    if (currentPassword != state) {
-      throw Exception('Password lama tidak sesuai.');
-    }
-    if (newPassword == currentPassword) {
-      throw Exception('Password baru harus berbeda dari password lama.');
+    // Password asli divalidasi backend (pesan error dari server ditampilkan apa adanya).
+    // Pencocokan lokal hanya untuk mode mock.
+    if (mockStatus) {
+      if (currentPassword != state) {
+        throw Exception('Password lama tidak sesuai.');
+      }
+      if (newPassword == currentPassword) {
+        throw Exception('Password baru harus berbeda dari password lama.');
+      }
     }
 
     await ref

@@ -12,6 +12,11 @@ class KasirShift extends _$KasirShift {
     return ref.watch(apiServiceProvider).fetchActiveShift();
   }
 
+  /// Ambil ulang shift aktif tanpa loading (angka transaksi berubah saat ada pesanan lunas).
+  Future<void> refresh() async {
+    state = AsyncData(await ref.read(apiServiceProvider).fetchActiveShift());
+  }
+
   /// SKPL-F-008 — buka shift dengan modal awal.
   Future<void> openShift(int startingCash) async {
     final shift = await ref

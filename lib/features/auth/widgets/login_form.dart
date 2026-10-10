@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../network/environment.dart';
 import '../../../helper/validator.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
@@ -97,7 +98,7 @@ class _LoginFormState extends ConsumerState<LoginForm> with DialogMixin {
                   validators: [Validator.required()],
                   onChanged: (_) => setState(() {}),
                 ),
-                const LoginDemoHint(),
+                if (mockStatus) const LoginDemoHint(),
                 PrimaryButton(
                   text: 'Masuk',
                   enabled:
