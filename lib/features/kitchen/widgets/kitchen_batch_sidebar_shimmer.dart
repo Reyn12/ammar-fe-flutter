@@ -16,9 +16,8 @@ class KitchenBatchSidebarShimmer extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: itemCount,
       separatorBuilder: (_, _) => const SizedBox(height: 12),
-      itemBuilder: (_, index) => KitchenBatchCardShimmerItem(
-        showCategory: index == 0 || index == 2,
-      ),
+      itemBuilder: (_, index) =>
+          KitchenBatchCardShimmerItem(showCategory: index == 0 || index == 2),
     );
   }
 }

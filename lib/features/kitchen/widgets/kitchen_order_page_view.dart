@@ -47,7 +47,9 @@ class _KitchenOrderPageViewState extends ConsumerState<KitchenOrderPageView> {
   Widget build(BuildContext context) {
     ref.listen<int>(kitchenPageIndexProvider, (_, next) => syncToPage(next));
 
-    return ref.watch(kitchenOrdersProvider).when(
+    return ref
+        .watch(kitchenOrdersProvider)
+        .when(
           skipLoadingOnReload: true,
           skipLoadingOnRefresh: true,
           loading: () => const KitchenOrderGridShimmer(),
@@ -59,8 +61,9 @@ class _KitchenOrderPageViewState extends ConsumerState<KitchenOrderPageView> {
           ),
           data: (orders) {
             final active = activeKitchenOrders(orders);
-            final totalPages =
-                (active.length / kitchenOrdersPerPage).ceil().clamp(1, 999);
+            final totalPages = (active.length / kitchenOrdersPerPage)
+                .ceil()
+                .clamp(1, 999);
 
             if (active.isEmpty) {
               return const KitchenOrderGridBuilder(orders: []);

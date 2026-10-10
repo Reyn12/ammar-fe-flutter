@@ -23,8 +23,7 @@ class Converter {
     }
 
     final envelope = ApiEnvelope.fromJson(responseData);
-    
+
     return envelope.requireSingle(fromJson);
   }
 }
-

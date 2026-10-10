@@ -14,7 +14,7 @@ class OrderSound {
   Future<void> play() async {
     try {
       await player.stop();
-      await player.play(AssetSource('sounds/notif-order-masuk.mp3'));
+      await player.play(AssetSource('sounds/notif-order-masuk.wav'));
     } catch (e) {
       // Bunyi hanya pelengkap; jangan sampai menggagalkan alert pesanan.
       debugPrint('Gagal memutar bunyi pesanan: $e');

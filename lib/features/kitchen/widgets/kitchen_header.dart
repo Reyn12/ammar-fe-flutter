@@ -9,7 +9,6 @@ import '../../../widget/live_clock.dart';
 import '../../../widget/logout_dialog.dart';
 import '../providers/kitchen_batch_provider.dart';
 import '../providers/kitchen_board_provider.dart';
-import 'kitchen_push_test_button.dart';
 
 class KitchenHeader extends ConsumerWidget {
   const KitchenHeader({super.key});
@@ -62,8 +61,9 @@ class KitchenHeader extends ConsumerWidget {
               ],
             ),
           ),
-          const KitchenPushTestButton(),
-          ConnectionIndicator(isOnline: ref.watch(staffEventsConnectionProvider)),
+          ConnectionIndicator(
+            isOnline: ref.watch(staffEventsConnectionProvider),
+          ),
           IconButton(
             tooltip: 'Muat ulang antrean',
             onPressed: () {
@@ -78,10 +78,7 @@ class KitchenHeader extends ConsumerWidget {
             tooltip: 'Keluar',
             onPressed: () => LogoutDialog.show(context),
             // TODO: ganti Material icon ini dengan asset ikon final.
-            icon: const Icon(
-              Icons.logout_rounded,
-              color: AppColors.dangerMain,
-            ),
+            icon: const Icon(Icons.logout_rounded, color: AppColors.dangerMain),
           ),
         ],
       ),

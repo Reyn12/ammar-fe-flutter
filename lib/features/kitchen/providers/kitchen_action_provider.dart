@@ -17,7 +17,9 @@ class KitchenActionController extends _$KitchenActionController {
     if (itemIds.isEmpty) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(apiServiceProvider).updateOrderItemsStatus(
+      await ref
+          .read(apiServiceProvider)
+          .updateOrderItemsStatus(
             itemIds: itemIds,
             status: OrderItemStatus.cooking,
           );
@@ -33,7 +35,9 @@ class KitchenActionController extends _$KitchenActionController {
     if (itemIds.isEmpty) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(apiServiceProvider).updateOrderItemsStatus(
+      await ref
+          .read(apiServiceProvider)
+          .updateOrderItemsStatus(
             itemIds: itemIds,
             status: OrderItemStatus.ready,
           );
@@ -53,11 +57,12 @@ class KitchenActionController extends _$KitchenActionController {
     if (orderIds.isEmpty) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(apiServiceProvider).processKitchenBatch(
-            batchId,
-            orderIds: orderIds,
-          );
-      await ref.read(kitchenBatchesProvider.notifier).applyProcessSelected(
+      await ref
+          .read(apiServiceProvider)
+          .processKitchenBatch(batchId, orderIds: orderIds);
+      await ref
+          .read(kitchenBatchesProvider.notifier)
+          .applyProcessSelected(
             batchId: batchId,
             productId: productId,
             orderIds: orderIds,

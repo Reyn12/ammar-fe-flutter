@@ -1,10 +1,7 @@
 import 'kitchen_incoming_toast_model.dart';
 
 class KitchenIncomingState {
-  const KitchenIncomingState({
-    this.newOrderIds = const {},
-    this.toast,
-  });
+  const KitchenIncomingState({this.newOrderIds = const {}, this.toast});
 
   final Set<int> newOrderIds;
   final KitchenIncomingToastModel? toast;

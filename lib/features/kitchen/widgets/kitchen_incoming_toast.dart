@@ -27,8 +27,9 @@ class KitchenIncomingToast extends ConsumerWidget {
           : KitchenIncomingToastCard(
               key: ValueKey('toast-${toast.orderId}'),
               toast: toast,
-              onClose: () =>
-                  ref.read(kitchenIncomingAlertProvider.notifier).dismissToast(),
+              onClose: () => ref
+                  .read(kitchenIncomingAlertProvider.notifier)
+                  .dismissToast(),
             ),
     );
   }

@@ -99,7 +99,9 @@ class _KitchenBatchDetailDialogState
   Future<void> submit() async {
     final orderIds = selectedOrderIds.toList();
     Navigator.of(context).pop();
-    await ref.read(kitchenActionControllerProvider.notifier).processBatch(
+    await ref
+        .read(kitchenActionControllerProvider.notifier)
+        .processBatch(
           batchId: batch.id ?? 0,
           productId: batch.productId ?? 0,
           orderIds: orderIds,
@@ -218,16 +220,16 @@ class _KitchenBatchDetailDialogState
                                           '${table.orderCode ?? '-'}',
                                           style: AppTypography.bodySemiboldM
                                               .copyWith(
-                                            color: AppColors.neutral100,
-                                          ),
+                                                color: AppColors.neutral100,
+                                              ),
                                         ),
                                       ),
                                       Text(
                                         '×${table.qty ?? 0}',
                                         style: AppTypography.bodySemiboldM
                                             .copyWith(
-                                          color: AppColors.neutral100,
-                                        ),
+                                              color: AppColors.neutral100,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -242,8 +244,8 @@ class _KitchenBatchDetailDialogState
                                       'Catatan: $notes',
                                       style: AppTypography.bodyRegularS
                                           .copyWith(
-                                        color: AppColors.warningPressed,
-                                      ),
+                                            color: AppColors.warningPressed,
+                                          ),
                                     ),
                                 ],
                               ),

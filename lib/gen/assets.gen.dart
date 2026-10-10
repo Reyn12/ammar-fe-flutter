@@ -36,8 +36,8 @@ class $AssetsImagesGen {
 class $AssetsSoundsGen {
   const $AssetsSoundsGen();
 
-  /// File path: assets/sounds/notif-order-masuk.mp3
-  String get notifOrderMasuk => 'assets/sounds/notif-order-masuk.mp3';
+  /// File path: assets/sounds/notif-order-masuk.wav
+  String get notifOrderMasuk => 'assets/sounds/notif-order-masuk.wav';
 
   /// List of all assets
   List<String> get values => [notifOrderMasuk];

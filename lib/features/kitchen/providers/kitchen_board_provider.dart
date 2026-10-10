@@ -146,8 +146,13 @@ Future<List<OrderModel>> pagedKitchenOrders(Ref ref) async {
   final active = activeKitchenOrders(
     await ref.watch(kitchenOrdersProvider.future),
   );
-  final totalPages = (active.length / kitchenOrdersPerPage).ceil().clamp(1, 999);
-  final pageIndex = ref.watch(kitchenPageIndexProvider).clamp(0, totalPages - 1);
+  final totalPages = (active.length / kitchenOrdersPerPage).ceil().clamp(
+    1,
+    999,
+  );
+  final pageIndex = ref
+      .watch(kitchenPageIndexProvider)
+      .clamp(0, totalPages - 1);
 
   // Kalau order hilang (full ready), page index bisa kepalang — tarik ke halaman valid.
   if (pageIndex != ref.watch(kitchenPageIndexProvider)) {

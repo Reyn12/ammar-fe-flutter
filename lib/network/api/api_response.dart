@@ -1,8 +1,5 @@
 class ApiError implements Exception {
-  ApiError({
-    required this.message,
-    this.errors,
-  });
+  ApiError({required this.message, this.errors});
 
   final String message;
   final Map<String, List<String>>? errors;
@@ -75,4 +72,3 @@ class ApiEnvelope {
     return fromJson(rawMap.cast<String, dynamic>());
   }
 }
-
