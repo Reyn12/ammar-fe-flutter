@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../resources/app_typography.dart';
+import '../../../resources/resources.dart';
+import '../../auth/helpers/auth_permission.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../providers/kasir_menu_provider.dart';
+import 'kasir_category_manage_dialog.dart';
 import 'kasir_menu_category_item.dart';
 
 class KasirMenuCategoryTabs extends ConsumerWidget {
@@ -34,6 +39,18 @@ class KasirMenuCategoryTabs extends ConsumerWidget {
                   .select(ref.watch(kasirMenuCategoriesProvider)[index].id),
             );
           }),
+          if (canManageMenu(ref.watch(sessionProvider)))
+            TextButton.icon(
+              onPressed: () => KasirCategoryManageDialog.show(context),
+              // TODO: ganti Material icon ini dengan asset ikon final.
+              icon: const Icon(Icons.tune_rounded, size: 18),
+              label: Text(
+                'Kelola Kategori',
+                style: AppTypography.bodySemiboldM.copyWith(
+                  color: AppColors.primaryMain,
+                ),
+              ),
+            ),
         ],
       ),
     );

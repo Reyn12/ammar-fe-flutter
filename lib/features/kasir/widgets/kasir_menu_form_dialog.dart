@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../helper/dialog_error_helper.dart';
+import '../../../models/addon_group_model.dart';
 import '../../../models/product_model.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
@@ -11,6 +12,7 @@ import '../../../widget/custom_text_field.dart';
 import '../../../widget/primary_button.dart';
 import '../providers/kasir_menu_provider.dart';
 import 'kasir_menu_category_item.dart';
+import 'kasir_menu_options_editor.dart';
 import 'kasir_menu_photo_picker.dart';
 
 class KasirMenuFormDialog extends ConsumerStatefulWidget {
@@ -37,6 +39,7 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
   late final TextEditingController priceController;
   late int? selectedCategoryId;
   late bool isAvailable;
+  late List<AddonGroupModel> addonGroups;
   String? imagePath;
   bool isSubmitting = false;
 
@@ -52,6 +55,7 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
     selectedCategoryId = widget.product?.categoryId;
     isAvailable = widget.product?.isAvailable ?? true;
     imagePath = widget.product?.imageUrl;
+    addonGroups = widget.product?.addonGroups ?? const [];
   }
 
   @override
@@ -63,6 +67,12 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.saveAndValidate() ?? false)) return;
+
+    final optionsError = _validateOptions();
+    if (optionsError != null) {
+      CustomSnackbar.error(context, optionsError, title: 'Pilihan menu');
+      return;
+    }
 
     setState(() => isSubmitting = true);
     try {
@@ -83,7 +93,7 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
                   ) ??
                   0,
               isAvailable: isAvailable,
-              addonGroups: widget.product?.addonGroups,
+              addonGroups: addonGroups,
             ),
           );
     } catch (error) {
@@ -102,6 +112,16 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
       _isEdit ? 'Perubahan menu tersimpan.' : 'Menu baru berhasil ditambahkan.',
       title: 'Berhasil',
     );
+  }
+
+  String? _validateOptions() {
+    for (final group in addonGroups) {
+      if ((group.name ?? '').isEmpty) return 'Nama grup pilihan wajib diisi.';
+      if ((group.addons ?? []).isEmpty) {
+        return 'Grup "${group.name}" butuh minimal satu pilihan.';
+      }
+    }
+    return null;
   }
 
   String? _categoryNameOf(int? categoryId) {
@@ -183,6 +203,11 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
                       ),
                     ),
                   ],
+                ),
+                KasirMenuOptionsEditor(
+                  productId: widget.product?.id,
+                  initialGroups: addonGroups,
+                  onChanged: (groups) => addonGroups = groups,
                 ),
                 Row(
                   children: [

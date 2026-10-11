@@ -13,6 +13,14 @@ class AddonModel {
   final int? price;
   final bool? isAvailable;
 
+  /// Body untuk POST/PUT /v1/products (bagian addon_groups[].addons[]).
+  Map<String, dynamic> toBody() => {
+    'id': ?id,
+    'name': name,
+    'price': price ?? 0,
+    'is_available': isAvailable ?? true,
+  };
+
   factory AddonModel.fromJson(Map<String, dynamic> json) {
     return AddonModel(
       id: (json['id'] as num?)?.toInt(),

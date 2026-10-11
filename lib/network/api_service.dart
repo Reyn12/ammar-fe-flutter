@@ -327,6 +327,45 @@ class ApiService {
     return Converter.list(res.data, CategoryModel.fromJson);
   }
 
+  /// POST /v1/categories (owner)
+  Future<CategoryModel> createCategory(String name, {bool? mock}) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      return CategoryModel(
+        id: DateTime.now().millisecondsSinceEpoch,
+        name: name,
+        productCount: 0,
+      );
+    }
+
+    final res = await dio.post('/v1/categories', data: {'name': name});
+    return Converter.single(res.data, CategoryModel.fromJson);
+  }
+
+  /// PUT /v1/categories/{id} (owner)
+  Future<CategoryModel> updateCategory(
+    int id,
+    String name, {
+    bool? mock,
+  }) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      return CategoryModel(id: id, name: name);
+    }
+
+    final res = await dio.put('/v1/categories/$id', data: {'name': name});
+    return Converter.single(res.data, CategoryModel.fromJson);
+  }
+
+  /// DELETE /v1/categories/{id} (owner); ditolak kalau kategori masih punya menu.
+  Future<void> deleteCategory(int id, {bool? mock}) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      return;
+    }
+    await dio.delete('/v1/categories/$id');
+  }
+
   /// POST /v1/uploads/product-image (multipart) -> URL foto yang dipakai di `image_url` produk.
   Future<String> uploadProductImage(String filePath, {bool? mock}) async {
     if (useMock(mock)) {
@@ -737,6 +776,11 @@ class ApiService {
     'name': product.name,
     'price': product.price,
     'is_available': product.isAvailable,
+    // Kalau dikirim, daftar grup dianggap lengkap (yang tidak ikut diarsipkan di backend).
+    if (product.addonGroups != null)
+      'addon_groups': product.addonGroups!
+          .map((group) => group.toBody())
+          .toList(),
   };
 
   Map<String, dynamic> _cashierBody(CashierAccountModel account) => {

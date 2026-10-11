@@ -19,6 +19,19 @@ class AddonGroupModel {
   final int? maxQty;
   final List<AddonModel>? addons;
 
+  /// Grup wajib pilih satu (misal Level Es); selain itu opsional boleh banyak.
+  bool get isVariant => (isRequired ?? false) && maxQty == 1;
+
+  /// Body untuk POST/PUT /v1/products (bagian addon_groups[]).
+  Map<String, dynamic> toBody() => {
+    'id': ?id,
+    'name': name,
+    'is_required': isRequired ?? false,
+    'min_qty': minQty ?? ((isRequired ?? false) ? 1 : 0),
+    'max_qty': maxQty ?? 1,
+    'addons': (addons ?? []).map((addon) => addon.toBody()).toList(),
+  };
+
   factory AddonGroupModel.fromJson(Map<String, dynamic> json) {
     return AddonGroupModel(
       id: (json['id'] as num?)?.toInt(),
