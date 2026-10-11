@@ -178,9 +178,8 @@ class _KitchenBatchDetailDialogState
                     final isSelected = selectedOrderIds.contains(orderId);
                     final notes = item?.notes;
                     final addons = (item?.addons ?? [])
-                        .map((addon) => addon.name)
-                        .whereType<String>()
-                        .join(', ');
+                        .map((addon) => addon.label)
+                        .join(' · ');
 
                     return InkWell(
                       onTap: () => toggleOrder(orderId),

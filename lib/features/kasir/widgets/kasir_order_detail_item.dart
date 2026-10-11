@@ -76,10 +76,10 @@ class KasirOrderDetailItem extends StatelessWidget {
                   (item.addons ?? [])
                       .map(
                         (addon) => (addon.price ?? 0) > 0
-                            ? '${addon.name} (+${formatRupiah(addon.price ?? 0)})'
-                            : '${addon.name}',
+                            ? '${addon.label} (+${formatRupiah(addon.price ?? 0)})'
+                            : addon.label,
                       )
-                      .join(', '),
+                      .join(' · '),
                   style: AppTypography.bodyRegularS.copyWith(
                     color: AppColors.neutral70,
                     height: 1.35,
