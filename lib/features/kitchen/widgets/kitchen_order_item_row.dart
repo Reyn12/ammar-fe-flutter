@@ -66,7 +66,16 @@ class KitchenOrderItemRow extends StatelessWidget {
                       decoration: isReady ? TextDecoration.lineThrough : null,
                     ),
                   ),
-                  if ((item.addons ?? []).isNotEmpty)
+                  for (final component in item.components ?? <OrderItemModel>[])
+                    Text(
+                      '• ${component.qty ?? 0}× ${component.productName ?? '-'}'
+                      '${(component.addons ?? []).isEmpty ? '' : ' (${component.addons!.map((addon) => addon.name).join(', ')})'}',
+                      style: AppTypography.bodyRegularS.copyWith(
+                        color: AppColors.neutral80,
+                        height: 1.3,
+                      ),
+                    ),
+                  if ((item.addons ?? []).isNotEmpty && !item.isPackage)
                     Text(
                       (item.addons ?? []).map((addon) => addon.name).join(', '),
                       style: AppTypography.bodyRegularS.copyWith(

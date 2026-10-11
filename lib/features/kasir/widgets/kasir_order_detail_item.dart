@@ -63,6 +63,14 @@ class KasirOrderDetailItem extends StatelessWidget {
                   ),
                 ],
               ),
+              if (item.isPackage)
+                Text(
+                  'Isi: ${item.components!.map((component) => component.productName).join(', ')}',
+                  style: AppTypography.bodyRegularS.copyWith(
+                    color: AppColors.neutral70,
+                    height: 1.35,
+                  ),
+                ),
               if ((item.addons ?? []).isNotEmpty)
                 Text(
                   (item.addons ?? [])

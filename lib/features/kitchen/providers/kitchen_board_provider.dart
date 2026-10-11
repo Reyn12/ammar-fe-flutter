@@ -89,6 +89,15 @@ class KitchenOrders extends _$KitchenOrders {
                   if (item.productId == productId &&
                       item.status == OrderItemStatus.pending)
                     item.copyWith(status: OrderItemStatus.cooking)
+                  else if (item.isPackage)
+                    item.withComponents([
+                      for (final component in item.components!)
+                        if (component.productId == productId &&
+                            component.status == OrderItemStatus.pending)
+                          component.copyWith(status: OrderItemStatus.cooking)
+                        else
+                          component,
+                    ])
                   else
                     item,
               ],

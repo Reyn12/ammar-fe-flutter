@@ -64,9 +64,12 @@ class _KitchenBatchDetailDialogState
     for (final order in orders) {
       if (order.id != table.orderId) continue;
       for (final item in order.items ?? <OrderItemModel>[]) {
-        if (item.productId == batch.productId &&
-            item.status == OrderItemStatus.pending) {
-          return item;
+        // Batch bisa berisi komponen paket, jadi isi paket ikut dicari.
+        for (final candidate in [item, ...?item.components]) {
+          if (candidate.productId == batch.productId &&
+              candidate.status == OrderItemStatus.pending) {
+            return candidate;
+          }
         }
       }
     }
