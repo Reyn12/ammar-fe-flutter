@@ -7,8 +7,10 @@ import '../../../models/addon_model.dart';
 import '../../../models/product_model.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
+import '../../../widget/custom_snackbar.dart';
 import '../providers/kasir_menu_provider.dart';
 import 'kasir_menu_category_item.dart';
+import 'kasir_menu_options_copy_dialog.dart';
 
 class _OptionDraft {
   _OptionDraft({
@@ -152,6 +154,18 @@ class _KasirMenuOptionsEditorState
     _emit();
   }
 
+  Future<void> _pickAndCopy(List<ProductModel> products) async {
+    final source = await KasirMenuOptionsCopyDialog.show(context, products);
+    if (source == null || !mounted) return;
+
+    _copyFrom(source);
+    CustomSnackbar.success(
+      context,
+      'Pilihan dari ${source.name ?? 'menu lain'} sudah disalin.',
+      title: 'Berhasil',
+    );
+  }
+
   void _copyFrom(ProductModel source) {
     _change(() {
       for (final group in source.addonGroups ?? <AddonGroupModel>[]) {
@@ -218,28 +232,11 @@ class _KasirMenuOptionsEditorState
               label: const Text('Tambah Grup Pilihan'),
             ),
             if (copyable.isNotEmpty)
-              PopupMenuButton<ProductModel>(
-                tooltip: 'Salin pilihan dari menu lain',
-                onSelected: _copyFrom,
-                itemBuilder: (_) => [
-                  for (final product in copyable)
-                    PopupMenuItem(
-                      value: product,
-                      child: Text(product.name ?? '-'),
-                    ),
-                ],
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  child: Text(
-                    'Salin dari menu lain',
-                    style: AppTypography.bodySemiboldM.copyWith(
-                      color: AppColors.primaryMain,
-                    ),
-                  ),
-                ),
+              OutlinedButton.icon(
+                onPressed: () => _pickAndCopy(copyable),
+                // TODO: ganti Material icon ini dengan asset ikon final.
+                icon: const Icon(Icons.copy_rounded, size: 18),
+                label: const Text('Salin dari menu lain'),
               ),
           ],
         ),

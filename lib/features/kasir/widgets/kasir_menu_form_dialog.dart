@@ -138,131 +138,151 @@ class _KasirMenuFormDialogState extends ConsumerState<KasirMenuFormDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 520),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: FormBuilder(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 18,
-              children: [
-                Text(
-                  _isEdit ? 'Edit Menu' : 'Tambah Menu',
-                  style: AppTypography.h8Bold.copyWith(
-                    color: AppColors.neutral100,
-                  ),
-                ),
-                KasirMenuPhotoPicker(
-                  imagePath: imagePath,
-                  onChanged: (path) => setState(() => imagePath = path),
-                ),
-                CustomTextField(
-                  name: 'name',
-                  label: 'Nama Menu',
-                  hint: 'Contoh: Ayam Bakar Madu',
-                  controller: nameController,
-                ),
-                CustomTextField(
-                  name: 'price',
-                  label: 'Harga',
-                  hint: 'Contoh: 28000',
-                  keyboardType: TextInputType.number,
-                  controller: priceController,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8,
-                  children: [
-                    Text(
-                      'Kategori',
-                      style: AppTypography.bodyRegularL.copyWith(
-                        color: AppColors.neutral100,
-                      ),
-                    ),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: List.generate(
-                        ref.watch(kasirMenuCategoriesProvider).length,
-                        (index) => KasirMenuCategoryItem(
-                          label:
-                              ref
-                                  .watch(kasirMenuCategoriesProvider)[index]
-                                  .name ??
-                              '-',
-                          isSelected:
-                              selectedCategoryId ==
-                              ref.watch(kasirMenuCategoriesProvider)[index].id,
-                          onTap: () => setState(() {
-                            selectedCategoryId = ref
-                                .read(kasirMenuCategoriesProvider)[index]
-                                .id;
-                          }),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Isi form bisa panjang (apalagi dengan pilihan menu), jadi hanya bagian ini yang scroll.
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                child: FormBuilder(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 18,
+                    children: [
+                      Text(
+                        _isEdit ? 'Edit Menu' : 'Tambah Menu',
+                        style: AppTypography.h8Bold.copyWith(
+                          color: AppColors.neutral100,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                KasirMenuOptionsEditor(
-                  productId: widget.product?.id,
-                  initialGroups: addonGroups,
-                  onChanged: (groups) => addonGroups = groups,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
+                      KasirMenuPhotoPicker(
+                        imagePath: imagePath,
+                        onChanged: (path) => setState(() => imagePath = path),
+                      ),
+                      CustomTextField(
+                        name: 'name',
+                        label: 'Nama Menu',
+                        hint: 'Contoh: Ayam Bakar Madu',
+                        controller: nameController,
+                      ),
+                      CustomTextField(
+                        name: 'price',
+                        label: 'Harga',
+                        hint: 'Contoh: 28000',
+                        keyboardType: TextInputType.number,
+                        controller: priceController,
+                      ),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 8,
                         children: [
                           Text(
-                            'Tersedia',
-                            style: AppTypography.bodySemiboldM.copyWith(
+                            'Kategori',
+                            style: AppTypography.bodyRegularL.copyWith(
                               color: AppColors.neutral100,
                             ),
                           ),
-                          Text(
-                            'Matikan kalau menu sedang habis.',
-                            style: AppTypography.bodyRegularS.copyWith(
-                              color: AppColors.neutral70,
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: List.generate(
+                              ref.watch(kasirMenuCategoriesProvider).length,
+                              (index) => KasirMenuCategoryItem(
+                                label:
+                                    ref
+                                        .watch(
+                                          kasirMenuCategoriesProvider,
+                                        )[index]
+                                        .name ??
+                                    '-',
+                                isSelected:
+                                    selectedCategoryId ==
+                                    ref
+                                        .watch(
+                                          kasirMenuCategoriesProvider,
+                                        )[index]
+                                        .id,
+                                onTap: () => setState(() {
+                                  selectedCategoryId = ref
+                                      .read(kasirMenuCategoriesProvider)[index]
+                                      .id;
+                                }),
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Switch(
-                      value: isAvailable,
-                      activeTrackColor: AppColors.successMain,
-                      onChanged: (value) => setState(() => isAvailable = value),
-                    ),
-                  ],
-                ),
-                Row(
-                  spacing: 12,
-                  children: [
-                    Expanded(
-                      child: PrimaryButton(
-                        text: 'Batal',
-                        reverse: true,
-                        borderColor: AppColors.neutral40,
-                        textColor: AppColors.neutral80,
-                        height: 48,
-                        onPressed: () => Navigator.of(context).pop(),
+                      KasirMenuOptionsEditor(
+                        productId: widget.product?.id,
+                        initialGroups: addonGroups,
+                        onChanged: (groups) => addonGroups = groups,
                       ),
-                    ),
-                    Expanded(
-                      child: PrimaryButton(
-                        text: isSubmitting ? 'Menyimpan...' : 'Simpan',
-                        height: 48,
-                        enabled: !isSubmitting && selectedCategoryId != null,
-                        onPressed: _submit,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Tersedia',
+                                  style: AppTypography.bodySemiboldM.copyWith(
+                                    color: AppColors.neutral100,
+                                  ),
+                                ),
+                                Text(
+                                  'Matikan kalau menu sedang habis.',
+                                  style: AppTypography.bodyRegularS.copyWith(
+                                    color: AppColors.neutral70,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Switch(
+                            value: isAvailable,
+                            activeTrackColor: AppColors.successMain,
+                            onChanged: (value) =>
+                                setState(() => isAvailable = value),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
+            const Divider(height: 1, color: AppColors.neutral30),
+            // Tombol tetap di bawah, tidak ikut scroll.
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 14, 24, 20),
+              child: Row(
+                spacing: 12,
+                children: [
+                  Expanded(
+                    child: PrimaryButton(
+                      text: 'Batal',
+                      reverse: true,
+                      borderColor: AppColors.neutral40,
+                      textColor: AppColors.neutral80,
+                      height: 48,
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                  Expanded(
+                    child: PrimaryButton(
+                      text: isSubmitting ? 'Menyimpan...' : 'Simpan',
+                      height: 48,
+                      enabled: !isSubmitting && selectedCategoryId != null,
+                      onPressed: _submit,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
