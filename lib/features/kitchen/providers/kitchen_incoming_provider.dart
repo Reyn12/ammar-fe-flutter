@@ -37,7 +37,7 @@ class KitchenIncomingAlert extends _$KitchenIncomingAlert {
       newOrderIds: {...state.newOrderIds, orderId},
       toast: KitchenIncomingToastModel(
         orderId: orderId,
-        orderCode: order.code ?? '-',
+        orderCode: 'No. ${order.queueNumber}',
         placeLabel: order.placeLabel,
         customerName: order.customerName ?? '-',
       ),

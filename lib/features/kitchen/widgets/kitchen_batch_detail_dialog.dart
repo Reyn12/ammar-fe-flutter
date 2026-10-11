@@ -219,7 +219,7 @@ class _KitchenBatchDetailDialogState
                                       Expanded(
                                         child: Text(
                                           '${table.tableLabel ?? '-'} · '
-                                          '${table.orderCode ?? '-'}',
+                                          'No. ${table.queueNumber}',
                                           style: AppTypography.bodySemiboldM
                                               .copyWith(
                                                 color: AppColors.neutral100,

@@ -194,7 +194,7 @@ class _KitchenOrderCardItemState extends State<KitchenOrderCardItem>
                         children: [
                           Flexible(
                             child: Text(
-                              order.code ?? '-',
+                              'No. ${order.queueNumber}',
                               style: AppTypography.h8Bold.copyWith(
                                 color: AppColors.neutral100,
                                 height: 1.2,

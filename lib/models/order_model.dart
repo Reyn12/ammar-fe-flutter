@@ -1,3 +1,4 @@
+import '../helper/order_code_helper.dart';
 import 'order_enums.dart';
 import 'order_item_model.dart';
 
@@ -35,6 +36,9 @@ class OrderModel {
   final int? taxAmount;
   final DateTime? createdAt;
   final List<OrderItemModel>? items;
+
+  /// 3 angka belakang kode yang dipanggil dapur, mis. "021".
+  String get queueNumber => queueNumberOf(code);
 
   bool get isTakeaway => orderType == OrderType.takeaway;
 
