@@ -58,6 +58,16 @@ class _GroupDraft {
   }
 }
 
+/// Memungkinkan widget lain (mis. editor isi paket) menambah grup ke [KasirMenuOptionsEditor].
+class KasirMenuOptionsController {
+  _KasirMenuOptionsEditorState? _state;
+
+  /// Menambah grup salinan (tanpa id); grup yang namanya sudah ada dilewati.
+  /// Mengembalikan jumlah grup yang benar-benar ditambahkan.
+  int appendGroups(List<AddonGroupModel> source) =>
+      _state?._appendGroups(source) ?? 0;
+}
+
 /// Editor grup pilihan menu (Level Es, Level Gula, Tambahan, dst). Setiap perubahan
 /// dikirim ke [onChanged] sebagai daftar lengkap grup.
 class KasirMenuOptionsEditor extends ConsumerStatefulWidget {
@@ -66,6 +76,7 @@ class KasirMenuOptionsEditor extends ConsumerStatefulWidget {
     required this.initialGroups,
     required this.onChanged,
     this.productId,
+    this.controller,
   });
 
   final List<AddonGroupModel> initialGroups;
@@ -73,6 +84,7 @@ class KasirMenuOptionsEditor extends ConsumerStatefulWidget {
 
   /// Menu yang sedang diedit; dikeluarkan dari daftar "Salin dari menu lain".
   final int? productId;
+  final KasirMenuOptionsController? controller;
 
   @override
   ConsumerState<KasirMenuOptionsEditor> createState() =>
@@ -87,10 +99,12 @@ class _KasirMenuOptionsEditorState
   void initState() {
     super.initState();
     groups = widget.initialGroups.map(_draftFrom).toList();
+    widget.controller?._state = this;
   }
 
   @override
   void dispose() {
+    if (widget.controller?._state == this) widget.controller?._state = null;
     for (final group in groups) {
       group.dispose();
     }
@@ -164,6 +178,26 @@ class _KasirMenuOptionsEditorState
       'Pilihan dari ${source.name ?? 'menu lain'} sudah disalin.',
       title: 'Berhasil',
     );
+  }
+
+  int _appendGroups(List<AddonGroupModel> source) {
+    final existing = {
+      for (final group in groups)
+        group.nameController.text.trim().toLowerCase(),
+    };
+    final fresh = [
+      for (final group in source)
+        if (!existing.contains((group.name ?? '').trim().toLowerCase())) group,
+    ];
+
+    if (fresh.isNotEmpty) {
+      _change(() {
+        for (final group in fresh) {
+          groups.add(_draftFrom(group, keepIds: false));
+        }
+      });
+    }
+    return fresh.length;
   }
 
   void _copyFrom(ProductModel source) {

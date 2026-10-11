@@ -5,21 +5,44 @@ import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
 import '../../../widget/primary_button.dart';
 
-/// Pilih menu lain untuk menyalin grup pilihannya (Level Es, Level Gula, dst).
-/// Menghasilkan menu yang dipilih, atau `null` kalau dibatalkan.
+/// Dialog pilih satu menu dengan kolom cari. Dipakai untuk menyalin grup pilihan dari menu
+/// lain (default) dan untuk menambah isi paket. Menghasilkan menu yang dipilih, atau `null`
+/// kalau dibatalkan.
 class KasirMenuOptionsCopyDialog extends StatefulWidget {
-  const KasirMenuOptionsCopyDialog({super.key, required this.products});
+  const KasirMenuOptionsCopyDialog({
+    super.key,
+    required this.products,
+    this.title = 'Salin Pilihan dari Menu Lain',
+    this.description =
+        'Semua grup pilihan dari menu yang kamu pilih akan ditambahkan ke menu ini.',
+    this.subtitleOf,
+  });
 
-  /// Hanya menu yang punya grup pilihan.
+  /// Daftar yang bisa dipilih (sudah disaring pemanggil).
   final List<ProductModel> products;
+  final String title;
+  final String description;
+
+  /// Teks kecil di bawah nama menu. Default: ringkasan nama grup pilihan.
+  final String Function(ProductModel product)? subtitleOf;
 
   static Future<ProductModel?> show(
     BuildContext context,
-    List<ProductModel> products,
-  ) {
+    List<ProductModel> products, {
+    String? title,
+    String? description,
+    String Function(ProductModel product)? subtitleOf,
+  }) {
     return showDialog<ProductModel>(
       context: context,
-      builder: (_) => KasirMenuOptionsCopyDialog(products: products),
+      builder: (_) => KasirMenuOptionsCopyDialog(
+        products: products,
+        title: title ?? 'Salin Pilihan dari Menu Lain',
+        description:
+            description ??
+            'Semua grup pilihan dari menu yang kamu pilih akan ditambahkan ke menu ini.',
+        subtitleOf: subtitleOf,
+      ),
     );
   }
 
@@ -67,13 +90,13 @@ class _KasirMenuOptionsCopyDialogState
             spacing: 14,
             children: [
               Text(
-                'Salin Pilihan dari Menu Lain',
+                widget.title,
                 style: AppTypography.h8Bold.copyWith(
                   color: AppColors.neutral100,
                 ),
               ),
               Text(
-                'Semua grup pilihan dari menu yang kamu pilih akan ditambahkan ke menu ini.',
+                widget.description,
                 style: AppTypography.bodyRegularS.copyWith(
                   color: AppColors.neutral70,
                 ),
@@ -134,7 +157,9 @@ class _KasirMenuOptionsCopyDialogState
                                     ),
                                   ),
                                   Text(
-                                    _groupsSummary(product),
+                                    (widget.subtitleOf ?? _groupsSummary)(
+                                      product,
+                                    ),
                                     style: AppTypography.bodyRegularS.copyWith(
                                       color: AppColors.neutral70,
                                     ),

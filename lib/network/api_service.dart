@@ -397,6 +397,7 @@ class ApiService {
         price: product.price,
         isAvailable: product.isAvailable,
         addonGroups: product.addonGroups,
+        components: product.components,
       );
     }
 
@@ -780,6 +781,11 @@ class ApiService {
     if (product.addonGroups != null)
       'addon_groups': product.addonGroups!
           .map((group) => group.toBody())
+          .toList(),
+    // Isi paket dikirim lengkap juga; daftar kosong = bukan paket.
+    if (product.components != null)
+      'components': product.components!
+          .map((component) => component.toBody())
           .toList(),
   };
 

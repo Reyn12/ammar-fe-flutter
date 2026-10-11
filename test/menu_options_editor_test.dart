@@ -21,6 +21,7 @@ const _levelEs = AddonGroupModel(
 Future<List<AddonGroupModel> Function()> _pumpEditor(
   WidgetTester tester, {
   List<AddonGroupModel> initial = const [_levelEs],
+  KasirMenuOptionsController? controller,
 }) async {
   tester.view.physicalSize = const Size(1600, 2400);
   tester.view.devicePixelRatio = 2;
@@ -34,6 +35,7 @@ Future<List<AddonGroupModel> Function()> _pumpEditor(
         home: Scaffold(
           body: SingleChildScrollView(
             child: KasirMenuOptionsEditor(
+              controller: controller,
               initialGroups: initial,
               onChanged: (groups) => latest = groups,
             ),
@@ -113,6 +115,36 @@ void main() {
     await tester.pump();
     expect(latest(), isEmpty);
   });
+
+  testWidgets(
+    'controller appends copied groups once and skips duplicate names',
+    (tester) async {
+      final controller = KasirMenuOptionsController();
+      final latest = await _pumpEditor(tester, controller: controller);
+
+      const penyajian = AddonGroupModel(
+        id: 77,
+        name: 'Penyajian',
+        isRequired: true,
+        minQty: 1,
+        maxQty: 1,
+        addons: [AddonModel(id: 5, name: 'Es', price: 0, isAvailable: true)],
+      );
+
+      expect(controller.appendGroups(const [_levelEs, penyajian]), 1);
+      await tester.pump();
+
+      final groups = latest();
+      expect(groups.map((group) => group.name), ['Level Es', 'Penyajian']);
+      expect(
+        groups.last.id,
+        isNull,
+        reason: 'salinan tidak membawa id menu asal',
+      );
+      expect(groups.last.addons!.single.id, isNull);
+      expect(controller.appendGroups(const [penyajian]), 0);
+    },
+  );
 
   test('group body keeps ids and derives min/max like the backend expects', () {
     expect(_levelEs.isVariant, isTrue);

@@ -1,4 +1,5 @@
 import 'addon_group_model.dart';
+import 'product_component_model.dart';
 
 class ProductModel {
   const ProductModel({
@@ -11,6 +12,7 @@ class ProductModel {
     this.price,
     this.isAvailable,
     this.addonGroups,
+    this.components,
   });
 
   final int? id;
@@ -23,6 +25,11 @@ class ProductModel {
   final bool? isAvailable;
   final List<AddonGroupModel>? addonGroups;
 
+  /// Isi paket; kosong/null untuk menu biasa.
+  final List<ProductComponentModel>? components;
+
+  bool get isPackage => (components ?? []).isNotEmpty;
+
   ProductModel copyWith({bool? isAvailable, String? imageUrl}) {
     return ProductModel(
       id: id,
@@ -34,6 +41,7 @@ class ProductModel {
       price: price,
       isAvailable: isAvailable ?? this.isAvailable,
       addonGroups: addonGroups,
+      components: components,
     );
   }
 
@@ -49,6 +57,11 @@ class ProductModel {
       isAvailable: json['is_available'] as bool?,
       addonGroups: (json['addon_groups'] as List?)
           ?.map((e) => AddonGroupModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      components: (json['components'] as List?)
+          ?.map(
+            (e) => ProductComponentModel.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
     );
   }
