@@ -1,7 +1,7 @@
 // Tes alur penuh terhadap backend SUNGGUHAN: pelanggan memesan -> kasir konfirmasi tunai ->
 // dapur memproses -> pesanan selesai -> kasir tutup shift, sambil mendengarkan event SSE.
 //
-// MEMBUAT DATA. Jalankan hanya terhadap backend lokal dengan database seed (password akun = "password"):
+// MEMBUAT DATA. Jalankan hanya terhadap backend lokal dengan database seed (password akun = "Password123"):
 //
 //   flutter test test/api_e2e_test.dart --dart-define=API_E2E=true \
 //     --dart-define=API_BASE_URL=http://127.0.0.1:8010/api
@@ -22,7 +22,7 @@ const _baseUrl = String.fromEnvironment(
 );
 const _password = String.fromEnvironment(
   'API_E2E_PASSWORD',
-  defaultValue: 'password',
+  defaultValue: 'Password123',
 );
 
 Future<(ApiService, Dio)> _loginAs(String username) async {
