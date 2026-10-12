@@ -92,10 +92,8 @@ class KasirCashiersPage extends ConsumerWidget {
                             account: account,
                             onEdit: () =>
                                 KasirCashierFormDialog.show(context, account),
-                            onDelete: () => KasirCashierDeleteDialog.show(
-                              context,
-                              account,
-                            ),
+                            onDelete: () =>
+                                KasirCashierDeleteDialog.show(context, account),
                             onToggleActive: () => ref
                                 .read(cashierAccountsProvider.notifier)
                                 .toggleActive(account.id),

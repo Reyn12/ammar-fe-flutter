@@ -74,9 +74,7 @@ class KasirKitchenItem extends StatelessWidget {
               child: Text(
                 _initials,
                 style: AppTypography.h7Bold.copyWith(
-                  color: active
-                      ? AppColors.orangeMain
-                      : AppColors.neutral70,
+                  color: active ? AppColors.orangeMain : AppColors.neutral70,
                   height: 1,
                 ),
               ),
@@ -91,9 +89,7 @@ class KasirKitchenItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.h9Bold.copyWith(
-                  color: active
-                      ? AppColors.neutral100
-                      : AppColors.neutral70,
+                  color: active ? AppColors.neutral100 : AppColors.neutral70,
                   height: 1.2,
                 ),
               ),

@@ -46,7 +46,10 @@ class _KasirOrderSearchFieldState extends ConsumerState<KasirOrderSearchField> {
         ),
         filled: true,
         fillColor: AppColors.neutral10,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 12,
+        ),
         prefixIcon: const Icon(
           // TODO: ganti Material icon ini dengan asset ikon final.
           Icons.search_rounded,
@@ -74,7 +77,10 @@ class _KasirOrderSearchFieldState extends ConsumerState<KasirOrderSearchField> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primaryMain, width: 1.4),
+          borderSide: const BorderSide(
+            color: AppColors.primaryMain,
+            width: 1.4,
+          ),
         ),
       ),
     );

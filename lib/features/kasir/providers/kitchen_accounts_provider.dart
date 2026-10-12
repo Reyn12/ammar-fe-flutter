@@ -40,7 +40,10 @@ class KitchenAccounts extends _$KitchenAccounts {
 
   Future<void> delete(int id) async {
     await ref.read(apiServiceProvider).deleteKitchenStaff(id);
-    state = [for (final item in state) if (item.id != id) item];
+    state = [
+      for (final item in state)
+        if (item.id != id) item,
+    ];
   }
 
   Future<void> toggleActive(int id) async {

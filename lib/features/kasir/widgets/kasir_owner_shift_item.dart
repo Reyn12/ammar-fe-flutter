@@ -32,16 +32,12 @@ class KasirOwnerShiftItem extends StatelessWidget {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: active
-                  ? AppColors.primarySurface
-                  : AppColors.neutral20,
+              color: active ? AppColors.primarySurface : AppColors.neutral20,
               borderRadius: BorderRadius.circular(12),
             ),
             // TODO: ganti Material icon ini dengan asset ikon final.
             child: Icon(
-              active
-                  ? Icons.play_circle_rounded
-                  : Icons.check_circle_rounded,
+              active ? Icons.play_circle_rounded : Icons.check_circle_rounded,
               size: 20,
               color: active ? AppColors.primaryMain : AppColors.neutral70,
             ),

@@ -75,7 +75,9 @@ class KasirHeader extends ConsumerWidget {
             foregroundColor: paymentStatusColor(null).foreground,
             backgroundColor: paymentStatusColor(null).background,
           ),
-          ConnectionIndicator(isOnline: ref.watch(staffEventsConnectionProvider)),
+          ConnectionIndicator(
+            isOnline: ref.watch(staffEventsConnectionProvider),
+          ),
           IconButton(
             tooltip: 'Muat ulang pesanan',
             onPressed: () => ref.invalidate(incomingOrdersProvider),

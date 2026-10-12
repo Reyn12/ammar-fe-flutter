@@ -65,18 +65,14 @@ class KasirCashierItem extends StatelessWidget {
               width: 72,
               height: 72,
               decoration: BoxDecoration(
-                color: active
-                    ? AppColors.primarySurface
-                    : AppColors.neutral30,
+                color: active ? AppColors.primarySurface : AppColors.neutral30,
                 borderRadius: BorderRadius.circular(20),
               ),
               alignment: Alignment.center,
               child: Text(
                 _initials,
                 style: AppTypography.h7Bold.copyWith(
-                  color: active
-                      ? AppColors.primaryMain
-                      : AppColors.neutral70,
+                  color: active ? AppColors.primaryMain : AppColors.neutral70,
                   height: 1,
                 ),
               ),
@@ -91,9 +87,7 @@ class KasirCashierItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.h9Bold.copyWith(
-                  color: active
-                      ? AppColors.neutral100
-                      : AppColors.neutral70,
+                  color: active ? AppColors.neutral100 : AppColors.neutral70,
                   height: 1.2,
                 ),
               ),

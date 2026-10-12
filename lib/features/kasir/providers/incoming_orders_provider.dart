@@ -117,8 +117,13 @@ int kasirOrderTotalPages(Ref ref) {
 @riverpod
 List<OrderModel> pagedIncomingOrders(Ref ref) {
   final filtered = ref.watch(filteredIncomingOrdersProvider);
-  final totalPages = (filtered.length / kasirOrdersPerPage).ceil().clamp(1, 999);
-  final pageIndex = ref.watch(kasirOrderPageIndexProvider).clamp(0, totalPages - 1);
+  final totalPages = (filtered.length / kasirOrdersPerPage).ceil().clamp(
+    1,
+    999,
+  );
+  final pageIndex = ref
+      .watch(kasirOrderPageIndexProvider)
+      .clamp(0, totalPages - 1);
 
   if (pageIndex != ref.watch(kasirOrderPageIndexProvider)) {
     Future.microtask(() {

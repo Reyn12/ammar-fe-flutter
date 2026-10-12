@@ -29,150 +29,144 @@ class KasirOrderDetailPanel extends ConsumerWidget {
       child: order == null
           ? const KasirOrderDetailEmpty()
           : Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: 16,
-                    children: [
-                      Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 16,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 12,
+                  children: [
+                    Expanded(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 12,
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  order.code ?? '-',
-                                  style: AppTypography.h7Bold.copyWith(
-                                    color: AppColors.neutral100,
-                                    height: 1.2,
-                                  ),
-                                ),
-                                Text(
-                                  '${order.placeLabel} · ${order.orderType?.label ?? '-'}'
-                                  '${order.createdAt == null ? '' : ' · ${formatClock(order.createdAt!)}'}',
-                                  style: AppTypography.bodyRegularM.copyWith(
-                                    color: AppColors.neutral70,
-                                    height: 1.3,
-                                  ),
-                                ),
-                              ],
+                          Text(
+                            order.code ?? '-',
+                            style: AppTypography.h7Bold.copyWith(
+                              color: AppColors.neutral100,
+                              height: 1.2,
                             ),
                           ),
-                          StatusPill(
-                            label: order.status?.label ?? '-',
-                            foregroundColor: orderStatusColor(
-                              order.status,
-                            ).foreground,
-                            backgroundColor: orderStatusColor(
-                              order.status,
-                            ).background,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        spacing: 8,
-                        children: [
-                          StatusPill(
-                            label:
-                                'Pembayaran ${order.paymentMethod?.label ?? '-'}',
-                            // TODO: ganti Material icon ini dengan asset ikon final.
-                            icon: Icons.account_balance_wallet_rounded,
-                            foregroundColor: AppColors.neutral80,
-                            backgroundColor: AppColors.neutral20,
-                          ),
-                          StatusPill(
-                            label: order.needCashConfirmation
-                                ? 'Menunggu Konfirmasi'
-                                : 'Lunas',
-                            foregroundColor: paymentStatusColor(
-                              order.paymentStatus,
-                            ).foreground,
-                            backgroundColor: paymentStatusColor(
-                              order.paymentStatus,
-                            ).background,
-                          ),
-                          if ((order.customerName ?? '').isNotEmpty)
-                            StatusPill(
-                              label: order.customerName ?? '',
-                              // TODO: ganti Material icon ini dengan asset ikon final.
-                              icon: Icons.person_rounded,
-                              foregroundColor: AppColors.neutral80,
-                              backgroundColor: AppColors.neutral20,
+                          Text(
+                            '${order.placeLabel} · ${order.orderType?.label ?? '-'}'
+                            '${order.createdAt == null ? '' : ' · ${formatClock(order.createdAt!)}'}',
+                            style: AppTypography.bodyRegularM.copyWith(
+                              color: AppColors.neutral70,
+                              height: 1.3,
                             ),
-                        ],
-                      ),
-                      const Divider(height: 1, color: AppColors.neutral30),
-                      Expanded(
-                        child: KasirOrderDetailItemBuilder(
-                          items: order.items ?? [],
-                        ),
-                      ),
-                      const Divider(height: 1, color: AppColors.neutral30),
-                      Column(
-                        spacing: 8,
-                        children: [
-                          KasirOrderSummaryRow(
-                            label: 'Subtotal',
-                            value: formatRupiah(order.subtotal),
-                          ),
-                          KasirOrderSummaryRow(
-                            label: 'Pajak',
-                            value: formatRupiah(order.taxAmount ?? 0),
-                          ),
-                          KasirOrderSummaryRow(
-                            label: 'Total',
-                            value: formatRupiah(order.totalAmount ?? 0),
-                            isTotal: true,
                           ),
                         ],
                       ),
-                      if (order.needCashConfirmation)
-                        PrimaryButton(
-                          text: 'Konfirmasi Pembayaran Tunai',
-                          color: AppColors.successMain,
-                          height: 52,
-                          leading: const Icon(
-                            // TODO: ganti Material icon ini dengan asset ikon final.
-                            Icons.check_circle_rounded,
-                            color: AppColors.neutral10,
-                          ),
-                          onPressed: () {
-                            if (!(ref
-                                    .read(kasirShiftProvider)
-                                    .value
-                                    ?.isActive ??
-                                false)) {
-                              CustomSnackbar.warning(
-                                context,
-                                'Buka shift dulu sebelum menerima pembayaran '
-                                'tunai.',
-                                title: 'Shift Belum Dibuka',
-                              );
-                              return;
-                            }
-                            KasirConfirmCashDialog.show(context, order);
-                          },
-                        )
-                      else
-                        PrimaryButton(
-                          text: 'Cetak Ulang Struk',
-                          reverse: true,
-                          borderColor: AppColors.primaryMain,
-                          textColor: AppColors.primaryMain,
-                          height: 52,
-                          leading: const Icon(
-                            // TODO: ganti Material icon ini dengan asset ikon final.
-                            Icons.print_rounded,
-                            color: AppColors.primaryMain,
-                          ),
-                          onPressed: () => CustomSnackbar.info(
-                            context,
-                            'Cetak struk masih dalam pengembangan.',
-                            title: 'Coming Soon',
-                          ),
-                        ),
-                    ],
+                    ),
+                    StatusPill(
+                      label: order.status?.label ?? '-',
+                      foregroundColor: orderStatusColor(
+                        order.status,
+                      ).foreground,
+                      backgroundColor: orderStatusColor(
+                        order.status,
+                      ).background,
+                    ),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    StatusPill(
+                      label: 'Pembayaran ${order.paymentMethod?.label ?? '-'}',
+                      // TODO: ganti Material icon ini dengan asset ikon final.
+                      icon: Icons.account_balance_wallet_rounded,
+                      foregroundColor: AppColors.neutral80,
+                      backgroundColor: AppColors.neutral20,
+                    ),
+                    StatusPill(
+                      label: order.needCashConfirmation
+                          ? 'Menunggu Konfirmasi'
+                          : 'Lunas',
+                      foregroundColor: paymentStatusColor(
+                        order.paymentStatus,
+                      ).foreground,
+                      backgroundColor: paymentStatusColor(
+                        order.paymentStatus,
+                      ).background,
+                    ),
+                    if ((order.customerName ?? '').isNotEmpty)
+                      StatusPill(
+                        label: order.customerName ?? '',
+                        // TODO: ganti Material icon ini dengan asset ikon final.
+                        icon: Icons.person_rounded,
+                        foregroundColor: AppColors.neutral80,
+                        backgroundColor: AppColors.neutral20,
+                      ),
+                  ],
+                ),
+                const Divider(height: 1, color: AppColors.neutral30),
+                Expanded(
+                  child: KasirOrderDetailItemBuilder(items: order.items ?? []),
+                ),
+                const Divider(height: 1, color: AppColors.neutral30),
+                Column(
+                  spacing: 8,
+                  children: [
+                    KasirOrderSummaryRow(
+                      label: 'Subtotal',
+                      value: formatRupiah(order.subtotal),
+                    ),
+                    KasirOrderSummaryRow(
+                      label: 'Pajak',
+                      value: formatRupiah(order.taxAmount ?? 0),
+                    ),
+                    KasirOrderSummaryRow(
+                      label: 'Total',
+                      value: formatRupiah(order.totalAmount ?? 0),
+                      isTotal: true,
+                    ),
+                  ],
+                ),
+                if (order.needCashConfirmation)
+                  PrimaryButton(
+                    text: 'Konfirmasi Pembayaran Tunai',
+                    color: AppColors.successMain,
+                    height: 52,
+                    leading: const Icon(
+                      // TODO: ganti Material icon ini dengan asset ikon final.
+                      Icons.check_circle_rounded,
+                      color: AppColors.neutral10,
+                    ),
+                    onPressed: () {
+                      if (!(ref.read(kasirShiftProvider).value?.isActive ??
+                          false)) {
+                        CustomSnackbar.warning(
+                          context,
+                          'Buka shift dulu sebelum menerima pembayaran '
+                          'tunai.',
+                          title: 'Shift Belum Dibuka',
+                        );
+                        return;
+                      }
+                      KasirConfirmCashDialog.show(context, order);
+                    },
+                  )
+                else
+                  PrimaryButton(
+                    text: 'Cetak Ulang Struk',
+                    reverse: true,
+                    borderColor: AppColors.primaryMain,
+                    textColor: AppColors.primaryMain,
+                    height: 52,
+                    leading: const Icon(
+                      // TODO: ganti Material icon ini dengan asset ikon final.
+                      Icons.print_rounded,
+                      color: AppColors.primaryMain,
+                    ),
+                    onPressed: () => CustomSnackbar.info(
+                      context,
+                      'Cetak struk masih dalam pengembangan.',
+                      title: 'Coming Soon',
+                    ),
                   ),
+              ],
+            ),
     );
   }
 }

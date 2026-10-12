@@ -13,7 +13,7 @@ part 'staff_events_service.g.dart';
 class StaffEvent {
   const StaffEvent({required this.type, required this.data, this.id});
 
-  /// order.created | order.paid | order.cancelled | kitchen.updated
+  /// order.created | order.paid | order.ready | order.cancelled | kitchen.updated
   final String type;
   final Map<String, dynamic> data;
   final String? id;

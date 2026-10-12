@@ -52,6 +52,28 @@ class KasirIncomingAlert extends _$KasirIncomingAlert {
     toastTimer = Timer(const Duration(seconds: 4), dismissToast);
   }
 
+  /// Makanan selesai di dapur: kasir diminta cetak struk dan memanggil nomor antrean.
+  void announceReady(OrderModel order) {
+    final orderId = order.id;
+    if (orderId == null) return;
+
+    unawaited(ref.read(orderSoundProvider).play());
+
+    state = state.copyWith(
+      toast: KasirIncomingToastModel(
+        orderId: orderId,
+        orderCode: order.code ?? '-',
+        placeLabel: order.placeLabel,
+        customerName: order.customerName ?? '-',
+        isReady: true,
+        queueNumber: order.queueNumber,
+      ),
+    );
+
+    toastTimer?.cancel();
+    toastTimer = Timer(const Duration(seconds: 10), dismissToast);
+  }
+
   void clearNew(int orderId) {
     clearNewTimers.remove(orderId)?.cancel();
     if (!state.newOrderIds.contains(orderId)) return;

@@ -74,7 +74,9 @@ class KasirShiftClosedCard extends ConsumerWidget {
                   icon: shift.cashDifference == 0
                       ? Icons.check_circle_rounded
                       : Icons.error_outline_rounded,
-                  label: shift.cashDifference < 0 ? 'Selisih Kurang' : 'Selisih Lebih',
+                  label: shift.cashDifference < 0
+                      ? 'Selisih Kurang'
+                      : 'Selisih Lebih',
                   value: formatRupiah(shift.cashDifference.abs()),
                   valueColor: shift.cashDifference == 0
                       ? AppColors.successMain

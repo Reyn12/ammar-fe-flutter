@@ -59,6 +59,8 @@ class KasirIncomingToastCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = toast.isReady ? AppColors.successMain : AppColors.orangeMain;
+
     return Material(
       color: Colors.transparent,
       elevation: 0,
@@ -68,16 +70,18 @@ class KasirIncomingToastCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.neutral10,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.orangeMain, width: 1.4),
+          border: Border.all(color: accent, width: 1.4),
           boxShadow: AppShadows.soft,
         ),
         child: Row(
           spacing: 10,
           children: [
-            const Icon(
-              Icons.notifications_active_rounded,
+            Icon(
+              toast.isReady
+                  ? Icons.restaurant_rounded
+                  : Icons.notifications_active_rounded,
               size: 20,
-              color: AppColors.orangeMain,
+              color: accent,
             ),
             Expanded(
               child: Column(
@@ -85,11 +89,13 @@ class KasirIncomingToastCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Pesanan baru · ${toast.orderCode}',
+                    toast.isReady
+                        ? 'Siap diantar · Antrian ${toast.queueNumber}'
+                        : 'Pesanan baru · ${toast.orderCode}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.bodySemiboldM.copyWith(
-                      color: AppColors.orangeMain,
+                      color: accent,
                       height: 1.2,
                     ),
                   ),

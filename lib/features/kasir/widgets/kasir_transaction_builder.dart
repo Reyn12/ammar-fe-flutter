@@ -18,7 +18,8 @@ class KasirTransactionBuilder extends StatelessWidget {
       return const Center(
         child: EmptyState(
           title: 'Belum ada transaksi',
-          subtitle: 'Transaksi yang selesai pada shift ini akan tercatat di sini.',
+          subtitle:
+              'Transaksi yang selesai pada shift ini akan tercatat di sini.',
         ),
       );
     }

@@ -42,9 +42,7 @@ class KasirTableItem extends StatelessWidget {
                 child: Text(
                   table.label,
                   style: AppTypography.h8Bold.copyWith(
-                    color: active
-                        ? AppColors.neutral100
-                        : AppColors.neutral70,
+                    color: active ? AppColors.neutral100 : AppColors.neutral70,
                     height: 1.15,
                   ),
                 ),

@@ -40,7 +40,10 @@ class TableAccounts extends _$TableAccounts {
 
   Future<void> delete(int id) async {
     await ref.read(apiServiceProvider).deleteTable(id);
-    state = [for (final item in state) if (item.id != id) item];
+    state = [
+      for (final item in state)
+        if (item.id != id) item,
+    ];
   }
 
   Future<void> toggleActive(int id) async {

@@ -27,11 +27,7 @@ class KasirMenuPhotoActionChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Icon(
-            icon,
-            size: 18,
-            color: iconColor ?? AppColors.neutral80,
-          ),
+          child: Icon(icon, size: 18, color: iconColor ?? AppColors.neutral80),
         ),
       ),
     );

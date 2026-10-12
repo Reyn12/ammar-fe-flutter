@@ -29,8 +29,7 @@ class KasirMenuCategoryTabs extends ConsumerWidget {
             index,
           ) {
             return KasirMenuCategoryItem(
-              label:
-                  ref.watch(kasirMenuCategoriesProvider)[index].name ?? '-',
+              label: ref.watch(kasirMenuCategoriesProvider)[index].name ?? '-',
               isSelected:
                   ref.watch(kasirMenuCategoryProvider) ==
                   ref.watch(kasirMenuCategoriesProvider)[index].id,

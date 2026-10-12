@@ -48,13 +48,24 @@ class _KasirShellPageState extends ConsumerState<KasirShellPage> {
         unawaited(ref.read(kasirShiftProvider.notifier).refresh());
       }
 
+      final orderId = event.orderId;
+      if (event.type == 'order.ready' && orderId != null) {
+        final order = await ref
+            .read(apiServiceProvider)
+            .fetchOrderDetail(orderId);
+        if (!mounted) return;
+        ref.read(kasirIncomingAlertProvider.notifier).announceReady(order);
+        return;
+      }
+
       final needsAttention =
           (event.type == 'order.created' && event.paymentMethod == 'cash') ||
           (event.type == 'order.paid' && event.paymentMethod == 'qris');
-      final orderId = event.orderId;
       if (!needsAttention || orderId == null) return;
 
-      final order = await ref.read(apiServiceProvider).fetchOrderDetail(orderId);
+      final order = await ref
+          .read(apiServiceProvider)
+          .fetchOrderDetail(orderId);
       if (!mounted) return;
       ref.read(kasirIncomingAlertProvider.notifier).announce(order);
     } catch (_) {

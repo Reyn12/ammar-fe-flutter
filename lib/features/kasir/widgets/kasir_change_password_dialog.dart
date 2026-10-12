@@ -121,9 +121,7 @@ class _KasirChangePasswordDialogState
                   hint: 'Ulangi password baru',
                   controller: confirmPasswordController,
                   validators: [
-                    Validator.confirmPassword(
-                      () => newPasswordController.text,
-                    ),
+                    Validator.confirmPassword(() => newPasswordController.text),
                   ],
                   onChanged: (_) => setState(() {}),
                 ),

@@ -92,10 +92,8 @@ class KasirKitchenStaffPage extends ConsumerWidget {
                             account: account,
                             onEdit: () =>
                                 KasirKitchenFormDialog.show(context, account),
-                            onDelete: () => KasirKitchenDeleteDialog.show(
-                              context,
-                              account,
-                            ),
+                            onDelete: () =>
+                                KasirKitchenDeleteDialog.show(context, account),
                             onToggleActive: () => ref
                                 .read(kitchenAccountsProvider.notifier)
                                 .toggleActive(account.id),

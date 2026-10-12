@@ -36,7 +36,9 @@ class _KasirShiftCloseDialogState extends ConsumerState<KasirShiftCloseDialog> {
   int get _expected => widget.shift.expectedCash ?? 0;
 
   int get _actual =>
-      int.tryParse(actualCashController.text.replaceAll(RegExp(r'[^0-9]'), '')) ??
+      int.tryParse(
+        actualCashController.text.replaceAll(RegExp(r'[^0-9]'), ''),
+      ) ??
       0;
 
   int get _difference => _actual - _expected;

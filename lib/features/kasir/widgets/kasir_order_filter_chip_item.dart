@@ -45,16 +45,17 @@ class KasirOrderFilterChipItem extends StatelessWidget {
               Text(
                 label,
                 style: AppTypography.bodySemiboldM.copyWith(
-                  color: isSelected
-                      ? AppColors.neutral10
-                      : AppColors.neutral80,
+                  color: isSelected ? AppColors.neutral10 : AppColors.neutral80,
                   height: 1.2,
                 ),
               ),
               if (badgeCount > 0)
                 Container(
                   constraints: const BoxConstraints(minWidth: 20),
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColors.neutral10

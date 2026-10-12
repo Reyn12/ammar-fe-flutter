@@ -35,8 +35,9 @@ class KasirOrderFilterTabs extends ConsumerWidget {
             label: filter.label,
             badgeCount: badgeCount,
             isSelected: ref.watch(incomingOrderFilterStateProvider) == filter,
-            onTap: () =>
-                ref.read(incomingOrderFilterStateProvider.notifier).select(filter),
+            onTap: () => ref
+                .read(incomingOrderFilterStateProvider.notifier)
+                .select(filter),
           );
         }),
       ),

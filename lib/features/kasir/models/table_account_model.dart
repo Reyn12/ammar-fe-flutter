@@ -21,8 +21,7 @@ class TableAccountModel {
 
   /// URL yang di-scan customer. Dari backend (`qr_url`); fallback ke bentuk standar.
   String get qrPayload =>
-      qrUrl ??
-      'https://ammar-fe-nextjs.vercel.app/m/$tableNumber?t=$qrToken';
+      qrUrl ?? 'https://ammar-fe-nextjs.vercel.app/m/$tableNumber?t=$qrToken';
 
   String get label => 'Meja $tableNumber';
 
@@ -49,9 +48,8 @@ class TableAccountModel {
       id: (json['id'] as num?)?.toInt() ?? 0,
       branchId: (json['branch_id'] as num?)?.toInt() ?? 1,
       tableNumber: json['table_number']?.toString() ?? '',
-      qrToken: json['qr_token']?.toString() ??
-          json['qr_code_url']?.toString() ??
-          '',
+      qrToken:
+          json['qr_token']?.toString() ?? json['qr_code_url']?.toString() ?? '',
       qrUrl: json['qr_url']?.toString(),
       isActive: json['is_active'] as bool? ?? true,
     );
