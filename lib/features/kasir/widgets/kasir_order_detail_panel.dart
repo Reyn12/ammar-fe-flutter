@@ -13,7 +13,6 @@ import '../../../widget/primary_button.dart';
 import '../../../widget/status_pill.dart';
 import '../../../widget/surface_card.dart';
 import '../providers/incoming_orders_provider.dart';
-import '../providers/kasir_incoming_alert_provider.dart';
 import '../providers/kasir_shift_provider.dart';
 import 'kasir_confirm_cash_dialog.dart';
 import 'kasir_order_detail_empty.dart';
@@ -180,19 +179,21 @@ class KasirOrderDetailPanel extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: PrimaryButton(
-                          text: 'Panggil Ulang',
+                          text: 'Cetak Struk',
                           reverse: true,
                           borderColor: AppColors.primaryMain,
                           textColor: AppColors.primaryMain,
                           height: 52,
                           leading: const Icon(
                             // TODO: ganti Material icon ini dengan asset ikon final.
-                            Icons.campaign_rounded,
+                            Icons.print_rounded,
                             color: AppColors.primaryMain,
                           ),
-                          onPressed: () => ref
-                              .read(kasirIncomingAlertProvider.notifier)
-                              .announceReady(order),
+                          onPressed: () => CustomSnackbar.info(
+                            context,
+                            'Cetak struk masih dalam pengembangan.',
+                            title: 'Coming Soon',
+                          ),
                         ),
                       ),
                       Expanded(
