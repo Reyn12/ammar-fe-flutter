@@ -193,12 +193,22 @@ class _KasirOrderCardItemState extends State<KasirOrderCardItem>
                       : AppColors.successSoft,
                   dense: true,
                 ),
-                StatusPill(
-                  label: order.status?.label ?? '-',
-                  foregroundColor: orderStatusColor(order.status).foreground,
-                  backgroundColor: orderStatusColor(order.status).background,
-                  dense: true,
-                ),
+                if (order.isReadyForHandOver)
+                  StatusPill(
+                    label: 'Siap Diantar',
+                    // TODO: ganti Material icon ini dengan asset ikon final.
+                    icon: Icons.restaurant_rounded,
+                    foregroundColor: AppColors.neutral10,
+                    backgroundColor: AppColors.successMain,
+                    dense: true,
+                  )
+                else
+                  StatusPill(
+                    label: order.status?.label ?? '-',
+                    foregroundColor: orderStatusColor(order.status).foreground,
+                    backgroundColor: orderStatusColor(order.status).background,
+                    dense: true,
+                  ),
               ],
             ),
             Text(

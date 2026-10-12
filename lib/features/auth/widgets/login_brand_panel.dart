@@ -54,29 +54,29 @@ class LoginBrandPanel extends StatelessWidget {
           ),
           // Akun demo hanya relevan saat memakai data mock.
           if (mockStatus)
-          Column(
-            spacing: 12,
-            children: [
-              LoginDemoAccountItem(
-                icon: Icons.storefront_rounded,
-                title: 'Masuk sebagai Owner',
-                subtitle:
-                    '${UserMocks.demoOwnerUsername} / ${UserMocks.demoPassword}',
-              ),
-              LoginDemoAccountItem(
-                icon: Icons.point_of_sale_rounded,
-                title: 'Masuk sebagai Kasir',
-                subtitle:
-                    '${UserMocks.demoCashierUsername} / ${UserMocks.demoPassword}',
-              ),
-              LoginDemoAccountItem(
-                icon: Icons.soup_kitchen_rounded,
-                title: 'Masuk sebagai Koki',
-                subtitle:
-                    '${UserMocks.demoKitchenUsername} / ${UserMocks.demoPassword}',
-              ),
-            ],
-          ),
+            Column(
+              spacing: 12,
+              children: [
+                LoginDemoAccountItem(
+                  icon: Icons.storefront_rounded,
+                  title: 'Masuk sebagai Owner',
+                  subtitle:
+                      '${UserMocks.demoOwnerUsername} / ${UserMocks.demoPassword}',
+                ),
+                LoginDemoAccountItem(
+                  icon: Icons.point_of_sale_rounded,
+                  title: 'Masuk sebagai Kasir',
+                  subtitle:
+                      '${UserMocks.demoCashierUsername} / ${UserMocks.demoPassword}',
+                ),
+                LoginDemoAccountItem(
+                  icon: Icons.soup_kitchen_rounded,
+                  title: 'Masuk sebagai Koki',
+                  subtitle:
+                      '${UserMocks.demoKitchenUsername} / ${UserMocks.demoPassword}',
+                ),
+              ],
+            ),
         ],
       ),
     );

@@ -11,9 +11,7 @@ class UserMocks {
     name: 'Rani Kasir',
     email: 'kasir@ammar.id',
     role: 'cashier',
-    roles: [
-      UserRoleModel(id: 1, name: 'cashier', description: 'Kasir cabang'),
-    ],
+    roles: [UserRoleModel(id: 1, name: 'cashier', description: 'Kasir cabang')],
   );
 
   static const kitchen = UserModel(
@@ -21,9 +19,7 @@ class UserMocks {
     name: 'Pak Udin',
     email: 'dapur@ammar.id',
     role: 'kitchen',
-    roles: [
-      UserRoleModel(id: 2, name: 'kitchen', description: 'Koki / dapur'),
-    ],
+    roles: [UserRoleModel(id: 2, name: 'kitchen', description: 'Koki / dapur')],
   );
 
   static const owner = UserModel(
@@ -31,9 +27,7 @@ class UserMocks {
     name: 'Pak Ammar',
     email: 'owner@ammar.id',
     role: 'owner',
-    roles: [
-      UserRoleModel(id: 3, name: 'owner', description: 'Pemilik toko'),
-    ],
+    roles: [UserRoleModel(id: 3, name: 'owner', description: 'Pemilik toko')],
   );
 
   /// Password demo sementara (mock UI, belum API).

@@ -34,6 +34,16 @@ class IncomingOrders extends _$IncomingOrders {
         if (order.id == orderId) updated else order,
     ]);
   }
+
+  /// Makanan diserahkan ke pelanggan: pesanan keluar dari daftar Pesanan Masuk.
+  Future<void> handOver(int orderId) async {
+    await ref.read(apiServiceProvider).handOverOrder(orderId: orderId);
+
+    state = AsyncData([
+      for (final order in state.value ?? <OrderModel>[])
+        if (order.id != orderId) order,
+    ]);
+  }
 }
 
 @riverpod

@@ -15,9 +15,24 @@ class KitchenBatchMocks {
       totalQty: 7,
       status: OrderItemStatus.pending,
       tables: [
-        KitchenBatchTableModel(orderId: 241, orderCode: '#AMR241', tableLabel: 'Meja 12', qty: 2),
-        KitchenBatchTableModel(orderId: 244, orderCode: '#AMR244', tableLabel: 'Meja 07', qty: 3),
-        KitchenBatchTableModel(orderId: 246, orderCode: '#AMR246', tableLabel: 'Takeaway', qty: 2),
+        KitchenBatchTableModel(
+          orderId: 241,
+          orderCode: '#AMR241',
+          tableLabel: 'Meja 12',
+          qty: 2,
+        ),
+        KitchenBatchTableModel(
+          orderId: 244,
+          orderCode: '#AMR244',
+          tableLabel: 'Meja 07',
+          qty: 3,
+        ),
+        KitchenBatchTableModel(
+          orderId: 246,
+          orderCode: '#AMR246',
+          tableLabel: 'Takeaway',
+          qty: 2,
+        ),
       ],
     ),
     KitchenBatchModel(
@@ -28,8 +43,18 @@ class KitchenBatchMocks {
       totalQty: 3,
       status: OrderItemStatus.pending,
       tables: [
-        KitchenBatchTableModel(orderId: 243, orderCode: '#AMR243', tableLabel: 'Takeaway', qty: 1),
-        KitchenBatchTableModel(orderId: 248, orderCode: '#AMR248', tableLabel: 'Meja 11', qty: 2),
+        KitchenBatchTableModel(
+          orderId: 243,
+          orderCode: '#AMR243',
+          tableLabel: 'Takeaway',
+          qty: 1,
+        ),
+        KitchenBatchTableModel(
+          orderId: 248,
+          orderCode: '#AMR248',
+          tableLabel: 'Meja 11',
+          qty: 2,
+        ),
       ],
     ),
     KitchenBatchModel(
@@ -40,8 +65,18 @@ class KitchenBatchMocks {
       totalQty: 2,
       status: OrderItemStatus.cooking,
       tables: [
-        KitchenBatchTableModel(orderId: 242, orderCode: '#AMR242', tableLabel: 'Meja 04', qty: 1),
-        KitchenBatchTableModel(orderId: 245, orderCode: '#AMR245', tableLabel: 'Meja 02', qty: 1),
+        KitchenBatchTableModel(
+          orderId: 242,
+          orderCode: '#AMR242',
+          tableLabel: 'Meja 04',
+          qty: 1,
+        ),
+        KitchenBatchTableModel(
+          orderId: 245,
+          orderCode: '#AMR245',
+          tableLabel: 'Meja 02',
+          qty: 1,
+        ),
       ],
     ),
     KitchenBatchModel(
@@ -52,9 +87,24 @@ class KitchenBatchMocks {
       totalQty: 3,
       status: OrderItemStatus.cooking,
       tables: [
-        KitchenBatchTableModel(orderId: 241, orderCode: '#AMR241', tableLabel: 'Meja 12', qty: 1),
-        KitchenBatchTableModel(orderId: 242, orderCode: '#AMR242', tableLabel: 'Meja 04', qty: 1),
-        KitchenBatchTableModel(orderId: 247, orderCode: '#AMR247', tableLabel: 'Meja 09', qty: 1),
+        KitchenBatchTableModel(
+          orderId: 241,
+          orderCode: '#AMR241',
+          tableLabel: 'Meja 12',
+          qty: 1,
+        ),
+        KitchenBatchTableModel(
+          orderId: 242,
+          orderCode: '#AMR242',
+          tableLabel: 'Meja 04',
+          qty: 1,
+        ),
+        KitchenBatchTableModel(
+          orderId: 247,
+          orderCode: '#AMR247',
+          tableLabel: 'Meja 09',
+          qty: 1,
+        ),
       ],
     ),
     KitchenBatchModel(
@@ -65,8 +115,18 @@ class KitchenBatchMocks {
       totalQty: 2,
       status: OrderItemStatus.pending,
       tables: [
-        KitchenBatchTableModel(orderId: 241, orderCode: '#AMR241', tableLabel: 'Meja 12', qty: 1),
-        KitchenBatchTableModel(orderId: 243, orderCode: '#AMR243', tableLabel: 'Takeaway', qty: 1),
+        KitchenBatchTableModel(
+          orderId: 241,
+          orderCode: '#AMR241',
+          tableLabel: 'Meja 12',
+          qty: 1,
+        ),
+        KitchenBatchTableModel(
+          orderId: 243,
+          orderCode: '#AMR243',
+          tableLabel: 'Takeaway',
+          qty: 1,
+        ),
       ],
     ),
     KitchenBatchModel(
@@ -77,7 +137,12 @@ class KitchenBatchMocks {
       totalQty: 1,
       status: OrderItemStatus.pending,
       tables: [
-        KitchenBatchTableModel(orderId: 241, orderCode: '#AMR241', tableLabel: 'Meja 12', qty: 1),
+        KitchenBatchTableModel(
+          orderId: 241,
+          orderCode: '#AMR241',
+          tableLabel: 'Meja 12',
+          qty: 1,
+        ),
       ],
     ),
     KitchenBatchModel(
@@ -88,7 +153,12 @@ class KitchenBatchMocks {
       totalQty: 1,
       status: OrderItemStatus.pending,
       tables: [
-        KitchenBatchTableModel(orderId: 247, orderCode: '#AMR247', tableLabel: 'Meja 09', qty: 1),
+        KitchenBatchTableModel(
+          orderId: 247,
+          orderCode: '#AMR247',
+          tableLabel: 'Meja 09',
+          qty: 1,
+        ),
       ],
     ),
     KitchenBatchModel(
@@ -99,8 +169,18 @@ class KitchenBatchMocks {
       totalQty: 3,
       status: OrderItemStatus.ready,
       tables: [
-        KitchenBatchTableModel(orderId: 241, orderCode: '#AMR241', tableLabel: 'Meja 12', qty: 2),
-        KitchenBatchTableModel(orderId: 247, orderCode: '#AMR247', tableLabel: 'Meja 09', qty: 1),
+        KitchenBatchTableModel(
+          orderId: 241,
+          orderCode: '#AMR241',
+          tableLabel: 'Meja 12',
+          qty: 2,
+        ),
+        KitchenBatchTableModel(
+          orderId: 247,
+          orderCode: '#AMR247',
+          tableLabel: 'Meja 09',
+          qty: 1,
+        ),
       ],
     ),
     KitchenBatchModel(
@@ -111,7 +191,12 @@ class KitchenBatchMocks {
       totalQty: 1,
       status: OrderItemStatus.ready,
       tables: [
-        KitchenBatchTableModel(orderId: 244, orderCode: '#AMR244', tableLabel: 'Meja 07', qty: 1),
+        KitchenBatchTableModel(
+          orderId: 244,
+          orderCode: '#AMR244',
+          tableLabel: 'Meja 07',
+          qty: 1,
+        ),
       ],
     ),
   ];

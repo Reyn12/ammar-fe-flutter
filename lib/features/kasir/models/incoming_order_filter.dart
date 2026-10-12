@@ -3,6 +3,7 @@ import '../../../models/order_model.dart';
 
 enum IncomingOrderFilter {
   all('Semua'),
+  ready('Siap Diantar'),
   waitingCash('Tunai Belum Dikonfirmasi'),
   dineIn('Dine-in'),
   takeaway('Takeaway');
@@ -15,6 +16,8 @@ enum IncomingOrderFilter {
     switch (this) {
       case IncomingOrderFilter.all:
         return true;
+      case IncomingOrderFilter.ready:
+        return order.isReadyForHandOver;
       case IncomingOrderFilter.waitingCash:
         return order.needCashConfirmation;
       case IncomingOrderFilter.dineIn:

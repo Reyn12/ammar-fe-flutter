@@ -14,11 +14,7 @@ extension RefListenHelper on WidgetRef {
       next.whenOrNull(
         error: (error, _) {
           final parsed = parseDialogError(error);
-          CustomSnackbar.error(
-            context,
-            parsed.message,
-            title: parsed.title,
-          );
+          CustomSnackbar.error(context, parsed.message, title: parsed.title);
         },
         data: onSuccess,
       );

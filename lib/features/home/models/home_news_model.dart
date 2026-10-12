@@ -1,10 +1,5 @@
 class HomeNewsModel {
-  const HomeNewsModel({
-    this.title,
-    this.description,
-    this.image,
-    this.isAsset,
-  });
+  const HomeNewsModel({this.title, this.description, this.image, this.isAsset});
 
   final String? title;
   final String? description;

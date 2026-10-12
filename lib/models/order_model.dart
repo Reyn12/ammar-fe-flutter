@@ -18,6 +18,7 @@ class OrderModel {
     this.totalAmount,
     this.taxAmount,
     this.createdAt,
+    this.handedOverAt,
     this.items,
   });
 
@@ -35,21 +36,30 @@ class OrderModel {
   final int? totalAmount;
   final int? taxAmount;
   final DateTime? createdAt;
+
+  /// Waktu makanan diserahkan ke pelanggan. Null = belum.
+  final DateTime? handedOverAt;
   final List<OrderItemModel>? items;
 
   /// 3 angka belakang kode yang dipanggil dapur, mis. "021".
   String get queueNumber => queueNumberOf(code);
 
+  /// Makanan sudah selesai dimasak dan menunggu diserahkan ke pelanggan.
+  bool get isReadyForHandOver =>
+      status == OrderStatus.completed && handedOverAt == null;
+
   bool get isTakeaway => orderType == OrderType.takeaway;
 
   /// Order tunai yang uangnya belum diverifikasi kasir.
   bool get needCashConfirmation =>
-      paymentMethod == PaymentMethod.cash && paymentStatus != PaymentStatus.paid;
+      paymentMethod == PaymentMethod.cash &&
+      paymentStatus != PaymentStatus.paid;
 
   int get subtotal =>
       (items ?? []).fold(0, (total, item) => total + item.lineTotal);
 
-  int get totalQty => (items ?? []).fold(0, (total, item) => total + (item.qty ?? 0));
+  int get totalQty =>
+      (items ?? []).fold(0, (total, item) => total + (item.qty ?? 0));
 
   int get remainingItemCount => (items ?? [])
       .where((item) => item.status != OrderItemStatus.ready)
@@ -61,6 +71,7 @@ class OrderModel {
   OrderModel copyWith({
     OrderStatus? status,
     PaymentStatus? paymentStatus,
+    DateTime? handedOverAt,
     List<OrderItemModel>? items,
   }) {
     return OrderModel(
@@ -78,6 +89,7 @@ class OrderModel {
       totalAmount: totalAmount,
       taxAmount: taxAmount,
       createdAt: createdAt,
+      handedOverAt: handedOverAt ?? this.handedOverAt,
       items: items ?? this.items,
     );
   }
@@ -93,11 +105,16 @@ class OrderModel {
       customerName: json['customer_name']?.toString(),
       orderType: OrderType.fromValue(json['order_type']?.toString()),
       status: OrderStatus.fromValue(json['status']?.toString()),
-      paymentMethod: PaymentMethod.fromValue(json['payment_method']?.toString()),
-      paymentStatus: PaymentStatus.fromValue(json['payment_status']?.toString()),
+      paymentMethod: PaymentMethod.fromValue(
+        json['payment_method']?.toString(),
+      ),
+      paymentStatus: PaymentStatus.fromValue(
+        json['payment_status']?.toString(),
+      ),
       totalAmount: (json['total_amount'] as num?)?.toInt(),
       taxAmount: (json['tax_amount'] as num?)?.toInt(),
       createdAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),
+      handedOverAt: DateTime.tryParse(json['handed_over_at']?.toString() ?? ''),
       items: (json['items'] as List?)
           ?.map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
           .toList(),

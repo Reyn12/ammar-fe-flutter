@@ -15,10 +15,7 @@ class SplashPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
-        child: ImageLoad(
-          src: Assets.images.icLogoDapurself.path,
-          width: 220,
-        ),
+        child: ImageLoad(src: Assets.images.icLogoDapurself.path, width: 220),
       ),
     );
   }

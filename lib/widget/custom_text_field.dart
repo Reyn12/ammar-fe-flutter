@@ -250,11 +250,7 @@ class CustomTextField<T> extends StatefulWidget {
         onTap: onTapSend,
         child: Padding(
           padding: const EdgeInsets.only(right: 12),
-          child: Icon(
-            Icons.send,
-            size: 24,
-            color: AppColors.primary,
-          ),
+          child: Icon(Icons.send, size: 24, color: AppColors.primary),
         ),
       ),
       suffixIconConstraints: const BoxConstraints(minWidth: 36, minHeight: 24),

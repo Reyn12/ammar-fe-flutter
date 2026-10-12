@@ -42,10 +42,7 @@ mixin DialogMixin {
     lastErrorMessage = null;
   }
 
-  void errorState(
-    BuildContext context, {
-    required Object error,
-  }) {
+  void errorState(BuildContext context, {required Object error}) {
     if (dialogShown) {
       dialogShown = false;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -59,11 +56,7 @@ mixin DialogMixin {
 
     lastErrorMessage = messageKey;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      CustomSnackbar.error(
-        context,
-        parsed.message,
-        title: parsed.title,
-      );
+      CustomSnackbar.error(context, parsed.message, title: parsed.title);
     });
   }
 
@@ -93,13 +86,8 @@ mixin DialogMixin {
         if (successHandled) return;
         successHandled = true;
 
-        successState<T>(
-          context,
-          value: value,
-          onSuccess: onSuccess,
-        );
+        successState<T>(context, value: value, onSuccess: onSuccess);
       },
     );
   }
 }
-

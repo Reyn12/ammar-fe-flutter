@@ -86,13 +86,13 @@ class AppColors {
 class AppShadows {
   /// Drop shadow: x 0, y 2, blur 25, spread 0, #000 @ 7%
   static List<BoxShadow> get soft => [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.07),
-          blurRadius: 25,
-          offset: const Offset(0, 2),
-          spreadRadius: 0,
-        ),
-      ];
+    BoxShadow(
+      color: Colors.black.withValues(alpha: 0.07),
+      blurRadius: 25,
+      offset: const Offset(0, 2),
+      spreadRadius: 0,
+    ),
+  ];
 
   static List<BoxShadow> get smooth => soft;
 }

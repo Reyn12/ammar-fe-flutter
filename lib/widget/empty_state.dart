@@ -21,11 +21,7 @@ class EmptyState extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (imagePath != null)
-          ImageLoad(
-            src: imagePath!,
-            width: 200,
-            fit: BoxFit.contain,
-          )
+          ImageLoad(src: imagePath!, width: 200, fit: BoxFit.contain)
         else
           Icon(
             Icons.inbox_outlined,

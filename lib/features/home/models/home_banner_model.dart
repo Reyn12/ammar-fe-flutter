@@ -1,8 +1,5 @@
 class HomeBannerItemModel {
-  const HomeBannerItemModel({
-    this.image,
-    this.isAsset,
-  });
+  const HomeBannerItemModel({this.image, this.isAsset});
 
   final String? image;
   final bool? isAsset;

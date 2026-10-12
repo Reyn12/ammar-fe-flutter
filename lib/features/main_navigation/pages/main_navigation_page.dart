@@ -11,11 +11,7 @@ class MainNavigationPage extends HookConsumerWidget {
   const MainNavigationPage({super.key});
 
   static List<NavItem> navItems = [
-    NavItem(
-      label: 'Beranda',
-      iconPath: '',
-      activeIconPath: '',
-    ),
+    NavItem(label: 'Beranda', iconPath: '', activeIconPath: ''),
   ];
 
   @override

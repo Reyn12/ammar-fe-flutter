@@ -19,11 +19,7 @@ class LoadingOverlay extends StatelessWidget {
         ),
       );
     } else {
-      return Center(
-        child: CircularProgressIndicator(
-          color: color,
-        ),
-      );
+      return Center(child: CircularProgressIndicator(color: color));
     }
   }
 }

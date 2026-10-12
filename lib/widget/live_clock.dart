@@ -8,7 +8,12 @@ import '../resources/resources.dart';
 
 /// Jam berjalan di header kasir & dapur.
 class LiveClock extends StatefulWidget {
-  const LiveClock({super.key, this.textStyle, this.color, this.showDate = true});
+  const LiveClock({
+    super.key,
+    this.textStyle,
+    this.color,
+    this.showDate = true,
+  });
 
   final TextStyle? textStyle;
   final Color? color;

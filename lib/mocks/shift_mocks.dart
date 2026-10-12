@@ -64,8 +64,5 @@ class ShiftMocks {
   }
 
   /// Seed awal list manajemen owner (ada 1 aktif + riwayat).
-  static List<ShiftModel> get managementList => [
-    activeShift,
-    ...closedHistory,
-  ];
+  static List<ShiftModel> get managementList => [activeShift, ...closedHistory];
 }

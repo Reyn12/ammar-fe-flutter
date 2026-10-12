@@ -1,9 +1,5 @@
 class UserRoleModel {
-  const UserRoleModel({
-    this.id,
-    this.name,
-    this.description,
-  });
+  const UserRoleModel({this.id, this.name, this.description});
 
   final int? id;
   final String? name;

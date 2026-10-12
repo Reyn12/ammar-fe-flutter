@@ -16,7 +16,8 @@ const List<String> _monthShortNames = [
 String _pad(int value) => value.toString().padLeft(2, '0');
 
 /// `14:05`
-String formatClock(DateTime value) => '${_pad(value.hour)}:${_pad(value.minute)}';
+String formatClock(DateTime value) =>
+    '${_pad(value.hour)}:${_pad(value.minute)}';
 
 /// `14:05:09`
 String formatClockWithSecond(DateTime value) =>

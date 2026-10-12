@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../helper/dialog_error_helper.dart';
 import '../../../helper/format_currency_helper.dart';
 import '../../../helper/format_time_helper.dart';
 import '../../../helper/status_color_helper.dart';
+import '../../../models/order_model.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
 import '../../../widget/custom_snackbar.dart';
@@ -11,6 +13,7 @@ import '../../../widget/primary_button.dart';
 import '../../../widget/status_pill.dart';
 import '../../../widget/surface_card.dart';
 import '../providers/incoming_orders_provider.dart';
+import '../providers/kasir_incoming_alert_provider.dart';
 import '../providers/kasir_shift_provider.dart';
 import 'kasir_confirm_cash_dialog.dart';
 import 'kasir_order_detail_empty.dart';
@@ -19,6 +22,30 @@ import 'kasir_order_summary_row.dart';
 
 class KasirOrderDetailPanel extends ConsumerWidget {
   const KasirOrderDetailPanel({super.key});
+
+  /// Serah terima: makanan (dan struk) diberikan ke pelanggan, pesanan keluar dari daftar.
+  Future<void> _handOver(
+    BuildContext context,
+    WidgetRef ref,
+    OrderModel order,
+  ) async {
+    try {
+      await ref.read(incomingOrdersProvider.notifier).handOver(order.id ?? 0);
+    } catch (error) {
+      if (!context.mounted) return;
+      final parsed = parseDialogError(error);
+      CustomSnackbar.error(context, parsed.message, title: parsed.title);
+      return;
+    }
+
+    ref.read(selectedOrderIdProvider.notifier).select(null);
+    if (!context.mounted) return;
+    CustomSnackbar.success(
+      context,
+      'Pesanan ${order.code} sudah diserahkan ke pelanggan.',
+      title: 'Selesai',
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -146,6 +173,42 @@ class KasirOrderDetailPanel extends ConsumerWidget {
                       }
                       KasirConfirmCashDialog.show(context, order);
                     },
+                  )
+                else if (order.isReadyForHandOver)
+                  Row(
+                    spacing: 12,
+                    children: [
+                      Expanded(
+                        child: PrimaryButton(
+                          text: 'Panggil Ulang',
+                          reverse: true,
+                          borderColor: AppColors.primaryMain,
+                          textColor: AppColors.primaryMain,
+                          height: 52,
+                          leading: const Icon(
+                            // TODO: ganti Material icon ini dengan asset ikon final.
+                            Icons.campaign_rounded,
+                            color: AppColors.primaryMain,
+                          ),
+                          onPressed: () => ref
+                              .read(kasirIncomingAlertProvider.notifier)
+                              .announceReady(order),
+                        ),
+                      ),
+                      Expanded(
+                        child: PrimaryButton(
+                          text: 'Sudah Diambil',
+                          color: AppColors.successMain,
+                          height: 52,
+                          leading: const Icon(
+                            // TODO: ganti Material icon ini dengan asset ikon final.
+                            Icons.check_circle_rounded,
+                            color: AppColors.neutral10,
+                          ),
+                          onPressed: () => _handOver(context, ref, order),
+                        ),
+                      ),
+                    ],
                   )
                 else
                   PrimaryButton(

@@ -126,7 +126,7 @@ class ApiService {
 
     final res = await dio.get(
       '/v1/orders',
-      queryParameters: {'status': 'paid,pending_cash'},
+      queryParameters: {'status': 'paid,pending_cash,ready'},
     );
     return Converter.list(res.data, OrderModel.fromJson);
   }
@@ -188,6 +188,22 @@ class ApiService {
       '/v1/orders/$orderId/confirm-cash',
       data: {if (receivedAmount != null) 'received_amount': receivedAmount},
     );
+    return Converter.single(res.data, OrderModel.fromJson);
+  }
+
+  /// POST /v1/orders/{id}/hand-over — makanan diserahkan ke pelanggan.
+  Future<OrderModel> handOverOrder({required int orderId, bool? mock}) async {
+    if (useMock(mock)) {
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      for (final order in OrderMocks.incomingOrders) {
+        if (order.id == orderId) {
+          return order.copyWith(handedOverAt: DateTime.now());
+        }
+      }
+      throw ApiError(message: 'Order tidak ditemukan.');
+    }
+
+    final res = await dio.post('/v1/orders/$orderId/hand-over');
     return Converter.single(res.data, OrderModel.fromJson);
   }
 
