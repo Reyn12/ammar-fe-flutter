@@ -60,14 +60,9 @@ class KitchenBatchItem extends StatelessWidget {
             runSpacing: 6,
             children: [
               StatusPill(
-                label:
-                    '${batch.notaCount}/${KitchenBatchModel.maxNotaPerBatch} nota',
-                foregroundColor: batch.isFull
-                    ? AppColors.dangerMain
-                    : AppColors.neutral70,
-                backgroundColor: batch.isFull
-                    ? AppColors.dangerSurface
-                    : AppColors.neutral20,
+                label: '${batch.notaCount} nota',
+                foregroundColor: AppColors.neutral70,
+                backgroundColor: AppColors.neutral20,
                 dense: true,
               ),
               StatusPill(

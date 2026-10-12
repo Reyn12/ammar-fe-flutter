@@ -12,9 +12,6 @@ class KitchenBatchModel {
     this.tables,
   });
 
-  /// Kapasitas maksimal nota per batch sesuai SKPL-F-010.
-  static const int maxNotaPerBatch = 6;
-
   final int? id;
   final String? categoryName;
   final int? productId;
@@ -24,8 +21,6 @@ class KitchenBatchModel {
   final List<KitchenBatchTableModel>? tables;
 
   int get notaCount => (tables ?? []).length;
-
-  bool get isFull => notaCount >= maxNotaPerBatch;
 
   KitchenBatchModel copyWith({
     OrderItemStatus? status,

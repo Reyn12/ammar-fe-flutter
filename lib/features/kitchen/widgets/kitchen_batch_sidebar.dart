@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../resources/app_typography.dart';
 import '../../../resources/resources.dart';
 import '../../../widget/empty_state.dart';
-import '../models/kitchen_batch_model.dart';
 import '../providers/kitchen_batch_provider.dart';
 import '../providers/kitchen_incoming_provider.dart';
 import 'kitchen_batch_group_builder.dart';
@@ -48,8 +47,7 @@ class KitchenBatchSidebar extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      'Menu yang sama digabung, maks '
-                      '${KitchenBatchModel.maxNotaPerBatch} nota per batch.',
+                      'Menu yang sama digabung jadi satu batch.',
                       style: AppTypography.bodyRegularS.copyWith(
                         color: AppColors.neutral70,
                         height: 1.35,

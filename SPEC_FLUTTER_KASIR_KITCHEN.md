@@ -67,7 +67,7 @@ App Flutter ini **hanya menangani Kasir & Koki/Dapur**.
 | SKPL-F-008      | Kelola shift (buka/tutup, modal awal, uang fisik)    | Kasir                              |
 | SKPL-F-013      | Kelola data menu (CRUD)                              | Kasir                              |
 | SKPL-F-009      | Tampilkan antrean batch (Order Batching)             | Kitchen                            |
-| SKPL-F-010      | Jalankan algoritma Order Batching (max 6 nota/batch) | Sistem (tampil di Kitchen)         |
+| SKPL-F-010      | Jalankan algoritma Order Batching (tanpa batas nota/batch) | Sistem (tampil di Kitchen)         |
 | SKPL-F-011      | Ubah status pesanan (diproses / siap saji)           | Kitchen                            |
 | SKPL-F-012      | Notifikasi WhatsApp struk (Fonnte)                   | Sistem (backend)                   |
 | SKPL-F-002..005 | Scan QR, lihat menu, keranjang, bayar QRIS           | Customer (Next.js) — bukan di sini |
@@ -227,7 +227,7 @@ Dua area utama:
   - Grup per kategori (MAKANAN, MINUMAN, dst).
   - Tiap batch: nama menu + **total qty** (angka besar), rincian per meja
     (Table 12 ×2, Table 04 ×3, ...), tombol **Process All**.
-  - Kapasitas **maksimal 6 nota per batch** (SKPL-F-010).
+  - **Tanpa batas jumlah nota** per batch (SKPL-F-010); koki memilih nota yang diproses di dialog detail.
 - **Area kanan — kartu order (grid):** kartu per `order`
   (`#AMRxxx`, meja, customer, timer). Tiap kartu: daftar `order_items`
   - `notes` + badge status item (Belum diproses / Dimasak / Disajikan).
@@ -240,7 +240,7 @@ Dua area utama:
 ### 6.2 Konsep Batch vs Page (penting untuk konsistensi)
 
 - **Batch** = pengelompokan item **menu yang sama** lintas order (sidebar kiri),
-  max 6 nota. Ini kontribusi akademik (Order Batching).
+  tanpa batas nota. Ini kontribusi akademik (Order Batching).
 - **Page** = paginasi tampilan kartu order di kanan. Murni UI, tidak ada
   hubungan dengan algoritma batching.
 
@@ -321,7 +321,7 @@ Kasir:
 
 Kitchen:
 
-- `GET /v1/kitchen/batches` → daftar batch (menu + qty + rincian meja, max 6 nota)
+- `GET /v1/kitchen/batches` → daftar batch (menu + qty + rincian meja)
 - `GET /v1/kitchen/orders` → kartu order + items (dengan pagination)
 - `POST /v1/kitchen/batches/{id}/process` → Process All (set items cooking)
 - `PATCH /v1/order-items/{id}/status` → { status: cooking|ready }
